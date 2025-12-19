@@ -2,9 +2,9 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Mail, ArrowRight } from "lucide-react";
+import { Mail, ArrowRight, Sparkles, Send } from "lucide-react";
 import { toast } from "sonner";
+import { motion } from "framer-motion";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
@@ -18,46 +18,80 @@ export function Newsletter() {
   };
 
   return (
-    <section className="container mx-auto px-4 py-12">
-      <div className="relative overflow-hidden rounded-[3rem] bg-primary p-8 md:p-20 text-primary-foreground shadow-2xl">
-        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 opacity-10">
-          <Mail className="h-96 w-96" />
+    <section className="container mx-auto px-4 py-24">
+      <motion.div 
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        className="relative overflow-hidden rounded-[4rem] bg-foreground p-10 md:p-24 text-background shadow-[0_50px_100px_-20px_rgba(0,0,0,0.3)]"
+      >
+        {/* Decorative Background Icons */}
+        <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 opacity-[0.05] pointer-events-none">
+          <Mail className="h-[40rem] w-[40rem] text-primary" />
+        </div>
+        <div className="absolute -bottom-24 -left-24 opacity-[0.05] pointer-events-none">
+          <Send className="h-[30rem] w-[30rem] text-secondary" />
         </div>
         
-        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-          <div className="space-y-6">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight">
-              Ne manquez aucune <br /> pépite africaine.
-            </h2>
-            <p className="text-primary-foreground/80 text-lg md:text-xl font-medium max-w-md">
-              Rejoignez 50,000+ lecteurs passionnés par l'innovation et la culture du continent.
-            </p>
+        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="space-y-10">
+            <div className="space-y-6">
+              <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
+                <Sparkles className="h-4 w-4 fill-primary" />
+                <span>Communauté Exclusive</span>
+              </div>
+              <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.85]">
+                L'Afrique <br /> dans votre <br /><span className="text-primary italic">boîte mail</span>.
+              </h2>
+              <p className="text-background/60 text-lg md:text-xl font-medium max-w-md leading-relaxed">
+                Rejoignez 50,000+ innovateurs. Pas de bruit, juste des pépites soigneusement sélectionnées.
+              </p>
+            </div>
           </div>
           
-          <div className="bg-white/10 backdrop-blur-md p-8 rounded-[2rem] border border-white/20">
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="relative group">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-primary-foreground/60 group-focus-within:text-white transition-colors" />
-                <input
-                  type="email"
-                  placeholder="votre@email.com"
-                  required
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-white/10 border border-white/20 rounded-2xl pl-12 pr-4 py-4 text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all"
-                />
+          <motion.div 
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white/5 backdrop-blur-3xl p-10 md:p-14 rounded-[3.5rem] border border-white/10 shadow-2xl"
+          >
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-[10px] font-black uppercase tracking-[0.2em] text-background/40 ml-4">Adresse Email</label>
+                <div className="relative group">
+                  <Mail className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-background/40 group-focus-within:text-primary transition-colors" />
+                  <input
+                    type="email"
+                    placeholder="votre@futur.com"
+                    required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full bg-white/5 border border-white/10 rounded-3xl pl-16 pr-6 py-6 text-xl text-white placeholder:text-white/20 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
+                  />
+                </div>
               </div>
-              <Button type="submit" className="w-full h-14 rounded-2xl bg-white text-primary hover:bg-white/90 font-black text-lg shadow-xl transition-all hover:scale-[1.02] active:scale-95">
-                S'abonner maintenant
-                <ArrowRight className="ml-2 h-5 w-5" />
+              
+              <Button type="submit" className="w-full h-20 rounded-3xl bg-primary text-primary-foreground hover:bg-primary/90 font-black text-xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 group">
+                Rejoindre le mouvement
+                <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
               </Button>
             </form>
-            <p className="mt-4 text-[10px] text-center font-bold uppercase tracking-widest text-primary-foreground/40">
-              Garanti sans spam. Désinscription en un clic.
-            </p>
-          </div>
+            
+            <div className="mt-10 flex items-center justify-center gap-6">
+              <div className="flex -space-x-3">
+                {[1, 2, 3, 4].map((i) => (
+                  <div key={i} className="h-10 w-10 rounded-full border-2 border-foreground bg-secondary/20 flex items-center justify-center overflow-hidden">
+                    <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
+                  </div>
+                ))}
+              </div>
+              <p className="text-[10px] font-black uppercase tracking-widest text-background/40">
+                +50k MEMBRES
+              </p>
+            </div>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 }

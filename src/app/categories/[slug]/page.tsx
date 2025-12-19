@@ -1,7 +1,7 @@
 import { ArticleCard } from "@/components/ArticleCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Filter, SlidersHorizontal, Sparkles } from "lucide-react";
+import { ArrowLeft, SlidersHorizontal, Sparkles } from "lucide-react";
 import Link from "next/link";
 
 // Mock Data
@@ -140,49 +140,6 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
            <Button variant="outline" className="rounded-full h-16 px-12 font-black uppercase tracking-widest text-xs border-primary/20 hover:bg-primary/5 hover:scale-105 transition-all">
              Charger plus de pépites
            </Button>
-        </div>
-      </section>
-    </div>
-  );
-}
-
-
-  return (
-    <div className="flex flex-col gap-12 pb-20 pt-12">
-      <section className="container mx-auto px-4">
-        <Button variant="ghost" size="sm" asChild className="mb-8">
-          <Link href="/">
-            <ArrowLeft className="mr-2 h-4 w-4" /> Retour à l'accueil
-          </Link>
-        </Button>
-        
-        <div className="flex flex-col gap-4 mb-12">
-          <Badge className="w-fit text-sm uppercase tracking-wider">Catégorie</Badge>
-          <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight">
-            {slug === "actualites" ? "Toutes les Actualités" : categoryName}
-          </h1>
-          <p className="text-lg text-muted-foreground max-w-2xl">
-            Retrouvez tous nos articles et reportages dédiés à la thématique {categoryName.toLowerCase()}.
-          </p>
-        </div>
-
-        {filteredArticles.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredArticles.map((article) => (
-              <ArticleCard key={article.id} {...article} />
-            ))}
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-             {/* Fallback to show something if mock list is small */}
-             {articles.map((article) => (
-              <ArticleCard key={article.id} {...article} />
-            ))}
-          </div>
-        )}
-        
-        <div className="mt-16 flex justify-center">
-           <Button variant="outline" className="rounded-full px-8">Charger plus d'articles</Button>
         </div>
       </section>
     </div>

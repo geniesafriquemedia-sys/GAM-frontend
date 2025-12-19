@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { 
   LayoutDashboard, 
   FileText, 
@@ -18,6 +17,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
+import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
 
 const menuItems = [
   { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
@@ -120,5 +121,3 @@ export function AdminSidebar() {
     </>
   );
 }
-
-import { Button } from "@/components/ui/button";

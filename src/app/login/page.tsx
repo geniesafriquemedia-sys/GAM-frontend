@@ -15,6 +15,22 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const handleQuickLogin = (role: "admin" | "editor") => {
+    setIsLoading(true);
+    const credentials = {
+      admin: { email: "admin@gam.media", pass: "admin123" },
+      editor: { email: "editor@gam.media", pass: "editor123" }
+    };
+    
+    setEmail(credentials[role].email);
+    setPassword(credentials[role].pass);
+
+    setTimeout(() => {
+      setIsLoading(false);
+      window.location.href = "/admin";
+    }, 1000);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);

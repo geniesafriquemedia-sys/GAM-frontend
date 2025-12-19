@@ -22,10 +22,11 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-  { icon: FileText, label: "Articles", href: "/admin/articles" },
-  { icon: Video, label: "Web TV", href: "/admin/web-tv" },
-  { icon: Users, label: "Utilisateurs", href: "/admin/users" },
+    { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
+    { icon: FileText, label: "Articles", href: "/admin/articles" },
+    { icon: Video, label: "Web TV", href: "/admin/web-tv" },
+    { icon: Calendar, label: "Planification", href: "/admin/scheduler" },
+    { icon: Users, label: "Utilisateurs", href: "/admin/users" },
   { icon: BarChart3, label: "Analyses", href: "/admin/analytics" },
   { 
     icon: Settings, 

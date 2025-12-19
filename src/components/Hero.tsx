@@ -59,14 +59,14 @@ export function Hero({ article }: HeroProps) {
                 </div>
               </motion.div>
               
-              <motion.h1 
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                className="text-5xl font-black leading-[0.95] tracking-tighter md:text-7xl lg:text-[9rem] max-w-5xl"
-              >
-                {article.title}
-              </motion.h1>
+                <motion.h1 
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.4, duration: 0.8 }}
+                  className="text-5xl font-black leading-[0.95] tracking-tighter md:text-7xl lg:text-8xl max-w-5xl"
+                >
+                  {article.title}
+                </motion.h1>
               
               <motion.p 
                 initial={{ opacity: 0, y: 20 }}

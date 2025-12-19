@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   Plus, 
@@ -19,6 +20,8 @@ import { Badge } from "@/components/ui/badge";
 import Link from "next/link";
 import { toast } from "sonner";
 import { ConfirmDelete } from "@/components/admin/ConfirmDelete";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { VideoForm } from "@/components/admin/forms/VideoForm";
 
 const videos = [
   {
@@ -28,7 +31,9 @@ const videos = [
     duration: "12:45",
     views: "1.2k",
     date: "12 Oct 2023",
-    status: "Publié"
+    status: "Publié",
+    url: "https://youtube.com/watch?v=1",
+    description: "Une plongée au cœur de l'écosystème tech nigérian."
   },
   {
     id: "v2",
@@ -37,7 +42,9 @@ const videos = [
     duration: "08:20",
     views: "850",
     date: "11 Oct 2023",
-    status: "Publié"
+    status: "Publié",
+    url: "https://youtube.com/watch?v=2",
+    description: "Comment les designers réinventent les traditions."
   },
   {
     id: "v3",
@@ -46,21 +53,35 @@ const videos = [
     duration: "15:10",
     views: "2.4k",
     date: "10 Oct 2023",
-    status: "Brouillon"
+    status: "Brouillon",
+    url: "https://youtube.com/watch?v=3",
+    description: "La révolution énergétique est en marche."
   }
 ];
 
 export default function WebTVAdmin() {
+  const [selectedVideo, setSelectedVideo] = useState<any>(null);
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter">WEB TV</h1>
+          <h1 className="text-3xl font-black tracking-tighter uppercase italic">WEB TV</h1>
           <p className="text-muted-foreground font-medium">Gérez vos contenus vidéo et diffusions YouTube.</p>
         </div>
-        <Button className="rounded-xl h-12 px-6 font-black bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-95">
-          <Plus className="mr-2 h-4 w-4" /> AJOUTER UNE VIDÉO
-        </Button>
+        
+        <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+          <DialogTrigger asChild>
+            <Button className="rounded-xl h-12 px-6 font-black bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-95 text-[10px] uppercase tracking-widest">
+              <Plus className="mr-2 h-4 w-4" /> AJOUTER UNE VIDÉO
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-4xl rounded-[2.5rem] border-none p-8 bg-background shadow-2xl">
+            <VideoForm mode="create" onClose={() => setIsCreateOpen(false)} />
+          </DialogContent>
+        </Dialog>
       </div>
 
       <div className="bg-card border border-border rounded-[2rem] p-6">
@@ -99,7 +120,7 @@ export default function WebTVAdmin() {
                   </Badge>
                 </div>
                 <div className="absolute top-4 right-4">
-                  <Badge className={video.status === 'Publié' ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-orange-500/10 text-orange-500 border-orange-500/20'}>
+                  <Badge className={video.status === 'Publié' ? 'bg-green-500/10 text-green-500 border-green-500/20 text-[9px] font-black uppercase' : 'bg-orange-500/10 text-orange-500 border-orange-500/20 text-[9px] font-black uppercase'}>
                     {video.status}
                   </Badge>
                 </div>
@@ -113,31 +134,45 @@ export default function WebTVAdmin() {
                     <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {video.views}</span>
                     <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {video.date}</span>
                   </div>
-                    <div className="flex items-center gap-1">
-                      <Button 
-                        onClick={() => toast.info(`Modification de : ${video.title}`)}
-                        variant="ghost" 
-                        size="icon" 
-                        className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
-                      >
-                        <Edit2 className="h-3.5 w-3.5" />
-                      </Button>
-                      <ConfirmDelete 
-                        onConfirm={() => toast.success(`Vidéo "${video.title}" supprimée`)}
-                        trigger={
-                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors">
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </Button>
-                        }
-                      />
-                    </div>
-
+                  <div className="flex items-center gap-1">
+                    <Button 
+                      onClick={() => {
+                        setSelectedVideo(video);
+                        setIsEditOpen(true);
+                      }}
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+                    >
+                      <Edit2 className="h-3.5 w-3.5" />
+                    </Button>
+                    <ConfirmDelete 
+                      onConfirm={() => toast.success(`Vidéo "${video.title}" supprimée`)}
+                      trigger={
+                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors">
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </motion.div>
           ))}
         </div>
       </div>
+
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent className="max-w-4xl rounded-[2.5rem] border-none p-8 bg-background shadow-2xl">
+          {selectedVideo && (
+            <VideoForm 
+              mode="edit" 
+              initialData={selectedVideo} 
+              onClose={() => setIsEditOpen(false)} 
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

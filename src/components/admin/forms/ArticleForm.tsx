@@ -145,8 +145,35 @@ export function ArticleForm({ initialData, mode }: ArticleFormProps) {
         </div>
 
         <div className="lg:col-span-4 space-y-8">
-          <div className="bg-muted/20 rounded-3xl p-8 border-none space-y-8">
-            <div className="space-y-2">
+            <div className="bg-muted/20 rounded-3xl p-8 border-none space-y-8">
+              <div className="space-y-4">
+                <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Statut & Planification</Label>
+                <div className="grid grid-cols-1 gap-4">
+                  <select 
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    className="w-full h-12 bg-muted/30 border-none rounded-2xl px-6 text-[10px] font-black uppercase tracking-widest outline-none appearance-none cursor-pointer hover:bg-muted/40 transition-colors"
+                  >
+                    <option value="draft">Brouillon</option>
+                    <option value="scheduled">Planifié</option>
+                    <option value="published">Publié</option>
+                  </select>
+
+                  {status === "scheduled" && (
+                    <div className="relative">
+                      <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40" />
+                      <Input 
+                        type="datetime-local"
+                        value={scheduledDate}
+                        onChange={(e) => setScheduledDate(e.target.value)}
+                        className="pl-11 h-12 rounded-2xl bg-muted/30 border-none font-black text-[10px] uppercase tracking-widest focus-visible:ring-1 focus-visible:ring-primary/20"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="space-y-2">
               <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Image de Couverture</Label>
               {initialData?.image ? (
                 <div className="relative aspect-video rounded-2xl overflow-hidden bg-muted/20 group">

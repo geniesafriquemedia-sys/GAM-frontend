@@ -4,7 +4,9 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useMemo } from "react";
 import { ArticleCard } from "@/components/ArticleCard";
 import { Badge } from "@/components/ui/badge";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon, ArrowLeft, Frown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 // Mock Data
 const articles = [
@@ -35,24 +37,6 @@ const articles = [
     image: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?q=80&w=1000&auto=format&fit=crop",
     readTime: "4 min",
   },
-  {
-    id: "4",
-    title: "Société : Les enjeux de la transition énergétique",
-    excerpt: "Analyse des défis et opportunités du passage au vert pour les économies d'Afrique.",
-    category: "Société",
-    date: "10 Oct 2023",
-    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1000&auto=format&fit=crop",
-    readTime: "6 min",
-  },
-  {
-    id: "5",
-    title: "Tech : Startups à suivre en 2024",
-    excerpt: "Notre sélection des pépites technologiques qui vont faire bouger les lignes.",
-    category: "Tech",
-    date: "09 Oct 2023",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop",
-    readTime: "7 min",
-  },
 ];
 
 function SearchResults() {
@@ -70,32 +54,51 @@ function SearchResults() {
   }, [query]);
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold flex items-center gap-3">
-          <SearchIcon className="h-8 w-8 text-primary" />
-          Résultats pour "{query}"
-        </h1>
-        <p className="text-muted-foreground">
-          Nous avons trouvé {filteredResults.length} contenu(s) correspondant à votre recherche.
-        </p>
+    <div className="flex flex-col gap-16">
+      <div className="flex flex-col gap-6">
+        <Button variant="ghost" size="sm" asChild className="w-fit rounded-full font-black uppercase tracking-widest text-[10px] text-muted-foreground hover:text-primary transition-colors p-0">
+          <Link href="/">
+            <ArrowLeft className="mr-2 h-4 w-4" /> Retour
+          </Link>
+        </Button>
+        <div className="space-y-4">
+           <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-tight">
+             Recherche.
+           </h1>
+           <div className="flex flex-wrap items-center gap-4">
+             <Badge className="bg-primary/10 text-primary border-none px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-widest">
+               {filteredResults.length} résultats
+             </Badge>
+             <p className="text-xl font-medium text-muted-foreground italic">
+               "{query}"
+             </p>
+           </div>
+        </div>
       </div>
 
       {filteredResults.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
           {filteredResults.map((article) => (
             <ArticleCard key={article.id} {...article} />
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="h-20 w-20 rounded-full bg-muted flex items-center justify-center mb-6">
-            <SearchIcon className="h-10 w-10 text-muted-foreground" />
+        <div className="flex flex-col items-center justify-center py-32 text-center bg-secondary/30 rounded-[3rem] border border-dashed border-primary/20">
+          <div className="h-24 w-24 rounded-full bg-white flex items-center justify-center mb-8 shadow-xl">
+            <Frown className="h-12 w-12 text-primary" />
           </div>
-          <h2 className="text-xl font-semibold mb-2">Aucun résultat trouvé</h2>
-          <p className="text-muted-foreground max-w-sm">
-            Désolé, nous n'avons trouvé aucun article correspondant à "{query}". Essayez avec d'autres mots-clés.
+          <h2 className="text-3xl font-black tracking-tighter mb-4">Silence radio...</h2>
+          <p className="text-muted-foreground max-w-sm font-medium leading-relaxed mb-8">
+            Désolé, nous n'avons trouvé aucun article correspondant à "{query}". Essayez avec d'autres mots-clés ou parcourez nos catégories.
           </p>
+          <div className="flex gap-4">
+             <Button asChild className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px]">
+                <Link href="/categories/tech">Voir la Tech</Link>
+             </Button>
+             <Button variant="outline" asChild className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-primary/10">
+                <Link href="/web-tv">Voir la TV</Link>
+             </Button>
+          </div>
         </div>
       )}
     </div>
@@ -104,10 +107,11 @@ function SearchResults() {
 
 export default function SearchPage() {
   return (
-    <div className="container mx-auto px-4 py-12">
-      <Suspense fallback={<div className="py-20 text-center">Chargement des résultats...</div>}>
+    <div className="container mx-auto px-4 py-12 md:py-24">
+      <Suspense fallback={<div className="py-20 text-center font-black animate-pulse">Scanning the archives...</div>}>
         <SearchResults />
       </Suspense>
     </div>
   );
 }
+

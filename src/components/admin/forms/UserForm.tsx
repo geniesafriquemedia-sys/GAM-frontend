@@ -48,28 +48,28 @@ export function UserForm({ initialData, mode, onClose }: UserFormProps) {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div className="space-y-1">
-          <h2 className="text-2xl font-black tracking-tighter uppercase italic">
+          <h2 className="text-xl font-black tracking-tighter uppercase italic text-primary">
             {mode === "create" ? "Inviter un Membre" : "Modifier le Profil"}
           </h2>
-          <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.3em]">
+          <p className="text-[9px] text-muted-foreground/60 font-bold uppercase tracking-[0.2em]">
             Gestion de l'équipe • Permissions
           </p>
         </div>
         {onClose && (
-          <Button variant="ghost" size="icon" onClick={onClose} className="rounded-xl">
-            <X className="h-5 w-5" />
+          <Button variant="ghost" size="icon" onClick={onClose} className="rounded-full hover:bg-muted/50">
+            <X className="h-4 w-4" />
           </Button>
         )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
         <div className="md:col-span-4 space-y-6">
-          <div className="space-y-3">
-            <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">Photo de profil</Label>
-            <div className="relative aspect-square rounded-[2rem] overflow-hidden border-2 border-dashed border-border flex flex-col items-center justify-center gap-3 hover:bg-primary/5 hover:border-primary/50 transition-all cursor-pointer group">
+          <div className="space-y-2">
+            <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Photo de profil</Label>
+            <div className="relative aspect-square rounded-3xl overflow-hidden bg-muted/20 flex flex-col items-center justify-center gap-3 hover:bg-primary/5 transition-all cursor-pointer group">
               {initialData?.avatar ? (
                 <>
                   <img src={initialData.avatar} className="h-full w-full object-cover opacity-80 group-hover:scale-110 transition-transform duration-500" />
@@ -79,7 +79,7 @@ export function UserForm({ initialData, mode, onClose }: UserFormProps) {
                 </>
               ) : (
                 <>
-                  <div className="h-12 w-12 rounded-2xl bg-muted flex items-center justify-center">
+                  <div className="h-12 w-12 rounded-2xl bg-background flex items-center justify-center shadow-sm">
                     <User className="h-6 w-6 text-muted-foreground" />
                   </div>
                   <span className="text-[9px] font-black uppercase tracking-widest text-muted-foreground">Uploader</span>
@@ -91,41 +91,41 @@ export function UserForm({ initialData, mode, onClose }: UserFormProps) {
 
         <div className="md:col-span-8 space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">Nom complet</Label>
+            <div className="space-y-2">
+              <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Nom complet</Label>
               <div className="relative">
-                <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <User className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40" />
                 <Input 
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Jean Dupont" 
-                  className="pl-11 h-12 rounded-xl bg-muted/50 border-none font-medium"
+                  className="pl-11 h-11 rounded-2xl bg-muted/30 border-none font-semibold text-sm focus-visible:ring-1 focus-visible:ring-primary/20"
                 />
               </div>
             </div>
-            <div className="space-y-3">
-              <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">Adresse Email</Label>
+            <div className="space-y-2">
+              <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Adresse Email</Label>
               <div className="relative">
-                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Mail className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40" />
                 <Input 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="jean@gam.com" 
-                  className="pl-11 h-12 rounded-xl bg-muted/50 border-none font-medium"
+                  className="pl-11 h-11 rounded-2xl bg-muted/30 border-none font-semibold text-sm focus-visible:ring-1 focus-visible:ring-primary/20"
                 />
               </div>
             </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-3">
-              <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">Rôle & Permissions</Label>
+            <div className="space-y-2">
+              <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Rôle & Permissions</Label>
               <div className="relative">
-                <Shield className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Shield className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40" />
                 <select 
                   value={role}
                   onChange={(e) => setRole(e.target.value)}
-                  className="w-full h-12 pl-11 bg-muted/50 border-none rounded-xl text-sm font-bold outline-none appearance-none cursor-pointer"
+                  className="w-full h-11 pl-11 bg-muted/30 border-none rounded-2xl text-[10px] font-black uppercase tracking-widest outline-none appearance-none cursor-pointer hover:bg-muted/40 transition-colors"
                 >
                   <option value="Administrateur">Administrateur</option>
                   <option value="Rédacteur">Rédacteur</option>
@@ -133,9 +133,9 @@ export function UserForm({ initialData, mode, onClose }: UserFormProps) {
                 </select>
               </div>
             </div>
-            <div className="space-y-3">
-              <Label className="text-[10px] font-black text-muted-foreground uppercase tracking-[0.3em]">Statut du compte</Label>
-              <select className="w-full h-12 bg-muted/50 border-none rounded-xl px-4 text-sm font-bold outline-none appearance-none cursor-pointer">
+            <div className="space-y-2">
+              <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Statut du compte</Label>
+              <select className="w-full h-11 bg-muted/30 border-none rounded-2xl px-4 text-[10px] font-black uppercase tracking-widest outline-none appearance-none cursor-pointer hover:bg-muted/40 transition-colors">
                 <option value="actif">Actif</option>
                 <option value="inactif">Inactif</option>
               </select>
@@ -143,31 +143,30 @@ export function UserForm({ initialData, mode, onClose }: UserFormProps) {
           </div>
 
           {mode === "create" && (
-            <div className="p-4 rounded-2xl bg-primary/5 border border-primary/10 flex gap-4 items-start">
-              <Lock className="h-5 w-5 text-primary mt-1" />
-              <div>
-                <p className="text-xs font-bold text-primary uppercase tracking-wider">Sécurité</p>
-                <p className="text-muted-foreground text-[11px] leading-relaxed">
-                  Un email d'invitation sera envoyé à l'utilisateur pour qu'il puisse configurer son mot de passe de manière sécurisée.
-                </p>
+            <div className="p-4 rounded-2xl bg-primary/5 border-none flex gap-4 items-center">
+              <div className="p-2 rounded-xl bg-primary/10">
+                <Lock className="h-4 w-4 text-primary" />
               </div>
+              <p className="text-muted-foreground text-[10px] font-medium leading-tight">
+                Un email d'invitation sera envoyé pour configurer le mot de passe de manière sécurisée.
+              </p>
             </div>
           )}
         </div>
       </div>
 
-      <div className="flex items-center justify-end gap-4 pt-4 border-t border-border">
+      <div className="flex items-center justify-end gap-3 pt-4">
         {mode === "edit" && (
-          <Button variant="ghost" className="text-destructive hover:bg-destructive/10 hover:text-destructive font-black text-[10px] uppercase tracking-widest rounded-xl">
-            <Trash2 className="h-4 w-4 mr-2" /> Supprimer l'accès
+          <Button variant="ghost" className="h-11 px-6 text-destructive hover:bg-destructive/10 hover:text-destructive font-black text-[9px] uppercase tracking-widest rounded-2xl">
+            <Trash2 className="h-4 w-4 mr-2" /> Supprimer
           </Button>
         )}
         <Button 
           onClick={handleSave}
           disabled={isSaving}
-          className="h-12 px-8 font-black bg-primary text-white hover:bg-primary/90 rounded-xl shadow-lg shadow-primary/20 transition-all active:scale-95 text-[10px] uppercase tracking-widest"
+          className="h-11 px-10 font-black bg-primary text-white hover:bg-primary/90 rounded-2xl shadow-xl shadow-primary/10 transition-all active:scale-95 text-[9px] uppercase tracking-widest"
         >
-          {isSaving ? "Traitement..." : (mode === "create" ? "Envoyer l'invitation" : "Enregistrer les modifications")}
+          {isSaving ? "Traitement..." : (mode === "create" ? "Envoyer l'invitation" : "Enregistrer")}
         </Button>
       </div>
     </div>

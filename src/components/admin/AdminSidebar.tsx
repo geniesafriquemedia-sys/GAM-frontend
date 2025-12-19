@@ -26,14 +26,30 @@ const menuItems = [
   { icon: FileText, label: "Articles", href: "/admin/articles" },
   { icon: Video, label: "Web TV", href: "/admin/web-tv" },
   { icon: Users, label: "Utilisateurs", href: "/admin/users" },
-  { icon: Shield, label: "Permissions", href: "/admin/roles" },
   { icon: BarChart3, label: "Analyses", href: "/admin/analytics" },
-  { icon: Settings, label: "Paramètres", href: "/admin/settings" },
+  { 
+    icon: Settings, 
+    label: "Paramètres", 
+    href: "/admin/settings",
+    subItems: [
+      { label: "Général", href: "/admin/settings" },
+      { label: "Rôles & Permissions", href: "/admin/settings/roles" },
+    ]
+  },
 ];
 
 export function AdminSidebar() {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
+  const [expandedMenus, setExpandedMenus] = useState<string[]>(["Paramètres"]);
+
+  const toggleMenu = (label: string) => {
+    setExpandedMenus(prev => 
+      prev.includes(label) 
+        ? prev.filter(l => l !== label) 
+        : [...prev, label]
+    );
+  };
 
   return (
     <>
@@ -74,29 +90,70 @@ export function AdminSidebar() {
         <div className="space-y-1">
           <p className="px-4 text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.3em] mb-4">Navigation</p>
           {menuItems.map((item) => {
-            const isActive = pathname === item.href;
+            const hasSubItems = item.subItems && item.subItems.length > 0;
+            const isExpanded = expandedMenus.includes(item.label);
+            const isActive = pathname === item.href || (hasSubItems && item.subItems?.some(sub => pathname === sub.href));
+            
             return (
-              <Link 
-                key={item.href} 
-                href={item.href}
-                onClick={() => setIsOpen(false)}
-                className={cn(
-                  "group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 relative",
-                  isActive 
-                    ? "text-white" 
-                    : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+              <div key={item.label} className="space-y-1">
+                {hasSubItems ? (
+                  <button
+                    onClick={() => toggleMenu(item.label)}
+                    className={cn(
+                      "group w-full flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 relative",
+                      isActive 
+                        ? "text-primary bg-primary/5" 
+                        : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                    )}
+                  >
+                    <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110 relative z-10", isActive ? "text-primary" : "text-primary/40 group-hover:text-primary")} />
+                    <span className="font-black text-[10px] uppercase tracking-widest relative z-10 flex-1 text-left">{item.label}</span>
+                    <ChevronRight className={cn("h-3 w-3 transition-transform duration-300", isExpanded && "rotate-90")} />
+                  </button>
+                ) : (
+                  <Link 
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={cn(
+                      "group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 relative",
+                      isActive 
+                        ? "text-white" 
+                        : "text-muted-foreground hover:text-primary hover:bg-primary/5"
+                    )}
+                  >
+                    <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110 relative z-10", isActive ? "text-white" : "text-primary/40 group-hover:text-primary")} />
+                    <span className="font-black text-[10px] uppercase tracking-widest relative z-10">{item.label}</span>
+                    {isActive && (
+                      <motion.div 
+                        layoutId="active-pill" 
+                        className="absolute inset-0 bg-primary rounded-2xl shadow-xl shadow-primary/20"
+                        transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                      />
+                    )}
+                  </Link>
                 )}
-              >
-                <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110 relative z-10", isActive ? "text-white" : "text-primary/40 group-hover:text-primary")} />
-                <span className="font-black text-[10px] uppercase tracking-widest relative z-10">{item.label}</span>
-                {isActive && (
-                  <motion.div 
-                    layoutId="active-pill" 
-                    className="absolute inset-0 bg-primary rounded-2xl shadow-xl shadow-primary/20"
-                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
-                  />
+
+                {hasSubItems && isExpanded && (
+                  <div className="ml-12 space-y-1 border-l border-border/50 pl-4 py-2">
+                    {item.subItems?.map((subItem) => {
+                      const isSubActive = pathname === subItem.href;
+                      return (
+                        <Link
+                          key={subItem.href}
+                          href={subItem.href}
+                          onClick={() => setIsOpen(false)}
+                          className={cn(
+                            "block py-2 text-[9px] font-black uppercase tracking-widest transition-colors",
+                            isSubActive ? "text-primary" : "text-muted-foreground hover:text-primary"
+                          )}
+                        >
+                          {subItem.label}
+                        </Link>
+                      );
+                    })}
+                  </div>
                 )}
-              </Link>
+              </div>
             );
           })}
         </div>

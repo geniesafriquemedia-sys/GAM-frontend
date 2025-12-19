@@ -289,7 +289,7 @@ export default function Home() {
                   <Link href="/categories/tech">Voir tous les dossiers</Link>
                 </Button>
               </motion.div>
-            </div>
+            </motion.div>
           </div>
         </motion.div>
       </section>
@@ -300,21 +300,25 @@ export default function Home() {
       {/* Culture & Society Grid - Modern Tabbed/Split Layout */}
       <section className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
-          <div className="space-y-12">
-            <div className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariants}
+            className="space-y-12"
+          >
+            <motion.div variants={itemVariants} className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
               <div className="space-y-1">
                 <h2 className="text-4xl font-black tracking-tighter">Culture.</h2>
                 <div className="h-1.5 w-12 bg-primary rounded-full" />
               </div>
               <Link href="/categories/culture" className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity">Tout voir</Link>
-            </div>
+            </motion.div>
             <div className="grid gap-14">
               {latestArticles.slice(1, 3).map((article, index) => (
                 <motion.div 
                   key={article.id} 
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  variants={itemVariants}
                   className="group flex gap-8 items-center"
                 >
                   <div className="relative h-36 w-36 md:h-48 md:w-48 shrink-0 overflow-hidden rounded-[3rem] shadow-xl group-hover:shadow-primary/10 transition-shadow">
@@ -334,23 +338,27 @@ export default function Home() {
                 </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
 
-          <div className="space-y-12">
-            <div className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
+          <motion.div 
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariants}
+            className="space-y-12"
+          >
+            <motion.div variants={itemVariants} className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
               <div className="space-y-1">
                 <h2 className="text-4xl font-black tracking-tighter">Société.</h2>
                 <div className="h-1.5 w-12 bg-secondary rounded-full" />
               </div>
               <Link href="/categories/societe" className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity">Tout voir</Link>
-            </div>
+            </motion.div>
             <div className="grid gap-14">
               {latestArticles.slice(2, 4).map((article, index) => (
                 <motion.div 
                   key={article.id} 
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  variants={itemVariants}
                   className="group flex gap-8 items-center"
                 >
                   <div className="relative h-36 w-36 md:h-48 md:w-48 shrink-0 overflow-hidden rounded-[3rem] shadow-xl group-hover:shadow-secondary/10 transition-shadow">
@@ -370,7 +378,7 @@ export default function Home() {
                 </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
     </div>

@@ -36,11 +36,13 @@ interface VideoFormProps {
   onClose?: () => void;
 }
 
-export function VideoForm({ initialData, mode, onClose }: VideoFormProps) {
-  const [title, setTitle] = useState(initialData?.title || "");
-  const [url, setUrl] = useState(initialData?.url || "");
-  const [description, setDescription] = useState(initialData?.description || "");
-  const [isSaving, setIsSaving] = useState(false);
+  export function VideoForm({ initialData, mode, onClose }: VideoFormProps) {
+    const [title, setTitle] = useState(initialData?.title || "");
+    const [url, setUrl] = useState(initialData?.url || "");
+    const [description, setDescription] = useState(initialData?.description || "");
+    const [status, setStatus] = useState(initialData?.status || "brouillon");
+    const [scheduledDate, setScheduledDate] = useState("");
+    const [isSaving, setIsSaving] = useState(false);
 
   const handleSave = () => {
     setIsSaving(true);

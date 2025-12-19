@@ -43,6 +43,8 @@ export function ArticleForm({ initialData, mode }: ArticleFormProps) {
   const [title, setTitle] = useState(initialData?.title || "");
   const [content, setContent] = useState(initialData?.content || "");
   const [category, setCategory] = useState(initialData?.category || "");
+  const [status, setStatus] = useState("draft");
+  const [scheduledDate, setScheduledDate] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
 

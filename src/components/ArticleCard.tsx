@@ -93,4 +93,3 @@ export function ArticleCard({ id, title, excerpt, category, date, image, readTim
     </motion.article>
   );
 }
-

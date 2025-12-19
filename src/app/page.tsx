@@ -91,17 +91,17 @@ export default function Home() {
       </section>
 
       {/* Web TV Preview Section */}
-      <section className="bg-zinc-950 py-24 text-white overflow-hidden">
+      <section className="bg-foreground py-24 text-background overflow-hidden">
         <div className="container mx-auto px-4">
           <div className="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-8">
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-accent font-black uppercase tracking-[0.2em] text-xs">
-                <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+              <div className="flex items-center gap-2 text-secondary font-black uppercase tracking-[0.2em] text-xs">
+                <div className="h-2 w-2 rounded-full bg-secondary animate-pulse" />
                 <span>GAM TV LIVE</span>
               </div>
               <h2 className="text-4xl md:text-6xl font-black tracking-tighter">L'Afrique en images.</h2>
             </div>
-            <Button asChild className="rounded-full h-14 px-10 font-bold bg-white text-black hover:bg-zinc-200">
+            <Button asChild className="rounded-full h-14 px-10 font-bold bg-background text-foreground hover:bg-background/90">
               <Link href="/web-tv">Accéder à la Web TV</Link>
             </Button>
           </div>
@@ -109,18 +109,18 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {videos.map((video) => (
               <Link key={video.id} href={`/web-tv/${video.id}`} className="group relative flex flex-col gap-4">
-                <div className="relative aspect-video overflow-hidden rounded-[2rem] bg-zinc-900 shadow-2xl">
+                <div className="relative aspect-video overflow-hidden rounded-[2rem] bg-background/10 shadow-2xl">
                   <Image src={video.thumbnail} alt={video.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-70" />
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="h-16 w-16 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/30 transition-transform duration-300 group-hover:scale-110">
-                      <Play className="h-6 w-6 fill-white text-white translate-x-0.5" />
+                    <div className="h-16 w-16 flex items-center justify-center rounded-full bg-background/20 backdrop-blur-md border border-background/30 transition-transform duration-300 group-hover:scale-110">
+                      <Play className="h-6 w-6 fill-background text-background translate-x-0.5" />
                     </div>
                   </div>
-                  <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest">
+                  <div className="absolute bottom-4 right-4 bg-foreground/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest">
                     {video.duration}
                   </div>
                 </div>
-                <h3 className="text-xl font-black leading-tight tracking-tight group-hover:text-accent transition-colors">
+                <h3 className="text-xl font-black leading-tight tracking-tight group-hover:text-secondary transition-colors">
                   {video.title}
                 </h3>
               </Link>

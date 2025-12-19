@@ -15,7 +15,8 @@ import {
   X,
   History,
   Trash2,
-  ArrowLeft
+  ArrowLeft,
+  Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";

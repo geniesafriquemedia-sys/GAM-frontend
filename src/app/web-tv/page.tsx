@@ -62,11 +62,11 @@ export default function WebTVPage() {
         <div className="container mx-auto px-4 h-full flex flex-col justify-end pb-24 relative z-10">
           <div className="max-w-4xl space-y-8">
             <div className="flex items-center gap-3">
-              <Badge className="bg-primary text-white border-none px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40">
-                À LA UNE • WEB TV
+              <Badge className="bg-red-600 text-white border-none px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-red-600/40">
+                À LA UNE • YOUTUBE INTÉGRAL
               </Badge>
-              <div className="flex items-center gap-2 text-accent font-black text-[10px] uppercase tracking-widest">
-                <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+              <div className="flex items-center gap-2 text-red-500 font-black text-[10px] uppercase tracking-widest">
+                <div className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
                 <span>En direct</span>
               </div>
             </div>
@@ -80,13 +80,13 @@ export default function WebTVPage() {
             </p>
 
             <div className="flex flex-wrap items-center gap-6 pt-4">
-              <Button size="lg" className="h-16 px-10 rounded-3xl bg-white text-black hover:bg-zinc-200 font-black uppercase tracking-widest text-xs shadow-2xl shadow-white/10" asChild>
+              <Button size="lg" className="h-16 px-10 rounded-3xl bg-red-600 text-white hover:bg-red-700 font-black uppercase tracking-widest text-xs shadow-2xl shadow-red-600/20" asChild>
                 <Link href={`/web-tv/${featuredVideo.id}`}>
-                  <Play className="mr-3 h-5 w-5 fill-black" /> Regarder maintenant
+                  <Play className="mr-3 h-5 w-5 fill-white" /> Regarder maintenant
                 </Link>
               </Button>
               <Button size="lg" variant="outline" className="h-16 px-8 rounded-3xl border-white/20 hover:bg-white/10 font-black uppercase tracking-widest text-xs transition-all">
-                <Info className="mr-3 h-5 w-5" /> Plus d'infos
+                <Info className="mr-3 h-5 w-5" /> Détails de la vidéo
               </Button>
             </div>
           </div>
@@ -97,11 +97,11 @@ export default function WebTVPage() {
       <section className="container mx-auto px-4 mt-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
+            <div className="flex items-center gap-2 text-red-600 font-black uppercase tracking-[0.2em] text-xs">
               <Tv className="h-4 w-4" />
-              <span>Contenus originaux</span>
+              <span>Univers YouTube</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter">Toutes nos émissions.</h2>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter">L'intégralité de nos vidéos.</h2>
           </div>
           <div className="flex items-center gap-4">
              <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-white/5">

@@ -127,23 +127,43 @@ interface VideoFormProps {
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Durée</Label>
-              <div className="relative">
-                <Clock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40" />
-                <Input placeholder="12:45" className="pl-11 h-11 rounded-2xl bg-muted/30 border-none font-semibold text-sm focus-visible:ring-1 focus-visible:ring-primary/20" />
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Durée</Label>
+                <div className="relative">
+                  <Clock className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40" />
+                  <Input placeholder="12:45" className="pl-11 h-11 rounded-2xl bg-muted/30 border-none font-semibold text-sm focus-visible:ring-1 focus-visible:ring-primary/20" />
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Statut</Label>
+                <select 
+                  value={status}
+                  onChange={(e) => setStatus(e.target.value)}
+                  className="w-full h-11 bg-muted/30 border-none rounded-2xl px-4 text-[10px] font-black uppercase tracking-widest outline-none appearance-none cursor-pointer hover:bg-muted/40 transition-colors"
+                >
+                  <option value="publie">Publié</option>
+                  <option value="brouillon">Brouillon</option>
+                  <option value="planifie">Planifié</option>
+                </select>
               </div>
             </div>
-            <div className="space-y-2">
-              <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Statut</Label>
-              <select className="w-full h-11 bg-muted/30 border-none rounded-2xl px-4 text-[10px] font-black uppercase tracking-widest outline-none appearance-none cursor-pointer hover:bg-muted/40 transition-colors">
-                <option value="publie">Publié</option>
-                <option value="brouillon">Brouillon</option>
-              </select>
-            </div>
+
+            {status === "planifie" && (
+              <div className="space-y-2">
+                <Label className="text-[9px] font-black text-muted-foreground uppercase tracking-widest">Date de publication</Label>
+                <div className="relative">
+                  <Calendar className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-primary/40" />
+                  <Input 
+                    type="datetime-local"
+                    value={scheduledDate}
+                    onChange={(e) => setScheduledDate(e.target.value)}
+                    className="pl-11 h-11 rounded-2xl bg-muted/30 border-none font-semibold text-sm focus-visible:ring-1 focus-visible:ring-primary/20" 
+                  />
+                </div>
+              </div>
+            )}
           </div>
-        </div>
       </div>
 
       <div className="flex items-center justify-end gap-3 pt-4">

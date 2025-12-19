@@ -65,15 +65,20 @@ export function AdminSidebar() {
 
       <div className="p-6 border-t border-white/5">
         <div className="bg-white/5 rounded-[2rem] p-6 space-y-6">
-          <div className="flex items-center gap-4">
-            <div className="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/30">
-              <span className="text-primary font-black text-lg">AD</span>
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 rounded-2xl bg-primary/20 flex items-center justify-center border border-primary/30 relative overflow-hidden group">
+                <img 
+                  src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=200&h=200&fit=crop" 
+                  alt="Admin" 
+                  className="object-cover h-full w-full opacity-80 group-hover:opacity-100 transition-opacity"
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-black text-white truncate">Amadou Diallo</p>
+                <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest truncate">Directeur de Publication</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-black text-white truncate">Admin GAM</p>
-              <p className="text-[10px] text-white/40 font-bold uppercase tracking-widest truncate">Rédacteur en Chef</p>
-            </div>
-          </div>
+
           <Link 
             href="/login" 
             className="flex items-center justify-center gap-2 w-full py-4 rounded-xl border border-white/10 text-white/60 font-black text-xs uppercase tracking-[0.2em] hover:bg-red-600/10 hover:border-red-600/30 hover:text-red-500 transition-all group"

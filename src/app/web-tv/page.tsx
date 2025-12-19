@@ -48,25 +48,25 @@ export default function WebTVPage() {
   const featuredVideo = videos[0];
 
   return (
-    <div className="bg-zinc-950 text-white min-h-screen pb-24">
+    <div className="bg-background text-foreground min-h-screen pb-24">
       {/* Immersive Hero */}
       <section className="relative h-[90vh] w-full overflow-hidden">
         <Image 
           src={featuredVideo.thumbnail} 
           alt={featuredVideo.title} 
           fill 
-          className="object-cover opacity-40 scale-105 blur-sm"
+          className="object-cover opacity-60 scale-105 blur-sm"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
         
         <div className="container mx-auto px-4 h-full flex flex-col justify-end pb-24 relative z-10">
           <div className="max-w-4xl space-y-8">
             <div className="flex items-center gap-3">
-              <Badge className="bg-red-600 text-white border-none px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-red-600/40">
+              <Badge className="bg-primary text-white border-none px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40">
                 À LA UNE • YOUTUBE INTÉGRAL
               </Badge>
-              <div className="flex items-center gap-2 text-red-500 font-black text-[10px] uppercase tracking-widest">
-                <div className="h-2 w-2 rounded-full bg-red-600 animate-pulse" />
+              <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
+                <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
                 <span>En direct</span>
               </div>
             </div>
@@ -75,17 +75,17 @@ export default function WebTVPage() {
               {featuredVideo.title}
             </h1>
             
-            <p className="text-xl md:text-2xl text-zinc-400 font-medium leading-tight max-w-2xl">
+            <p className="text-xl md:text-2xl text-muted-foreground font-medium leading-tight max-w-2xl">
               {featuredVideo.description}
             </p>
 
             <div className="flex flex-wrap items-center gap-6 pt-4">
-              <Button size="lg" className="h-16 px-10 rounded-3xl bg-red-600 text-white hover:bg-red-700 font-black uppercase tracking-widest text-xs shadow-2xl shadow-red-600/20" asChild>
+              <Button size="lg" className="h-16 px-10 rounded-3xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/20" asChild>
                 <Link href={`/web-tv/${featuredVideo.id}`}>
                   <Play className="mr-3 h-5 w-5 fill-white" /> Regarder maintenant
                 </Link>
               </Button>
-              <Button size="lg" variant="outline" className="h-16 px-8 rounded-3xl border-white/20 hover:bg-white/10 font-black uppercase tracking-widest text-xs transition-all">
+              <Button size="lg" variant="outline" className="h-16 px-8 rounded-3xl border-border hover:bg-muted font-black uppercase tracking-widest text-xs transition-all">
                 <Info className="mr-3 h-5 w-5" /> Détails de la vidéo
               </Button>
             </div>
@@ -97,17 +97,17 @@ export default function WebTVPage() {
       <section className="container mx-auto px-4 mt-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="space-y-4">
-            <div className="flex items-center gap-2 text-red-600 font-black uppercase tracking-[0.2em] text-xs">
+            <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
               <Tv className="h-4 w-4" />
               <span>Univers YouTube</span>
             </div>
             <h2 className="text-4xl md:text-6xl font-black tracking-tighter">L'intégralité de nos vidéos.</h2>
           </div>
           <div className="flex items-center gap-4">
-             <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-white/5">
+             <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-border hover:bg-muted">
                 Plus récents
              </Button>
-             <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-white/5">
+             <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-border hover:bg-muted">
                 Populaires
              </Button>
           </div>
@@ -122,32 +122,33 @@ export default function WebTVPage() {
 
       {/* Playlist Section */}
       <section className="container mx-auto px-4 mt-40">
-        <div className="rounded-[4rem] bg-zinc-900 p-12 md:p-24 border border-white/5 relative overflow-hidden">
+        <div className="rounded-[4rem] bg-card p-12 md:p-24 border border-border relative overflow-hidden">
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-8">
                <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.9]">Ne manquez <br/>aucun direct.</h2>
-               <p className="text-xl text-zinc-400 font-medium leading-relaxed">
+               <p className="text-xl text-muted-foreground font-medium leading-relaxed">
                  Abonnez-vous à nos alertes pour recevoir une notification dès que nous passons en direct ou publions un nouveau reportage exclusif.
                </p>
-               <div className="flex gap-4">
+               <div className="flex flex-col sm:flex-row gap-4">
                  <input 
                    placeholder="Votre adresse email" 
-                   className="flex-1 bg-zinc-800 border-none rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-primary outline-none"
+                   className="flex-1 bg-muted border border-border rounded-2xl px-6 py-4 text-foreground focus:ring-2 focus:ring-primary outline-none"
                  />
-                 <Button className="h-14 px-10 rounded-2xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-xs">
+                 <Button className="h-14 px-10 rounded-2xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
                    S'abonner
                  </Button>
                </div>
             </div>
             <div className="grid grid-cols-2 gap-4">
                {[1,2,3,4].map(i => (
-                 <div key={i} className="aspect-square rounded-3xl bg-zinc-800 animate-pulse" />
+                 <div key={i} className="aspect-square rounded-3xl bg-muted animate-pulse" />
                ))}
             </div>
           </div>
-          <div className="absolute top-0 right-0 h-full w-1/3 bg-primary/10 blur-[100px] -z-10" />
+          <div className="absolute top-0 right-0 h-full w-1/3 bg-primary/5 blur-[100px] -z-10" />
         </div>
       </section>
     </div>
   );
+}
 }

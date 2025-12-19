@@ -12,14 +12,13 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const pathname = usePathname();
 
-  const navLinks = [
-    { name: "Accueil", href: "/" },
-    { name: "Actualités", href: "/actualites" },
-    { name: "Web TV", href: "/web-tv", isLive: true },
-    { name: "Tech", href: "/categories/tech" },
-    { name: "Société", href: "/categories/societe" },
-    { name: "Culture", href: "/categories/culture" },
-  ];
+    const navLinks = [
+      { name: "Accueil", href: "/" },
+      { name: "Actualités", href: "/actualites" },
+      { name: "Web TV", href: "/web-tv", isLive: true },
+      { name: "À Propos", href: "/about" },
+      { name: "Contact", href: "/contact" },
+    ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-xl">

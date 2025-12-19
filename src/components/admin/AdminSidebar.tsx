@@ -5,15 +5,16 @@ import {
   FileText, 
   Users, 
   Settings, 
-  LogOut, 
-  ChevronRight,
-  Sparkles,
-  BarChart3,
-  Video,
-  Menu,
-  X,
-  Shield
-} from "lucide-react";
+    LogOut, 
+    ChevronRight,
+    Sparkles,
+    BarChart3,
+    Video,
+    Calendar,
+    Menu,
+    X,
+    Shield
+  } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";

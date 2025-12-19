@@ -123,30 +123,41 @@ export default function AdminArticlesPage() {
                       <Eye className="h-4 w-4 text-muted-foreground" /> {article.views}
                     </div>
                   </td>
-                  <td className="px-8 py-5 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <Button asChild variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground">
-                        <Link href={`/admin/articles/${article.id}`}><Edit2 className="h-4 w-4" /></Link>
-                      </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground">
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="w-56 bg-card border-border rounded-2xl p-2 shadow-2xl">
-                          <DropdownMenuItem className="rounded-xl focus:bg-muted focus:text-foreground p-3 cursor-pointer group">
-                            <ExternalLink className="mr-3 h-4 w-4 text-muted-foreground group-hover:text-primary" />
-                            <span className="text-[10px] font-black uppercase tracking-widest">Voir sur le site</span>
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="rounded-xl focus:bg-destructive/10 focus:text-destructive p-3 cursor-pointer group">
-                            <Trash2 className="mr-3 h-4 w-4 text-muted-foreground group-hover:text-destructive" />
-                            <span className="text-[10px] font-black uppercase tracking-widest text-destructive">Supprimer définitivement</span>
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </td>
+                    <td className="px-8 py-5 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <Button asChild variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground">
+                          <Link href={`/admin/articles/${article.id}`}><Edit2 className="h-4 w-4" /></Link>
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl hover:bg-muted text-muted-foreground hover:text-foreground">
+                              <MoreVertical className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-56 bg-card border-border rounded-2xl p-2 shadow-2xl">
+                            <DropdownMenuItem 
+                              onClick={() => toast.info(`Aperçu de : ${article.title}`)}
+                              className="rounded-xl focus:bg-muted focus:text-foreground p-3 cursor-pointer group"
+                            >
+                              <ExternalLink className="mr-3 h-4 w-4 text-muted-foreground group-hover:text-primary" />
+                              <span className="text-[10px] font-black uppercase tracking-widest">Voir sur le site</span>
+                            </DropdownMenuItem>
+                            <div className="px-1 py-1">
+                              <ConfirmDelete 
+                                onConfirm={() => toast.success(`Article "${article.title}" supprimé avec succès`)}
+                                trigger={
+                                  <div className="flex items-center rounded-xl hover:bg-destructive/10 hover:text-destructive p-3 cursor-pointer group transition-colors">
+                                    <Trash2 className="mr-3 h-4 w-4 text-muted-foreground group-hover:text-destructive" />
+                                    <span className="text-[10px] font-black uppercase tracking-widest text-destructive">Supprimer définitivement</span>
+                                  </div>
+                                }
+                              />
+                            </div>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </td>
+
                 </tr>
               ))}
             </tbody>

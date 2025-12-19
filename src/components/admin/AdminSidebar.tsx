@@ -57,18 +57,22 @@ export function AdminSidebar() {
         />
       )}
 
-      <aside className={cn(
-        "fixed inset-y-0 left-0 w-64 bg-card border-r border-border flex flex-col h-screen z-[95] transition-transform duration-500 lg:translate-x-0 lg:static",
-        isOpen ? "translate-x-0" : "-translate-x-full"
-      )}>
-        <div className="p-6">
-          <Link href="/" className="text-2xl font-black tracking-tighter text-foreground flex items-center gap-2">
-            GAM<span className="text-primary italic">.admin</span>
-          </Link>
-        </div>
+    <aside className={cn(
+      "fixed inset-y-0 left-0 w-72 bg-background/80 backdrop-blur-3xl border-r border-border/50 flex flex-col h-screen z-[95] transition-transform duration-500 lg:translate-x-0 lg:static",
+      isOpen ? "translate-x-0" : "-translate-x-full"
+    )}>
+      <div className="p-8">
+        <Link href="/" className="flex items-center gap-3 group">
+          <div className="h-10 w-10 rounded-xl bg-primary flex items-center justify-center shadow-lg shadow-primary/20 transition-transform group-hover:scale-110">
+            <span className="text-white font-black text-xl italic">G</span>
+          </div>
+          <span className="text-xl font-black tracking-tighter text-foreground uppercase italic leading-none group-hover:text-primary transition-colors">GAM<span className="text-primary/50">.admin</span></span>
+        </Link>
+      </div>
 
-        <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar">
-          <p className="px-4 text-[9px] font-black text-muted-foreground uppercase tracking-[0.3em] mb-4 mt-2">Menu Principal</p>
+      <nav className="flex-1 px-6 space-y-8 overflow-y-auto custom-scrollbar pt-4">
+        <div className="space-y-1">
+          <p className="px-4 text-[9px] font-black text-muted-foreground/40 uppercase tracking-[0.3em] mb-4">Navigation</p>
           {menuItems.map((item) => {
             const isActive = pathname === item.href;
             return (
@@ -77,23 +81,27 @@ export function AdminSidebar() {
                 href={item.href}
                 onClick={() => setIsOpen(false)}
                 className={cn(
-                  "group flex items-center justify-between px-4 py-2.5 rounded-xl transition-all duration-300",
+                  "group flex items-center gap-4 px-4 py-3 rounded-2xl transition-all duration-300 relative",
                   isActive 
-                    ? "bg-primary text-white shadow-lg shadow-primary/20" 
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                    ? "text-white" 
+                    : "text-muted-foreground hover:text-primary hover:bg-primary/5"
                 )}
               >
-                <div className="flex items-center gap-3">
-                  <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110", isActive ? "text-white" : "text-muted-foreground group-hover:text-primary")} />
-                  <span className="font-black text-xs uppercase tracking-widest">{item.label}</span>
-                </div>
+                <item.icon className={cn("h-4 w-4 transition-transform group-hover:scale-110 relative z-10", isActive ? "text-white" : "text-primary/40 group-hover:text-primary")} />
+                <span className="font-black text-[10px] uppercase tracking-widest relative z-10">{item.label}</span>
                 {isActive && (
-                  <motion.div layoutId="active" className="h-1 w-1 rounded-full bg-white" />
+                  <motion.div 
+                    layoutId="active-pill" 
+                    className="absolute inset-0 bg-primary rounded-2xl shadow-xl shadow-primary/20"
+                    transition={{ type: "spring", bounce: 0.2, duration: 0.6 }}
+                  />
                 )}
               </Link>
             );
           })}
-        </nav>
+        </div>
+      </nav>
+
 
         <div className="p-4 border-t border-border">
           <div className="bg-muted rounded-2xl p-4 space-y-4">

@@ -73,12 +73,22 @@ export function ArticleForm({ initialData, mode }: ArticleFormProps) {
           </div>
         </div>
         
-        <div className="flex items-center gap-4">
-          <Button variant="ghost" className="rounded-2xl h-12 px-8 font-black text-foreground hover:bg-muted border border-transparent hover:border-border transition-all uppercase tracking-widest text-[10px]">
-            <Eye className="mr-2 h-4 w-4" /> {mode === "create" ? "Prévisualiser" : "Voir"}
-          </Button>
-          <Button 
-            onClick={handleSave}
+          <div className="flex items-center gap-4">
+            <ArticlePreview 
+              data={{
+                title,
+                content,
+                category,
+                image: initialData?.image || "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=2000&auto=format&fit=crop",
+              }}
+              trigger={
+                <Button variant="ghost" className="rounded-2xl h-12 px-8 font-black text-foreground hover:bg-muted border border-transparent hover:border-border transition-all uppercase tracking-widest text-[10px]">
+                  <Eye className="mr-2 h-4 w-4" /> {mode === "create" ? "Prévisualiser" : "Voir"}
+                </Button>
+              }
+            />
+            <Button 
+              onClick={handleSave}
             className="rounded-2xl h-12 px-8 font-black bg-primary text-white hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-[10px]"
             disabled={isSaving}
           >

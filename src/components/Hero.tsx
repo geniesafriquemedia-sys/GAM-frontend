@@ -27,20 +27,16 @@ export function Hero({ article }: HeroProps) {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="relative min-h-[650px] md:min-h-[800px] w-full overflow-hidden rounded-[3rem] md:rounded-[4rem] bg-foreground text-background shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)]"
         >
-          <div className="absolute inset-0">
-            <Image
-              src={article.image}
-              alt={article.title}
-              fill
-              className="object-cover opacity-50 transition-transform duration-[2s] group-hover:scale-105"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/30 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-foreground/80 via-foreground/20 to-transparent md:block hidden" />
-            
-            {/* Texture Overlay */}
-            <div className="absolute inset-0 opacity-[0.03] pointer-events-none bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]" />
-          </div>
+            <div className="absolute inset-0">
+              <Image
+                src={article.image}
+                alt={article.title}
+                fill
+                className="object-cover opacity-60 transition-transform duration-[2s]"
+                priority
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+            </div>
           
           <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-20 lg:p-24">
             <div className="max-w-4xl space-y-10">

@@ -238,30 +238,41 @@ export default function Home() {
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+            <motion.div 
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              variants={containerVariants}
+              className="grid grid-cols-1 lg:grid-cols-3 gap-12"
+            >
               <div className="lg:col-span-2">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <ArticleCard 
-                    id="5"
-                    title="Tech : Startups à suivre en 2024"
-                    excerpt="Notre sélection des pépites technologiques qui vont faire bouger les lignes l'année prochaine."
-                    category="Tech"
-                    date="09 Oct 2023"
-                    image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop"
-                    readTime="7 min"
-                  />
-                  <ArticleCard 
-                    id="1"
-                    title="L'émergence des Smart Cities"
-                    excerpt="Kigali s'impose comme un modèle de développement urbain technologique sur le continent."
-                    category="Technologie"
-                    date="13 Oct 2023"
-                    image="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=1000&auto=format&fit=crop"
-                    readTime="8 min"
-                  />
+                  <motion.div variants={itemVariants}>
+                    <ArticleCard 
+                      id="5"
+                      title="Tech : Startups à suivre en 2024"
+                      excerpt="Notre sélection des pépites technologiques qui vont faire bouger les lignes l'année prochaine."
+                      category="Tech"
+                      date="09 Oct 2023"
+                      image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop"
+                      readTime="7 min"
+                    />
+                  </motion.div>
+                  <motion.div variants={itemVariants}>
+                    <ArticleCard 
+                      id="1"
+                      title="L'émergence des Smart Cities"
+                      excerpt="Kigali s'impose comme un modèle de développement urbain technologique sur le continent."
+                      category="Technologie"
+                      date="13 Oct 2023"
+                      image="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=1000&auto=format&fit=crop"
+                      readTime="8 min"
+                    />
+                  </motion.div>
                 </div>
               </div>
               <motion.div 
+                variants={itemVariants}
                 whileHover={{ y: -10 }}
                 className="flex flex-col justify-between p-12 rounded-[3.5rem] bg-primary text-primary-foreground shadow-2xl shadow-primary/20 relative overflow-hidden"
               >

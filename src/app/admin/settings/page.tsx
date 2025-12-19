@@ -15,10 +15,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { toast } from "sonner";
+import { ConfirmDelete } from "@/components/admin/ConfirmDelete";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function AdminSettingsPage() {
+  const handleSave = () => {
+    toast.success("Paramètres enregistrés avec succès !");
+  };
+
   return (
     <div className="space-y-12">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-12">
@@ -27,7 +32,10 @@ export default function AdminSettingsPage() {
           <p className="text-[10px] text-muted-foreground font-bold uppercase tracking-[0.3em]">Configurez votre espace et le site</p>
         </div>
         
-        <Button className="rounded-2xl h-12 px-8 font-black bg-primary text-white hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-[10px]">
+        <Button 
+          onClick={handleSave}
+          className="rounded-2xl h-12 px-8 font-black bg-primary text-white hover:bg-primary/90 shadow-2xl shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95 uppercase tracking-widest text-[10px]"
+        >
           <Save className="mr-2 h-4 w-4" /> Enregistrer les changements
         </Button>
       </header>

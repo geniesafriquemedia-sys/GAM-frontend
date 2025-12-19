@@ -135,16 +135,27 @@ export default function UsersAdmin() {
                       {user.joined}
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors">
-                        <Edit2 className="h-4 w-4" />
-                      </Button>
-                      <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </td>
+                    <td className="px-6 py-4 text-right">
+                      <div className="flex items-center justify-end gap-1">
+                        <Button 
+                          onClick={() => toast.info(`Modification de l'utilisateur : ${user.name}`)}
+                          variant="ghost" 
+                          size="icon" 
+                          className="h-9 w-9 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+                        >
+                          <Edit2 className="h-4 w-4" />
+                        </Button>
+                        <ConfirmDelete 
+                          onConfirm={() => toast.success(`Utilisateur "${user.name}" supprimé`)}
+                          trigger={
+                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors">
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          }
+                        />
+                      </div>
+                    </td>
+
                 </motion.tr>
               ))}
             </tbody>

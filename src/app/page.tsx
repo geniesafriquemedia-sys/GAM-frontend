@@ -167,13 +167,17 @@ export default function Home() {
             </div>
             
             <div className="lg:col-span-7">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <motion.div 
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                variants={containerVariants}
+                className="grid grid-cols-1 md:grid-cols-2 gap-6"
+              >
                 {videos.slice(0, 2).map((video, index) => (
                   <motion.div
                     key={video.id}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: index * 0.2 }}
+                    variants={itemVariants}
                     className={`group relative overflow-hidden rounded-[3rem] bg-white/5 border border-white/10 ${index === 1 ? 'md:translate-y-12' : ''}`}
                   >
                     <Link href={`/web-tv/${video.id}`} className="block">
@@ -199,7 +203,7 @@ export default function Home() {
                     </Link>
                   </motion.div>
                 ))}
-              </div>
+              </motion.div>
             </div>
           </div>
         </div>

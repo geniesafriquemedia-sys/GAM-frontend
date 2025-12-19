@@ -126,10 +126,25 @@ export default function AdminSettingsPage() {
                 <p className="font-black text-destructive uppercase tracking-tighter text-xl italic">Zone de Danger</p>
                 <p className="text-[10px] text-destructive/60 font-bold uppercase tracking-widest">Actions irréversibles pour votre instance</p>
               </div>
-              <div className="flex flex-wrap justify-center gap-4">
-                <Button variant="ghost" className="rounded-xl border border-destructive/20 text-destructive font-black uppercase tracking-widest text-[9px] h-12 px-8 hover:bg-destructive/10 transition-all">Vider le cache</Button>
-                <Button className="rounded-xl bg-destructive text-white font-black uppercase tracking-widest text-[9px] h-12 px-8 hover:bg-destructive/90 transition-all">Réinitialiser le site</Button>
-              </div>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <ConfirmDelete 
+                    onConfirm={() => toast.success("Cache vidé avec succès")}
+                    title="Vider le cache ?"
+                    description="Cette action peut ralentir temporairement le chargement du site."
+                    trigger={
+                      <Button variant="ghost" className="rounded-xl border border-destructive/20 text-destructive font-black uppercase tracking-widest text-[9px] h-12 px-8 hover:bg-destructive/10 transition-all">Vider le cache</Button>
+                    }
+                  />
+                  <ConfirmDelete 
+                    onConfirm={() => toast.error("Le site a été réinitialisé")}
+                    title="Réinitialiser TOUT le site ?"
+                    description="ATTENTION : Cette action supprimera TOUS les articles, utilisateurs et paramètres. C'est la fin du monde tel que vous le connaissez."
+                    trigger={
+                      <Button className="rounded-xl bg-destructive text-white font-black uppercase tracking-widest text-[9px] h-12 px-8 hover:bg-destructive/90 transition-all">Réinitialiser le site</Button>
+                    }
+                  />
+                </div>
+
             </div>
           </Card>
         </section>

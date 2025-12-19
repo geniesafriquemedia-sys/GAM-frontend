@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame, Facebook, Twitter, Instagram, Linkedin, ArrowRight } from "lucide-react";
+import { Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame, Facebook, Twitter, Instagram, Linkedin, ArrowRight, User } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -87,9 +87,16 @@ export function Header() {
             <Search className="h-5 w-5" />
           </Button>
           
-          <Button asChild className="hidden sm:flex rounded-full px-8 font-black text-xs uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0">
-             <Link href="/web-tv">Direct TV</Link>
-          </Button>
+            <Button asChild className="hidden sm:flex rounded-full px-8 font-black text-xs uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0">
+               <Link href="/web-tv">Direct TV</Link>
+            </Button>
+
+            <Button asChild variant="ghost" size="icon" className="hidden lg:flex rounded-full hover:bg-primary/10 hover:text-primary transition-all">
+              <Link href="/login">
+                <User className="h-5 w-5" />
+              </Link>
+            </Button>
+
 
           <Sheet>
             <SheetTrigger asChild>

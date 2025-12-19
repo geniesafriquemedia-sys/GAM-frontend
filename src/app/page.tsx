@@ -1,11 +1,14 @@
+"use client";
+
 import { Hero } from "@/components/Hero";
 import { ArticleCard } from "@/components/ArticleCard";
 import { Newsletter } from "@/components/Newsletter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Play, TrendingUp, Zap } from "lucide-react";
+import { ArrowRight, Play, TrendingUp, Zap, Sparkles } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { motion } from "framer-motion";
 
 // Mock Data
 const featuredArticle = {
@@ -63,175 +66,258 @@ const videos = [
 
 export default function Home() {
   return (
-    <div className="flex flex-col gap-24 pb-24">
+    <div className="flex flex-col gap-32 pb-32">
       {/* Hero Section */}
       <Hero article={featuredArticle} />
 
       {/* Latest Feed Section */}
       <section className="container mx-auto px-4">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
-              <TrendingUp className="h-4 w-4" />
-              <span>En ce moment</span>
+        <motion.div 
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
+        >
+          <div className="space-y-6 max-w-2xl">
+            <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <TrendingUp className="h-4 w-4" />
+              </div>
+              <span>Le Flux GAM</span>
             </div>
-            <h2 className="text-4xl md:text-5xl font-black tracking-tighter">Dernières pépites.</h2>
+            <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9]">
+              Pépites de <span className="text-primary italic">demain</span>.
+            </h2>
           </div>
-          <Button variant="outline" asChild className="rounded-full h-12 px-8 font-bold border-primary/20 hover:bg-primary/5 transition-all">
+          <Button variant="outline" asChild className="rounded-2xl h-14 px-10 font-black border-primary/20 hover:bg-primary/5 hover:border-primary transition-all group">
             <Link href="/actualites">
-              Parcourir tout le flux <ArrowRight className="ml-2 h-4 w-4" />
+              Tout le flux <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
           </Button>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16">
-          {latestArticles.map((article) => (
-            <ArticleCard key={article.id} {...article} />
+        </motion.div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-20">
+          {latestArticles.map((article, index) => (
+            <ArticleCard key={article.id} {...article} index={index} />
           ))}
         </div>
       </section>
 
-      {/* Web TV Preview Section */}
-      <section className="bg-foreground py-24 text-background overflow-hidden">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row md:items-center justify-between mb-16 gap-8">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2 text-secondary font-black uppercase tracking-[0.2em] text-xs">
-                <div className="h-2 w-2 rounded-full bg-secondary animate-pulse" />
-                <span>GAM TV LIVE</span>
-              </div>
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter">L'Afrique en images.</h2>
-            </div>
-            <Button asChild className="rounded-full h-14 px-10 font-bold bg-background text-foreground hover:bg-background/90">
-              <Link href="/web-tv">Accéder à la Web TV</Link>
-            </Button>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {videos.map((video) => (
-              <Link key={video.id} href={`/web-tv/${video.id}`} className="group relative flex flex-col gap-4">
-                <div className="relative aspect-video overflow-hidden rounded-[2rem] bg-background/10 shadow-2xl">
-                  <Image src={video.thumbnail} alt={video.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110 opacity-70" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="h-16 w-16 flex items-center justify-center rounded-full bg-background/20 backdrop-blur-md border border-background/30 transition-transform duration-300 group-hover:scale-110">
-                      <Play className="h-6 w-6 fill-background text-background translate-x-0.5" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-4 right-4 bg-foreground/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest">
-                    {video.duration}
-                  </div>
+      {/* Web TV Preview Section - Dynamic Asymmetrical Layout */}
+      <section className="relative bg-foreground py-32 text-background overflow-hidden">
+        {/* Abstract Background Elements */}
+        <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/20 rounded-full blur-[100px] pointer-events-none" />
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
+            <div className="lg:col-span-5 space-y-10">
+              <div className="space-y-6">
+                <div className="flex items-center gap-3 text-secondary font-black uppercase tracking-[0.3em] text-[10px]">
+                  <div className="h-2.5 w-2.5 rounded-full bg-secondary animate-pulse shadow-[0_0_15px_rgba(var(--secondary),0.8)]" />
+                  <span>GAM TV EN DIRECT</span>
                 </div>
-                <h3 className="text-xl font-black leading-tight tracking-tight group-hover:text-secondary transition-colors">
-                  {video.title}
-                </h3>
-              </Link>
-            ))}
+                <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.85]">
+                  L'Afrique <br /> en <span className="text-secondary">immersion</span>.
+                </h2>
+                <p className="text-lg text-background/60 font-medium max-w-md leading-relaxed">
+                  Documentaires, interviews et reportages exclusifs au cœur de l'innovation et de la culture panafricaine.
+                </p>
+              </div>
+              <Button asChild className="rounded-2xl h-16 px-12 font-black bg-secondary text-foreground hover:bg-secondary/90 shadow-2xl shadow-secondary/20 transition-all hover:-translate-y-1 active:scale-95">
+                <Link href="/web-tv" className="flex items-center gap-3">
+                  Explorer la Web TV <Play className="h-4 w-4 fill-current" />
+                </Link>
+              </Button>
+            </div>
+            
+            <div className="lg:col-span-7">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {videos.slice(0, 2).map((video, index) => (
+                  <motion.div
+                    key={video.id}
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: index * 0.2 }}
+                    className={`group relative overflow-hidden rounded-[3rem] bg-background/5 border border-white/10 ${index === 1 ? 'md:translate-y-12' : ''}`}
+                  >
+                    <Link href={`/web-tv/${video.id}`} className="block">
+                      <div className="relative aspect-[4/5]">
+                        <Image src={video.thumbnail} alt={video.title} fill className="object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60" />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+                        
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <div className="h-20 w-20 flex items-center justify-center rounded-full bg-white/10 backdrop-blur-xl border border-white/20 transition-all duration-500 group-hover:scale-110 group-hover:bg-secondary group-hover:border-secondary">
+                            <Play className="h-8 w-8 fill-white text-white group-hover:fill-foreground group-hover:text-foreground transition-colors" />
+                          </div>
+                        </div>
+
+                        <div className="absolute bottom-8 left-8 right-8 space-y-3">
+                          <Badge className="bg-secondary/20 backdrop-blur-md text-secondary border-secondary/30 text-[9px] font-black uppercase tracking-widest">
+                            {video.duration}
+                          </Badge>
+                          <h3 className="text-2xl font-black leading-tight tracking-tighter group-hover:text-secondary transition-colors line-clamp-2">
+                            {video.title}
+                          </h3>
+                        </div>
+                      </div>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Thematic Section: Tech Focus */}
+      {/* Thematic Section: Tech Focus - Evolutive Container */}
       <section className="container mx-auto px-4">
-        <div className="relative overflow-hidden rounded-[3rem] bg-secondary/30 p-8 md:p-16">
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 opacity-5">
-             <Zap className="h-96 w-96 text-primary" />
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.98 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          className="relative overflow-hidden rounded-[4rem] bg-secondary/10 p-10 md:p-24 border border-secondary/10 shadow-inner"
+        >
+          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 opacity-[0.03]">
+             <Zap className="h-[40rem] w-[40rem] text-primary" />
           </div>
           
           <div className="relative z-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-12 gap-6">
-              <div className="space-y-2">
-                <Badge className="rounded-full bg-primary/10 text-primary border-none text-[10px] font-black uppercase tracking-widest mb-2">
+            <div className="flex flex-col md:flex-row md:items-center justify-between mb-20 gap-10">
+              <div className="space-y-4">
+                <Badge className="rounded-full bg-primary/10 text-primary border-none text-[10px] font-black uppercase tracking-[0.3em] px-5 py-1.5 mb-2">
                   Grand Angle
                 </Badge>
-                <h2 className="text-3xl md:text-5xl font-black tracking-tighter">Focus Tech & Innovation.</h2>
+                <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">
+                  Focus <span className="text-primary italic">Tech</span> & Innovation.
+                </h2>
               </div>
-              <Button variant="link" className="text-primary font-black uppercase tracking-widest text-xs group" asChild>
-                <Link href="/categories/tech">
-                  Explorer la tech <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              <Button variant="link" className="text-primary font-black uppercase tracking-[0.2em] text-[10px] group h-auto p-0" asChild>
+                <Link href="/categories/tech" className="flex items-center gap-3">
+                  Explorer la galaxie tech <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
                 </Link>
               </Button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              <ArticleCard 
-                id="5"
-                title="Tech : Startups à suivre en 2024"
-                excerpt="Notre sélection des pépites technologiques qui vont faire bouger les lignes l'année prochaine."
-                category="Tech"
-                date="09 Oct 2023"
-                image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop"
-                readTime="7 min"
-              />
-              <ArticleCard 
-                id="1"
-                title="L'émergence des Smart Cities"
-                excerpt="Kigali s'impose comme un modèle de développement urbain technologique sur le continent."
-                category="Technologie"
-                date="13 Oct 2023"
-                image="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=1000&auto=format&fit=crop"
-                readTime="8 min"
-              />
-              <div className="flex flex-col justify-center space-y-6 p-10 rounded-[2.5rem] bg-primary text-primary-foreground">
-                <h3 className="text-3xl font-black leading-tight tracking-tighter">Plus de Tech ?</h3>
-                <p className="text-primary-foreground/70 font-medium leading-relaxed">
-                  Découvrez comment le numérique transforme les sociétés africaines en profondeur.
-                </p>
-                <Button className="w-full h-14 rounded-2xl bg-white text-primary hover:bg-white/90 font-black shadow-lg" asChild>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
+              <div className="lg:col-span-2">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <ArticleCard 
+                    id="5"
+                    title="Tech : Startups à suivre en 2024"
+                    excerpt="Notre sélection des pépites technologiques qui vont faire bouger les lignes l'année prochaine."
+                    category="Tech"
+                    date="09 Oct 2023"
+                    image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop"
+                    readTime="7 min"
+                  />
+                  <ArticleCard 
+                    id="1"
+                    title="L'émergence des Smart Cities"
+                    excerpt="Kigali s'impose comme un modèle de développement urbain technologique sur le continent."
+                    category="Technologie"
+                    date="13 Oct 2023"
+                    image="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=1000&auto=format&fit=crop"
+                    readTime="8 min"
+                  />
+                </div>
+              </div>
+              <motion.div 
+                whileHover={{ y: -10 }}
+                className="flex flex-col justify-between p-12 rounded-[3.5rem] bg-primary text-primary-foreground shadow-2xl shadow-primary/20 relative overflow-hidden"
+              >
+                <div className="absolute top-0 right-0 p-8 opacity-20">
+                  <Sparkles className="h-16 w-16" />
+                </div>
+                <div className="space-y-6 relative z-10">
+                  <h3 className="text-4xl font-black leading-none tracking-tighter">Plus de <br />Tech ?</h3>
+                  <p className="text-primary-foreground/70 font-medium leading-relaxed">
+                    Découvrez comment le numérique transforme les sociétés africaines en profondeur.
+                  </p>
+                </div>
+                <Button className="w-full h-16 rounded-2xl bg-white text-primary hover:bg-white/90 font-black shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-xs uppercase tracking-widest relative z-10" asChild>
                   <Link href="/categories/tech">Voir tous les dossiers</Link>
                 </Button>
-              </div>
+              </motion.div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </section>
 
-      {/* Newsletter */}
+      {/* Newsletter - Integrated better */}
       <Newsletter />
 
-      {/* Culture & Society Grid */}
+      {/* Culture & Society Grid - Modern Tabbed/Split Layout */}
       <section className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
-          <div className="space-y-10">
-            <div className="flex items-center justify-between border-b pb-4">
-              <h2 className="text-3xl font-black tracking-tighter">Culture.</h2>
-              <Link href="/categories/culture" className="text-primary text-xs font-black uppercase tracking-widest hover:underline decoration-2 underline-offset-8">Voir plus</Link>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
+          <div className="space-y-12">
+            <div className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
+              <div className="space-y-1">
+                <h2 className="text-4xl font-black tracking-tighter">Culture.</h2>
+                <div className="h-1.5 w-12 bg-primary rounded-full" />
+              </div>
+              <Link href="/categories/culture" className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity">Tout voir</Link>
             </div>
-            <div className="grid gap-12">
-              {latestArticles.slice(1, 3).map(article => (
-                <div key={article.id} className="group flex gap-6 items-start">
-                  <div className="relative h-32 w-32 md:h-40 md:w-40 shrink-0 overflow-hidden rounded-[2rem] shadow-lg">
-                    <Image src={article.image} alt={article.title} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+            <div className="grid gap-14">
+              {latestArticles.slice(1, 3).map((article, index) => (
+                <motion.div 
+                  key={article.id} 
+                  initial={{ opacity: 0, x: -20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="group flex gap-8 items-center"
+                >
+                  <div className="relative h-36 w-36 md:h-48 md:w-48 shrink-0 overflow-hidden rounded-[3rem] shadow-xl group-hover:shadow-primary/10 transition-shadow">
+                    <Image src={article.image} alt={article.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                   </div>
-                  <div className="space-y-3 pt-2">
-                    <Badge variant="secondary" className="bg-accent/10 text-accent border-none text-[9px] font-black uppercase tracking-widest">{article.category}</Badge>
+                  <div className="space-y-4 flex-1">
+                    <Badge className="bg-accent/10 text-accent border-none text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full">{article.category}</Badge>
                     <Link href={`/articles/${article.id}`} className="block group-hover:text-primary transition-colors">
-                      <h3 className="text-xl font-black leading-tight tracking-tight">{article.title}</h3>
+                      <h3 className="text-2xl font-black leading-none tracking-tight">{article.title}</h3>
                     </Link>
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{article.date} • {article.readTime}</p>
+                    <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
+                      <span>{article.date}</span>
+                      <div className="h-1 w-1 rounded-full bg-primary/30" />
+                      <span>{article.readTime}</span>
+                    </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
 
-          <div className="space-y-10">
-            <div className="flex items-center justify-between border-b pb-4">
-              <h2 className="text-3xl font-black tracking-tighter">Société.</h2>
-              <Link href="/categories/societe" className="text-primary text-xs font-black uppercase tracking-widest hover:underline decoration-2 underline-offset-8">Voir plus</Link>
+          <div className="space-y-12">
+            <div className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
+              <div className="space-y-1">
+                <h2 className="text-4xl font-black tracking-tighter">Société.</h2>
+                <div className="h-1.5 w-12 bg-secondary rounded-full" />
+              </div>
+              <Link href="/categories/societe" className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity">Tout voir</Link>
             </div>
-            <div className="grid gap-12">
-              {latestArticles.slice(2, 4).map(article => (
-                <div key={article.id} className="group flex gap-6 items-start">
-                  <div className="relative h-32 w-32 md:h-40 md:w-40 shrink-0 overflow-hidden rounded-[2rem] shadow-lg">
-                    <Image src={article.image} alt={article.title} fill className="object-cover transition-transform duration-500 group-hover:scale-110" />
+            <div className="grid gap-14">
+              {latestArticles.slice(2, 4).map((article, index) => (
+                <motion.div 
+                  key={article.id} 
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="group flex gap-8 items-center"
+                >
+                  <div className="relative h-36 w-36 md:h-48 md:w-48 shrink-0 overflow-hidden rounded-[3rem] shadow-xl group-hover:shadow-secondary/10 transition-shadow">
+                    <Image src={article.image} alt={article.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
                   </div>
-                  <div className="space-y-3 pt-2">
-                    <Badge variant="secondary" className="bg-primary/10 text-primary border-none text-[9px] font-black uppercase tracking-widest">{article.category}</Badge>
+                  <div className="space-y-4 flex-1">
+                    <Badge className="bg-primary/10 text-primary border-none text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full">{article.category}</Badge>
                     <Link href={`/articles/${article.id}`} className="block group-hover:text-primary transition-colors">
-                      <h3 className="text-xl font-black leading-tight tracking-tight">{article.title}</h3>
+                      <h3 className="text-2xl font-black leading-none tracking-tight">{article.title}</h3>
                     </Link>
-                    <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">{article.date} • {article.readTime}</p>
+                    <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
+                      <span>{article.date}</span>
+                      <div className="h-1 w-1 rounded-full bg-secondary/30" />
+                      <span>{article.readTime}</span>
+                    </div>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
@@ -240,4 +326,3 @@ export default function Home() {
     </div>
   );
 }
-

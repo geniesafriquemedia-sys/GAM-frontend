@@ -49,5 +49,4 @@ export function VideoCard({ id, title, duration, thumbnail, category }: VideoCar
     </div>
   );
 }
-}
 

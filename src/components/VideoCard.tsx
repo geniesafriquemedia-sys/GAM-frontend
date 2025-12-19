@@ -21,11 +21,11 @@ export function VideoCard({ id, title, duration, thumbnail, category }: VideoCar
           fill
           className="object-cover opacity-80 transition-transform duration-700 group-hover:scale-110"
         />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="h-14 w-14 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/30 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary group-hover:border-primary">
-            <Play className="h-6 w-6 fill-white text-white translate-x-0.5 transition-colors group-hover:fill-primary-foreground group-hover:text-primary-foreground" />
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="h-14 w-14 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/30 transition-all duration-300 group-hover:scale-110 group-hover:bg-red-600 group-hover:border-red-600">
+              <Play className="h-6 w-6 fill-white text-white translate-x-0.5 transition-colors group-hover:fill-white group-hover:text-white" />
+            </div>
           </div>
-        </div>
         <div className="absolute bottom-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-white">
           {duration}
         </div>

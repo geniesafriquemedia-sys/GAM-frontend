@@ -1,65 +1,177 @@
-import Image from "next/image";
+import { Hero } from "@/components/Hero";
+import { ArticleCard } from "@/components/ArticleCard";
+import { Newsletter } from "@/components/Newsletter";
+import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import Link from "next/link";
+
+// Mock Data
+const featuredArticle = {
+  id: "1",
+  title: "L'émergence des Smart Cities en Afrique : L'exemple de Kigali",
+  excerpt: "Kigali s'impose comme un modèle de développement urbain technologique sur le continent. Entre innovation numérique et durabilité, retour sur une transformation exemplaire.",
+  category: "Technologie",
+  image: "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=2000&auto=format&fit=crop",
+};
+
+const latestArticles = [
+  {
+    id: "2",
+    title: "Éducation : Le boom des plateformes d'e-learning locales",
+    excerpt: "De plus en plus d'entrepreneurs africains lancent des solutions d'apprentissage en ligne adaptées aux réalités du continent.",
+    category: "Éducation",
+    date: "12 Oct 2023",
+    image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=1000&auto=format&fit=crop",
+    readTime: "5 min",
+  },
+  {
+    id: "3",
+    title: "Culture : Le retour en force de l'artisanat traditionnel",
+    excerpt: "Comment les jeunes designers réinventent les codes de l'artisanat ancestral pour le marché mondial.",
+    category: "Culture",
+    date: "11 Oct 2023",
+    image: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?q=80&w=1000&auto=format&fit=crop",
+    readTime: "4 min",
+  },
+  {
+    id: "4",
+    title: "Société : Les enjeux de la transition énergétique",
+    excerpt: "Analyse des défis et opportunités du passage au vert pour les économies d'Afrique subsaharienne.",
+    category: "Société",
+    date: "10 Oct 2023",
+    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1000&auto=format&fit=crop",
+    readTime: "6 min",
+  },
+  {
+    id: "5",
+    title: "Tech : Startups à suivre en 2024",
+    excerpt: "Notre sélection des pépites technologiques qui vont faire bouger les lignes l'année prochaine.",
+    category: "Tech",
+    date: "09 Oct 2023",
+    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop",
+    readTime: "7 min",
+  },
+];
+
+const techArticles = latestArticles.filter(a => a.category === "Tech" || a.category === "Technologie" || a.id === "5");
+const cultureArticles = latestArticles.filter(a => a.category === "Culture" || a.id === "3");
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="flex flex-col gap-16 pb-16">
+      {/* US-H-01: Contenus à la une */}
+      <Hero article={featuredArticle} />
+
+      {/* US-H-02: Fil d'actualité */}
+      <section className="container mx-auto px-4">
+        <div className="flex items-center justify-between mb-8">
+          <h2 className="text-3xl font-bold tracking-tight">Dernières Actualités</h2>
+          <Button variant="ghost" asChild>
+            <Link href="/actualites">
+              Voir tout <ArrowRight className="ml-2 h-4 w-4" />
+            </Link>
+          </Button>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {latestArticles.map((article) => (
+            <ArticleCard key={article.id} {...article} />
+          ))}
+        </div>
+      </section>
+
+      {/* US-H-03: Blocs thématiques - Tech */}
+      <section className="container mx-auto px-4">
+        <div className="bg-zinc-900 text-white rounded-3xl p-8 md:p-12">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold tracking-tight">Focus Tech</h2>
+            <Button variant="link" className="text-white hover:text-primary" asChild>
+              <Link href="/categories/tech">
+                Explorer la catégorie <ArrowRight className="ml-2 h-4 w-4" />
+              </Link>
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <ArticleCard 
+              id="5"
+              title="Tech : Startups à suivre en 2024"
+              excerpt="Notre sélection des pépites technologiques qui vont faire bouger les lignes l'année prochaine."
+              category="Tech"
+              date="09 Oct 2023"
+              image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop"
+              readTime="7 min"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+             <ArticleCard 
+              id="1"
+              title="L'émergence des Smart Cities"
+              excerpt="Kigali s'impose comme un modèle de développement urbain technologique sur le continent."
+              category="Technologie"
+              date="13 Oct 2023"
+              image="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=1000&auto=format&fit=crop"
+              readTime="8 min"
+            />
+            <div className="flex flex-col justify-center space-y-4 p-6 border border-zinc-800 rounded-2xl bg-zinc-900/50">
+               <h3 className="text-xl font-bold">Plus de Tech ?</h3>
+               <p className="text-zinc-400 text-sm">Découvrez toutes les innovations qui façonnent l'Afrique de demain.</p>
+               <Button variant="secondary" className="w-full" asChild>
+                 <Link href="/categories/tech">Accéder à la rubrique</Link>
+               </Button>
+            </div>
+          </div>
         </div>
-      </main>
+      </section>
+
+      {/* Newsletter */}
+      <Newsletter />
+
+      {/* US-H-03: Blocs thématiques - Culture & Société */}
+      <section className="container mx-auto px-4">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold tracking-tight">Culture</h2>
+              <Link href="/categories/culture" className="text-primary text-sm font-medium hover:underline">Voir plus</Link>
+            </div>
+            <div className="space-y-8">
+              {latestArticles.slice(1, 3).map(article => (
+                <div key={article.id} className="flex gap-4 items-start">
+                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg">
+                    <Image src={article.image} alt={article.title} fill className="object-cover" />
+                  </div>
+                  <div className="space-y-1">
+                    <Badge variant="outline" className="text-[10px] uppercase tracking-wider">{article.category}</Badge>
+                    <Link href={`/articles/${article.id}`} className="hover:text-primary transition-colors">
+                      <h3 className="font-bold leading-tight">{article.title}</h3>
+                    </Link>
+                    <p className="text-xs text-muted-foreground">{article.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold tracking-tight">Société</h2>
+              <Link href="/categories/societe" className="text-primary text-sm font-medium hover:underline">Voir plus</Link>
+            </div>
+            <div className="space-y-8">
+              {latestArticles.slice(2, 4).map(article => (
+                <div key={article.id} className="flex gap-4 items-start">
+                  <div className="relative h-24 w-24 shrink-0 overflow-hidden rounded-lg">
+                    <Image src={article.image} alt={article.title} fill className="object-cover" />
+                  </div>
+                  <div className="space-y-1">
+                    <Badge variant="outline" className="text-[10px] uppercase tracking-wider">{article.category}</Badge>
+                    <Link href={`/articles/${article.id}`} className="hover:text-primary transition-colors">
+                      <h3 className="font-bold leading-tight">{article.title}</h3>
+                    </Link>
+                    <p className="text-xs text-muted-foreground">{article.date}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }

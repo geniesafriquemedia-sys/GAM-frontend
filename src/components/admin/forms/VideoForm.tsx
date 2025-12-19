@@ -8,12 +8,13 @@ import {
   Image as ImageIcon, 
   Youtube, 
   Clock,
-  CheckCircle2,
-  X,
-  Trash2,
-  ArrowLeft,
-  Link as LinkIcon
-} from "lucide-react";
+    CheckCircle2,
+    X,
+    Trash2,
+    ArrowLeft,
+    Link as LinkIcon,
+    Calendar
+  } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";

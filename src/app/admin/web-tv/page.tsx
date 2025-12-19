@@ -113,14 +113,25 @@ export default function WebTVAdmin() {
                     <span className="flex items-center gap-1"><Eye className="h-3 w-3" /> {video.views}</span>
                     <span className="flex items-center gap-1"><Calendar className="h-3 w-3" /> {video.date}</span>
                   </div>
-                  <div className="flex items-center gap-1">
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors">
-                      <Edit2 className="h-3.5 w-3.5" />
-                    </Button>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors">
-                      <Trash2 className="h-3.5 w-3.5" />
-                    </Button>
-                  </div>
+                    <div className="flex items-center gap-1">
+                      <Button 
+                        onClick={() => toast.info(`Modification de : ${video.title}`)}
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-8 w-8 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
+                      >
+                        <Edit2 className="h-3.5 w-3.5" />
+                      </Button>
+                      <ConfirmDelete 
+                        onConfirm={() => toast.success(`Vidéo "${video.title}" supprimée`)}
+                        trigger={
+                          <Button variant="ghost" size="icon" className="h-8 w-8 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors">
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </Button>
+                        }
+                      />
+                    </div>
+
                 </div>
               </div>
             </motion.div>

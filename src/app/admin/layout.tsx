@@ -1,6 +1,7 @@
 "use client";
 
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { Toaster } from "sonner";
 
 export default function AdminLayout({
   children,
@@ -15,6 +16,7 @@ export default function AdminLayout({
           {children}
         </div>
       </main>
+      <Toaster position="top-right" richColors />
     </div>
   );
 }

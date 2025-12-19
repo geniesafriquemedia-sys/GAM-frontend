@@ -150,6 +150,40 @@ export default function LoginPage() {
             </Button>
           </form>
 
+          <div className="space-y-4">
+            <div className="flex items-center gap-4">
+              <div className="h-px flex-1 bg-zinc-900" />
+              <span className="text-[10px] font-black text-zinc-600 uppercase tracking-widest">Accès Simulé</span>
+              <div className="h-px flex-1 bg-zinc-900" />
+            </div>
+            <div className="grid grid-cols-2 gap-4">
+              <button 
+                onClick={() => handleQuickLogin("admin")}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+              >
+                <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
+                  <ShieldCheck className="h-5 w-5" />
+                </div>
+                <div className="text-center">
+                  <p className="text-[10px] font-black text-white uppercase tracking-tighter">Directeur</p>
+                  <p className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Admin</p>
+                </div>
+              </button>
+              <button 
+                onClick={() => handleQuickLogin("editor")}
+                className="flex flex-col items-center gap-2 p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-primary/50 hover:bg-primary/5 transition-all group"
+              >
+                <div className="h-10 w-10 rounded-xl bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:scale-110 transition-transform">
+                  <Sparkles className="h-5 w-5" />
+                </div>
+                <div className="text-center">
+                  <p className="text-[10px] font-black text-white uppercase tracking-tighter">Rédacteur</p>
+                  <p className="text-[8px] font-bold text-zinc-500 uppercase tracking-widest">Editor</p>
+                </div>
+              </button>
+            </div>
+          </div>
+
           <div className="pt-6 border-t border-zinc-900 flex flex-col items-center gap-4">
             <p className="text-zinc-500 text-sm font-medium">
               Pas encore membre de l'équipe ?{" "}

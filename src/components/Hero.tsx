@@ -111,7 +111,7 @@ export function Hero({ article }: HeroProps) {
               01 / 03 STORIES
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </section>
   );

@@ -1,53 +1,46 @@
-import { VideoCard } from "@/components/VideoCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Play, Tv, ArrowRight, Zap, TrendingUp } from "lucide-react";
+import { Play, Calendar, Clock, Tv, ArrowRight, Share2, Info } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { VideoCard } from "@/components/VideoCard";
 
-// Mock Data
 const videos = [
-  {
-    id: "v1",
-    title: "Reportage : L'innovation au service de l'agriculture au Sénégal",
+  { 
+    id: "v1", 
+    title: "L'industrie du futur à Lagos : Immersion dans la tech nigériane", 
+    thumbnail: "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1000&auto=format&fit=crop", 
     duration: "12:45",
-    thumbnail: "https://images.unsplash.com/photo-1595113316349-9fa4eb24f884?q=80&w=1000&auto=format&fit=crop",
-    category: "Reportage",
-  },
-  {
-    id: "v2",
-    title: "Interview exclusive : Le futur de la Fintech en Afrique Centrale",
-    duration: "18:20",
-    thumbnail: "https://images.unsplash.com/photo-1551836022-d5d88e9218df?q=80&w=1000&auto=format&fit=crop",
-    category: "Interview",
-  },
-  {
-    id: "v3",
-    title: "GAM Tech Show : Les gadgets qui vont changer votre quotidien",
-    duration: "08:15",
-    thumbnail: "https://images.unsplash.com/photo-1526733158272-60b7404276a0?q=80&w=1000&auto=format&fit=crop",
-    category: "Émission",
-  },
-  {
-    id: "v4",
-    title: "Documentaire : Les cités oubliées de l'histoire africaine",
-    duration: "45:00",
-    thumbnail: "https://images.unsplash.com/photo-1523805009345-7448845a9e53?q=80&w=1000&auto=format&fit=crop",
+    date: "12 Oct 2023",
     category: "Documentaire",
+    description: "Découvrez comment Lagos est devenue le hub technologique incontournable du continent africain."
   },
-  {
-    id: "v5",
-    title: "Tuto : Comment lancer sa startup avec un petit budget",
-    duration: "15:30",
-    thumbnail: "https://images.unsplash.com/photo-1553729459-efe14ef6055d?q=80&w=1000&auto=format&fit=crop",
-    category: "Éducation",
+  { 
+    id: "v2", 
+    title: "Le retour du textile traditionnel : L'art du pagne revisité", 
+    thumbnail: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1000&auto=format&fit=crop", 
+    duration: "08:20",
+    date: "10 Oct 2023",
+    category: "Culture",
+    description: "Immersion dans les ateliers des designers qui réinventent les codes de la mode africaine."
   },
-  {
-    id: "v6",
-    title: "Live : Débat sur l'intelligence artificielle et l'emploi",
-    duration: "1:05:00",
-    thumbnail: "https://images.unsplash.com/photo-1531482615713-2afd69097998?q=80&w=1000&auto=format&fit=crop",
-    category: "Live",
+  { 
+    id: "v3", 
+    title: "Reportage exclusif : Les fermes solaires géantes du Kenya", 
+    thumbnail: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=1000&auto=format&fit=crop", 
+    duration: "15:10",
+    date: "08 Oct 2023",
+    category: "Énergie",
+    description: "Le Kenya s'impose comme leader mondial de l'énergie renouvelable. Analyse d'un succès énergétique."
+  },
+  { 
+    id: "v4", 
+    title: "Talk : L'avenir de l'intelligence artificielle en Afrique", 
+    thumbnail: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop", 
+    duration: "24:30",
+    date: "05 Oct 2023",
+    category: "Innovation",
+    description: "Débat avec les meilleurs experts sur les opportunités de l'IA pour le développement du continent."
   },
 ];
 
@@ -55,127 +48,106 @@ export default function WebTVPage() {
   const featuredVideo = videos[0];
 
   return (
-    <div className="flex flex-col gap-24 pb-24">
-      {/* Hero Video section */}
-      <section className="bg-zinc-950 text-white pt-24 pb-32 overflow-hidden relative">
-        <div className="absolute top-0 right-0 opacity-10 blur-3xl h-[600px] w-[600px] bg-primary rounded-full -translate-y-1/2 translate-x-1/2" />
+    <div className="bg-zinc-950 text-white min-h-screen pb-24">
+      {/* Immersive Hero */}
+      <section className="relative h-[90vh] w-full overflow-hidden">
+        <Image 
+          src={featuredVideo.thumbnail} 
+          alt={featuredVideo.title} 
+          fill 
+          className="object-cover opacity-40 scale-105 blur-sm"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/60 to-transparent" />
         
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="flex flex-col gap-12">
-            <div className="space-y-4 max-w-2xl">
-               <div className="flex items-center gap-3">
-                 <div className="flex items-center gap-2 bg-accent/20 text-accent px-4 py-1.5 rounded-full border border-accent/20">
-                    <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
-                    <span className="text-xs font-black uppercase tracking-widest">Live Now</span>
-                 </div>
-                 <Badge className="bg-primary hover:bg-primary/90 rounded-full px-4 text-xs font-black uppercase tracking-widest border-none">GAM TV</Badge>
-               </div>
-               <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9]">Web TV.</h1>
-               <p className="text-zinc-400 text-xl font-medium max-w-xl">
-                 L'excellence visuelle au service des récits africains. Reportages, interviews et émissions exclusives.
-               </p>
+        <div className="container mx-auto px-4 h-full flex flex-col justify-end pb-24 relative z-10">
+          <div className="max-w-4xl space-y-8">
+            <div className="flex items-center gap-3">
+              <Badge className="bg-primary text-white border-none px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40">
+                À LA UNE • WEB TV
+              </Badge>
+              <div className="flex items-center gap-2 text-accent font-black text-[10px] uppercase tracking-widest">
+                <div className="h-2 w-2 rounded-full bg-accent animate-pulse" />
+                <span>En direct</span>
+              </div>
             </div>
+            
+            <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9]">
+              {featuredVideo.title}
+            </h1>
+            
+            <p className="text-xl md:text-2xl text-zinc-400 font-medium leading-tight max-w-2xl">
+              {featuredVideo.description}
+            </p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
-              <div className="lg:col-span-8">
-                <Link href={`/web-tv/${featuredVideo.id}`} className="group relative aspect-video block overflow-hidden rounded-[3rem] bg-zinc-900 shadow-2xl border border-white/5">
-                  <Image
-                    src={featuredVideo.thumbnail}
-                    alt={featuredVideo.title}
-                    fill
-                    className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent" />
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="h-24 w-24 rounded-full bg-white/10 backdrop-blur-xl flex items-center justify-center border border-white/20 shadow-2xl transform group-hover:scale-110 group-hover:bg-primary group-hover:border-primary transition-all duration-500">
-                      <Play className="h-10 w-10 text-white fill-white ml-2 transition-colors group-hover:text-primary-foreground group-hover:fill-primary-foreground" />
-                    </div>
-                  </div>
-                  <div className="absolute bottom-10 left-10 right-10">
-                     <Badge className="mb-4 bg-accent text-accent-foreground font-black uppercase tracking-widest border-none px-4">{featuredVideo.category}</Badge>
-                     <h2 className="text-3xl md:text-5xl font-black tracking-tighter max-w-2xl leading-tight">{featuredVideo.title}</h2>
-                  </div>
+            <div className="flex flex-wrap items-center gap-6 pt-4">
+              <Button size="lg" className="h-16 px-10 rounded-3xl bg-white text-black hover:bg-zinc-200 font-black uppercase tracking-widest text-xs shadow-2xl shadow-white/10" asChild>
+                <Link href={`/web-tv/${featuredVideo.id}`}>
+                  <Play className="mr-3 h-5 w-5 fill-black" /> Regarder maintenant
                 </Link>
-              </div>
-              
-              <div className="lg:col-span-4 space-y-8">
-                <div className="flex items-center justify-between border-b border-white/10 pb-4">
-                   <h3 className="text-xl font-black tracking-tight flex items-center gap-2">
-                     <TrendingUp className="h-5 w-5 text-primary" />
-                     À ne pas manquer
-                   </h3>
-                </div>
-                <div className="grid gap-6">
-                  {videos.slice(1, 4).map((video) => (
-                    <Link key={video.id} href={`/web-tv/${video.id}`} className="flex gap-6 group">
-                      <div className="relative h-24 w-40 shrink-0 overflow-hidden rounded-2xl bg-zinc-900 border border-white/5">
-                        <Image src={video.thumbnail} alt={video.title} fill className="object-cover opacity-60 group-hover:opacity-100 transition-all duration-500 group-hover:scale-110" />
-                        <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                           <Play className="h-6 w-6 text-white fill-white" />
-                        </div>
-                      </div>
-                      <div className="space-y-2 py-1">
-                        <Badge variant="outline" className="text-[8px] font-black uppercase tracking-widest border-white/20 text-zinc-400">{video.category}</Badge>
-                        <h4 className="text-md font-black leading-tight tracking-tight line-clamp-2 group-hover:text-primary transition-colors">{video.title}</h4>
-                        <p className="text-[10px] font-bold uppercase tracking-widest text-zinc-500">{video.duration}</p>
-                      </div>
-                    </Link>
-                  ))}
-                </div>
-                <div className="bg-primary/10 backdrop-blur-xl p-8 rounded-[2.5rem] border border-primary/20 relative overflow-hidden group">
-                  <Zap className="absolute -bottom-8 -right-8 h-32 w-32 text-primary opacity-10 transition-transform group-hover:scale-125" />
-                  <h4 className="text-xl font-black tracking-tight mb-2">Canal GAM+</h4>
-                  <p className="text-sm text-zinc-400 mb-6 font-medium">Rejoignez 100k+ abonnés pour du contenu premium.</p>
-                  <Button className="w-full h-12 rounded-2xl bg-primary text-primary-foreground font-black shadow-lg shadow-primary/20 hover:scale-[1.02] transition-all">S'abonner maintenant</Button>
-                </div>
-              </div>
+              </Button>
+              <Button size="lg" variant="outline" className="h-16 px-8 rounded-3xl border-white/20 hover:bg-white/10 font-black uppercase tracking-widest text-xs transition-all">
+                <Info className="mr-3 h-5 w-5" /> Plus d'infos
+              </Button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Video Grid */}
-      <section className="container mx-auto px-4">
+      {/* Video Grid Section */}
+      <section className="container mx-auto px-4 mt-24">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
           <div className="space-y-4">
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-none">Bibliothèque.</h2>
-            <p className="text-muted-foreground font-medium text-lg">Plus de 500 heures de contenus originaux.</p>
+            <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
+              <Tv className="h-4 w-4" />
+              <span>Contenus originaux</span>
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter">Toutes nos émissions.</h2>
           </div>
-          <div className="flex flex-wrap gap-3">
-            {["Toutes", "Émissions", "Interviews", "Reportages", "Culture"].map((cat) => (
-              <Button key={cat} variant="outline" className="rounded-full h-12 px-8 font-bold border-primary/10 hover:bg-primary hover:text-primary-foreground transition-all">
-                {cat}
-              </Button>
-            ))}
+          <div className="flex items-center gap-4">
+             <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-white/5">
+                Plus récents
+             </Button>
+             <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-white/10 hover:bg-white/5">
+                Populaires
+             </Button>
           </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
           {videos.map((video) => (
             <VideoCard key={video.id} {...video} />
           ))}
         </div>
       </section>
-      
-      {/* Featured show section */}
-      <section className="container mx-auto px-4">
-         <div className="bg-zinc-950 text-white rounded-[4rem] p-12 md:p-24 relative overflow-hidden">
-            <div className="absolute inset-0 opacity-20">
-               <Image src="https://images.unsplash.com/photo-1598387993441-a3641824c301?q=80&w=2000&auto=format&fit=crop" alt="TV Show" fill className="object-cover" />
-            </div>
-            <div className="relative z-10 max-w-2xl space-y-8">
-               <div className="flex items-center gap-2 text-accent font-black uppercase tracking-[0.3em] text-sm">
-                  <Tv className="h-6 w-6" />
-                  <span>Série Spéciale</span>
+
+      {/* Playlist Section */}
+      <section className="container mx-auto px-4 mt-40">
+        <div className="rounded-[4rem] bg-zinc-900 p-12 md:p-24 border border-white/5 relative overflow-hidden">
+          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div className="space-y-8">
+               <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.9]">Ne manquez <br/>aucun direct.</h2>
+               <p className="text-xl text-zinc-400 font-medium leading-relaxed">
+                 Abonnez-vous à nos alertes pour recevoir une notification dès que nous passons en direct ou publions un nouveau reportage exclusif.
+               </p>
+               <div className="flex gap-4">
+                 <input 
+                   placeholder="Votre adresse email" 
+                   className="flex-1 bg-zinc-800 border-none rounded-2xl px-6 py-4 text-white focus:ring-2 focus:ring-primary outline-none"
+                 />
+                 <Button className="h-14 px-10 rounded-2xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-xs">
+                   S'abonner
+                 </Button>
                </div>
-               <h2 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9]">Génies du <br /> continent.</h2>
-               <p className="text-xl text-zinc-400 font-medium">Une série documentaire qui explore les parcours des inventeurs et créateurs les plus influents d'Afrique.</p>
-               <Button size="lg" className="rounded-full h-16 px-12 font-black text-lg bg-accent text-accent-foreground hover:bg-accent/90 shadow-2xl shadow-accent/20">
-                  Regarder la série <ArrowRight className="ml-3 h-6 w-6" />
-               </Button>
             </div>
-         </div>
+            <div className="grid grid-cols-2 gap-4">
+               {[1,2,3,4].map(i => (
+                 <div key={i} className="aspect-square rounded-3xl bg-zinc-800 animate-pulse" />
+               ))}
+            </div>
+          </div>
+          <div className="absolute top-0 right-0 h-full w-1/3 bg-primary/10 blur-[100px] -z-10" />
+        </div>
       </section>
     </div>
   );
 }
-

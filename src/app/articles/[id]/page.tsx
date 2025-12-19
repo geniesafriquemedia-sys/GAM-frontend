@@ -33,10 +33,13 @@ const articles = [
       <h2 class="text-4xl font-black tracking-tighter mt-12 mb-6 text-primary">L'innovation au service de l'écologie</h2>
       <p class="mb-6 text-xl leading-relaxed text-muted-foreground">La gestion des ressources est un pilier central. Les systèmes d'éclairage public intelligents s'adaptent désormais à la présence de piétons ou de véhicules, réduisant ainsi la consommation d'énergie de 40% dans certains quartiers.</p>
       
-      <blockquote class="relative p-12 my-12 overflow-hidden rounded-[3rem] bg-zinc-950 text-white">
-        <div class="relative z-10">
-           <p class="text-3xl font-black leading-tight mb-6">"Kigali démontre que le développement rapide et la durabilité environnementale ne sont pas mutuellement exclusifs, ils sont complémentaires grâce au numérique."</p>
+      <blockquote class="relative p-12 my-12 overflow-hidden rounded-[3rem] bg-card border border-border text-foreground">
+        <div className="relative z-10">
+           <p className="text-3xl font-black leading-tight mb-6">"Kigali démontre que le développement rapide et la durabilité environnementale ne sont pas mutuellement exclusifs, ils sont complémentaires grâce au numérique."</p>
            <cite class="text-primary font-bold uppercase tracking-widest text-sm">— Paul Kagame, Président du Rwanda</cite>
+        </div>
+        <div className="absolute top-0 right-0 p-8 opacity-5">
+           <span className="text-9xl font-black serif">“</span>
         </div>
       </blockquote>
       

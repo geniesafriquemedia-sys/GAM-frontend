@@ -18,17 +18,17 @@ export function Hero({ article }: HeroProps) {
   return (
     <section className="relative w-full overflow-hidden bg-background pt-6">
       <div className="container mx-auto px-4">
-        <div className="relative min-h-[600px] w-full overflow-hidden rounded-[2.5rem] bg-zinc-900 text-white shadow-2xl">
+        <div className="relative min-h-[600px] w-full overflow-hidden rounded-[2.5rem] bg-foreground text-background shadow-2xl">
           <div className="absolute inset-0">
             <Image
               src={article.image}
               alt={article.title}
               fill
-              className="object-cover opacity-70 transition-transform duration-700 hover:scale-105"
+              className="object-cover opacity-60 transition-transform duration-700 hover:scale-105"
               priority
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent" />
-            <div className="absolute inset-0 bg-gradient-to-r from-zinc-950/60 to-transparent md:block hidden" />
+            <div className="absolute inset-0 bg-gradient-to-t from-foreground via-foreground/40 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-foreground/60 to-transparent md:block hidden" />
           </div>
           
           <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-16 lg:p-24">
@@ -37,9 +37,9 @@ export function Hero({ article }: HeroProps) {
                 <Badge className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-4 py-1 text-xs font-bold uppercase tracking-wider">
                   À la Une
                 </Badge>
-                <div className="flex items-center gap-2 text-accent">
-                  <Sparkles className="h-4 w-4 fill-accent" />
-                  <span className="text-xs font-bold uppercase tracking-widest">{article.category}</span>
+                <div className="flex items-center gap-2 text-secondary">
+                  <Sparkles className="h-4 w-4 fill-secondary" />
+                  <span className="text-xs font-bold uppercase tracking-widest text-secondary">{article.category}</span>
                 </div>
               </div>
               
@@ -47,7 +47,7 @@ export function Hero({ article }: HeroProps) {
                 {article.title}
               </h1>
               
-              <p className="text-lg text-zinc-300 md:text-xl lg:text-2xl line-clamp-2 max-w-2xl font-medium">
+              <p className="text-lg text-background/80 md:text-xl lg:text-2xl line-clamp-2 max-w-2xl font-medium">
                 {article.excerpt}
               </p>
               
@@ -58,7 +58,7 @@ export function Hero({ article }: HeroProps) {
                     <ArrowRight className="ml-2 h-5 w-5" />
                   </Link>
                 </Button>
-                <Button variant="outline" size="lg" className="rounded-full px-10 h-16 text-lg font-bold bg-white/10 border-white/20 text-white backdrop-blur-md hover:bg-white/20 transition-all">
+                <Button variant="outline" size="lg" className="rounded-full px-10 h-16 text-lg font-bold bg-background/10 border-background/20 text-background backdrop-blur-md hover:bg-background/20 transition-all">
                   Plus tard
                 </Button>
               </div>

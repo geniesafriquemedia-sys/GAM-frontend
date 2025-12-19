@@ -63,37 +63,37 @@ interface PermissionsGridProps {
 
 export function PermissionsGrid({ selectedPermissions, onChange }: PermissionsGridProps) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
       {permissionGroups.map((group) => (
-        <div key={group.name} className="space-y-4 p-6 rounded-[2rem] bg-muted/30 border border-border/50">
-          <div className="flex items-center gap-3 mb-2">
+        <div key={group.name} className="space-y-4 p-5 rounded-3xl bg-muted/20 border-none">
+          <div className="flex items-center gap-3 mb-1">
             <div className="p-2 rounded-xl bg-primary/10 text-primary">
               <group.icon className="h-4 w-4" />
             </div>
-            <h3 className="text-sm font-black uppercase tracking-widest">{group.name}</h3>
+            <h3 className="text-xs font-black uppercase tracking-widest text-foreground/80">{group.name}</h3>
           </div>
           
-          <div className="space-y-3">
+          <div className="space-y-2">
             {group.permissions.map((permission) => (
               <div 
                 key={permission.id} 
-                className="flex items-start gap-3 p-3 rounded-xl hover:bg-background/50 transition-colors cursor-pointer group"
+                className="flex items-start gap-3 p-3 rounded-2xl hover:bg-background/80 transition-all cursor-pointer group border border-transparent hover:border-border/50"
                 onClick={() => onChange(permission.id)}
               >
                 <Checkbox 
                   id={permission.id} 
                   checked={selectedPermissions.includes(permission.id)}
                   onCheckedChange={() => onChange(permission.id)}
-                  className="mt-1 border-primary/30 data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+                  className="mt-1 border-primary/20 data-[state=checked]:bg-primary data-[state=checked]:border-primary transition-colors"
                 />
                 <div className="space-y-0.5">
                   <Label 
                     htmlFor={permission.id}
-                    className="text-[11px] font-black uppercase tracking-wider cursor-pointer group-hover:text-primary transition-colors"
+                    className="text-[10px] font-extrabold uppercase tracking-wider cursor-pointer group-hover:text-primary transition-colors"
                   >
                     {permission.name}
                   </Label>
-                  <p className="text-[10px] text-muted-foreground font-medium leading-tight">
+                  <p className="text-[10px] text-muted-foreground/70 font-medium leading-tight">
                     {permission.description}
                   </p>
                 </div>

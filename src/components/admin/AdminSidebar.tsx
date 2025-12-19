@@ -11,7 +11,8 @@ import {
   BarChart3,
   Video,
   Menu,
-  X
+  X,
+  Shield
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -25,6 +26,7 @@ const menuItems = [
   { icon: FileText, label: "Articles", href: "/admin/articles" },
   { icon: Video, label: "Web TV", href: "/admin/web-tv" },
   { icon: Users, label: "Utilisateurs", href: "/admin/users" },
+  { icon: Shield, label: "Permissions", href: "/admin/roles" },
   { icon: BarChart3, label: "Analyses", href: "/admin/analytics" },
   { icon: Settings, label: "Paramètres", href: "/admin/settings" },
 ];

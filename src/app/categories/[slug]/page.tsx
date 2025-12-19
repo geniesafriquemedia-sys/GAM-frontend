@@ -1,7 +1,9 @@
 import { ArticleCard } from "@/components/ArticleCard";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { ArrowRight, Zap, Globe, Heart, BookOpen, BarChart3 } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 const categoriesData: Record<string, any> = {
   tech: {

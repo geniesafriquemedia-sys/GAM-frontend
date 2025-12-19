@@ -64,6 +64,30 @@ const videos = [
   { id: "v3", title: "Reportage : Les fermes solaires du Kenya", thumbnail: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=1000&auto=format&fit=crop", duration: "15:10" },
 ];
 
+// Variants for staggered animations
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2
+    }
+  }
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 30 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: {
+      duration: 0.8,
+      ease: [0.16, 1, 0.3, 1]
+    }
+  }
+};
+
 export default function Home() {
   return (
     <div className="flex flex-col gap-32 pb-32">
@@ -73,12 +97,13 @@ export default function Home() {
       {/* Latest Feed Section */}
       <section className="container mx-auto px-4">
         <motion.div 
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
           className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
         >
-          <div className="space-y-6 max-w-2xl">
+          <motion.div variants={itemVariants} className="space-y-6 max-w-2xl">
             <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <TrendingUp className="h-4 w-4" />
@@ -88,19 +113,29 @@ export default function Home() {
             <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9]">
               Pépites de <span className="text-primary italic">demain</span>.
             </h2>
-          </div>
-          <Button variant="outline" asChild className="rounded-2xl h-14 px-10 font-black border-primary/20 hover:bg-primary/5 hover:border-primary transition-all group">
-            <Link href="/actualites">
-              Tout le flux <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-            </Link>
-          </Button>
+          </motion.div>
+          <motion.div variants={itemVariants}>
+            <Button variant="outline" asChild className="rounded-2xl h-14 px-10 font-black border-primary/20 hover:bg-primary/5 hover:border-primary transition-all group">
+              <Link href="/actualites">
+                Tout le flux <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+              </Link>
+            </Button>
+          </motion.div>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-20">
+        <motion.div 
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+          variants={containerVariants}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-20"
+        >
           {latestArticles.map((article, index) => (
-            <ArticleCard key={article.id} {...article} index={index} />
+            <motion.div key={article.id} variants={itemVariants}>
+              <ArticleCard {...article} index={index} />
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       {/* Web TV Preview Section - YouTube Centric */}

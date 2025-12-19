@@ -2,8 +2,10 @@ import { Hero } from "@/components/Hero";
 import { ArticleCard } from "@/components/ArticleCard";
 import { Newsletter } from "@/components/Newsletter";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 // Mock Data
 const featuredArticle = {

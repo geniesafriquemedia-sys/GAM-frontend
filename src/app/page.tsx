@@ -138,7 +138,6 @@ export default function Home() {
       <section className="relative bg-black py-32 text-white overflow-hidden">
         <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-red-600/10 to-transparent pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-red-600/20 rounded-full blur-[100px] pointer-events-none" />
-        
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-5 space-y-10">
@@ -160,7 +159,6 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
-            
             <div className="lg:col-span-7">
               <motion.div 
                 initial="hidden"
@@ -202,173 +200,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="container mx-auto px-4">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="relative overflow-hidden rounded-[4rem] bg-secondary/10 p-10 md:p-24 border border-secondary/10 shadow-inner"
-        >
-          <div className="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 opacity-[0.03]">
-             <Zap className="h-[40rem] w-[40rem] text-primary" />
-          </div>
-          <div className="relative z-10">
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-20 gap-10">
-              <div className="space-y-4">
-                <Badge className="rounded-full bg-primary/10 text-primary border-none text-[10px] font-black uppercase tracking-[0.3em] px-5 py-1.5 mb-2">
-                  Grand Angle
-                </Badge>
-                <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">
-                  Focus <span className="text-primary italic">Tech</span> & Innovation.
-                </h2>
-              </div>
-              <Button variant="link" className="text-primary font-black uppercase tracking-[0.2em] text-[10px] group h-auto p-0" asChild>
-                <Link href="/categories/tech" className="flex items-center gap-3">
-                  Explorer la galaxie tech <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-2" />
-                </Link>
-              </Button>
-            </div>
-            <motion.div 
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={containerVariants}
-              className="grid grid-cols-1 lg:grid-cols-3 gap-12"
-            >
-              <div className="lg:col-span-2">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-                  <motion.div variants={itemVariants}>
-                    <ArticleCard 
-                      id="5"
-                      title="Tech : Startups à suivre en 2024"
-                      excerpt="Notre sélection des pépites technologiques qui vont faire bouger les lignes l'année prochaine."
-                      category="Tech"
-                      date="09 Oct 2023"
-                      image="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop"
-                      readTime="7 min"
-                    />
-                  </motion.div>
-                  <motion.div variants={itemVariants}>
-                    <ArticleCard 
-                      id="1"
-                      title="L'émergence des Smart Cities"
-                      excerpt="Kigali s'impose comme un modèle de développement urbain technologique sur le continent."
-                      category="Technologie"
-                      date="13 Oct 2023"
-                      image="https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=1000&auto=format&fit=crop"
-                      readTime="8 min"
-                    />
-                  </motion.div>
-                </div>
-              </div>
-              <motion.div 
-                variants={itemVariants}
-                whileHover={{ y: -10 }}
-                className="flex flex-col justify-between p-12 rounded-[3.5rem] bg-primary text-primary-foreground shadow-2xl shadow-primary/20 relative overflow-hidden"
-              >
-                <div className="absolute top-0 right-0 p-8 opacity-20">
-                  <Sparkles className="h-16 w-16" />
-                </div>
-                <div className="space-y-6 relative z-10">
-                  <h3 className="text-4xl font-black leading-none tracking-tighter">Plus de <br />Tech ?</h3>
-                  <p className="text-primary-foreground/70 font-medium leading-relaxed">
-                    Découvrez comment le numérique transforme les sociétés africaines en profondeur.
-                  </p>
-                </div>
-                <Button className="w-full h-16 rounded-2xl bg-white text-primary hover:bg-white/90 font-black shadow-xl transition-all hover:scale-[1.02] active:scale-95 text-xs uppercase tracking-widest relative z-10" asChild>
-                  <Link href="/categories/tech">Voir tous les dossiers</Link>
-                </Button>
-              </motion.div>
-            </motion.div>
-          </div>
-        </motion.div>
-      </section>
-
       <Newsletter />
-
-      <section className="container mx-auto px-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-24">
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={containerVariants}
-            className="space-y-12"
-          >
-            <motion.div variants={itemVariants} className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
-              <div className="space-y-1">
-                <h2 className="text-4xl font-black tracking-tighter">Culture.</h2>
-                <div className="h-1.5 w-12 bg-primary rounded-full" />
-              </div>
-              <Link href="/categories/culture" className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity">Tout voir</Link>
-            </motion.div>
-            <div className="grid gap-14">
-              {latestArticles.slice(1, 3).map((article, index) => (
-                <motion.div 
-                  key={article.id} 
-                  variants={itemVariants}
-                  className="group flex gap-8 items-center"
-                >
-                  <div className="relative h-36 w-36 md:h-48 md:w-48 shrink-0 overflow-hidden rounded-[3rem] shadow-xl group-hover:shadow-primary/10 transition-shadow">
-                    <Image src={article.image} alt={article.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                  </div>
-                  <div className="space-y-4 flex-1">
-                    <Badge className="bg-accent/10 text-accent border-none text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full">{article.category}</Badge>
-                    <Link href={`/articles/${article.id}`} className="block group-hover:text-primary transition-colors">
-                      <h3 className="text-2xl font-black leading-none tracking-tight">{article.title}</h3>
-                    </Link>
-                    <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-                      <span>{article.date}</span>
-                      <div className="h-1 w-1 rounded-full bg-primary/30" />
-                      <span>{article.readTime}</span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-
-          <motion.div 
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={containerVariants}
-            className="space-y-12"
-          >
-            <motion.div variants={itemVariants} className="flex items-center justify-between border-b-2 border-primary/10 pb-6">
-              <div className="space-y-1">
-                <h2 className="text-4xl font-black tracking-tighter">Société.</h2>
-                <div className="h-1.5 w-12 bg-secondary rounded-full" />
-              </div>
-              <Link href="/categories/societe" className="text-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-70 transition-opacity">Tout voir</Link>
-            </motion.div>
-            <div className="grid gap-14">
-              {latestArticles.slice(2, 4).map((article, index) => (
-                <motion.div 
-                  key={article.id} 
-                  variants={itemVariants}
-                  className="group flex gap-8 items-center"
-                >
-                  <div className="relative h-36 w-36 md:h-48 md:w-48 shrink-0 overflow-hidden rounded-[3rem] shadow-xl group-hover:shadow-secondary/10 transition-shadow">
-                    <Image src={article.image} alt={article.title} fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
-                  </div>
-                  <div className="space-y-4 flex-1">
-                    <Badge className="bg-primary/10 text-primary border-none text-[8px] font-black uppercase tracking-widest px-3 py-1 rounded-full">{article.category}</Badge>
-                    <Link href={`/articles/${article.id}`} className="block group-hover:text-primary transition-colors">
-                      <h3 className="text-2xl font-black leading-none tracking-tight">{article.title}</h3>
-                    </Link>
-                    <div className="flex items-center gap-3 text-[9px] font-black uppercase tracking-widest text-muted-foreground/60">
-                      <span>{article.date}</span>
-                      <div className="h-1 w-1 rounded-full bg-secondary/30" />
-                      <span>{article.readTime}</span>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          </motion.div>
-        </div>
-      </section>
     </div>
   );
 }

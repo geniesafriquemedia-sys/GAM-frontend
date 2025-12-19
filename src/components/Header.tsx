@@ -98,9 +98,12 @@ export function Header() {
               </Button>
             </SheetTrigger>
             <SheetContent side="right" className="w-full sm:max-w-md p-0 bg-background overflow-hidden border-l border-primary/10">
-              <div className="flex flex-col h-full">
+              <div className="flex flex-col h-full relative">
+                {/* African Pattern Overlay */}
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6zM36 4V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
+                
                 {/* Sidebar Header */}
-                <div className="p-8 pb-4 flex items-center justify-between border-b border-primary/5 bg-muted/20">
+                <div className="p-8 pb-4 flex items-center justify-between border-b border-primary/5 bg-muted/20 relative z-10">
                   <div className="flex flex-col">
                     <span className="text-2xl font-black tracking-tighter text-primary leading-none">GAM</span>
                     <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-1">Menu de Navigation</span>

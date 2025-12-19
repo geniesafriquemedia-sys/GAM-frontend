@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { 
   UserPlus, 
@@ -18,6 +19,8 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { toast } from "sonner";
 import { ConfirmDelete } from "@/components/admin/ConfirmDelete";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { UserForm } from "@/components/admin/forms/UserForm";
 
 const users = [
   {
@@ -50,26 +53,38 @@ const users = [
 ];
 
 export default function UsersAdmin() {
+  const [selectedUser, setSelectedUser] = useState<any>(null);
+  const [isInviteOpen, setIsInviteOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+
   return (
     <div className="space-y-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-black tracking-tighter uppercase italic">UTILISATEURS</h1>
+          <h1 className="text-3xl font-black tracking-tighter uppercase italic text-foreground">UTILISATEURS</h1>
           <p className="text-muted-foreground font-medium">Gérez les membres de votre équipe et leurs permissions.</p>
         </div>
-        <Button className="rounded-xl h-12 px-6 font-black bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-95">
-          <UserPlus className="mr-2 h-4 w-4" /> INVITER UN MEMBRE
-        </Button>
+        
+        <Dialog open={isInviteOpen} onOpenChange={setIsInviteOpen}>
+          <DialogTrigger asChild>
+            <Button className="rounded-xl h-12 px-6 font-black bg-primary text-white hover:bg-primary/90 shadow-lg shadow-primary/20 transition-all active:scale-95 text-[10px] uppercase tracking-widest">
+              <UserPlus className="mr-2 h-4 w-4" /> INVITER UN MEMBRE
+            </Button>
+          </DialogTrigger>
+          <DialogContent className="max-w-3xl rounded-[2.5rem] border-none p-8 bg-background shadow-2xl">
+            <UserForm mode="create" onClose={() => setIsInviteOpen(false)} />
+          </DialogContent>
+        </Dialog>
       </div>
 
-      <div className="bg-card border border-border rounded-[2rem] overflow-hidden">
-        <div className="p-6 border-b border-border">
+      <div className="bg-card border border-border rounded-[2rem] overflow-hidden shadow-sm">
+        <div className="p-6 border-b border-border bg-muted/10">
           <div className="flex flex-col md:flex-row gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
               <Input 
                 placeholder="Rechercher par nom ou email..." 
-                className="pl-11 h-12 rounded-xl bg-muted/50 border-none font-medium"
+                className="pl-11 h-12 rounded-xl bg-muted/50 border-none font-medium text-foreground"
               />
             </div>
             <div className="flex gap-2">
@@ -102,7 +117,7 @@ export default function UsersAdmin() {
                   animate={{ opacity: 1 }}
                   className="hover:bg-muted/20 transition-colors group"
                 >
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-foreground">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-xl bg-muted overflow-hidden border border-border group-hover:border-primary/30 transition-colors">
                         <img src={user.avatar} alt={user.name} className="h-full w-full object-cover" />
@@ -113,13 +128,13 @@ export default function UsersAdmin() {
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-foreground">
                     <div className="flex items-center gap-2">
                       <Shield className="h-3.5 w-3.5 text-primary" />
                       <span className="text-xs font-bold uppercase tracking-wider">{user.role}</span>
                     </div>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-foreground">
                     <Badge className={
                       user.status === 'Actif' 
                         ? 'bg-green-500/10 text-green-500 border-green-500/20 text-[9px] font-black uppercase' 
@@ -129,39 +144,53 @@ export default function UsersAdmin() {
                       {user.status}
                     </Badge>
                   </td>
-                  <td className="px-6 py-4">
+                  <td className="px-6 py-4 text-foreground">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground font-medium">
                       <Calendar className="h-3.5 w-3.5" />
                       {user.joined}
                     </div>
                   </td>
-                    <td className="px-6 py-4 text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button 
-                          onClick={() => toast.info(`Modification de l'utilisateur : ${user.name}`)}
-                          variant="ghost" 
-                          size="icon" 
-                          className="h-9 w-9 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors"
-                        >
-                          <Edit2 className="h-4 w-4" />
-                        </Button>
-                        <ConfirmDelete 
-                          onConfirm={() => toast.success(`Utilisateur "${user.name}" supprimé`)}
-                          trigger={
-                            <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors">
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          }
-                        />
-                      </div>
-                    </td>
-
+                  <td className="px-6 py-4 text-right">
+                    <div className="flex items-center justify-end gap-1">
+                      <Button 
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setIsEditOpen(true);
+                        }}
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-9 w-9 rounded-lg hover:bg-primary/10 hover:text-primary transition-colors text-foreground"
+                      >
+                        <Edit2 className="h-4 w-4" />
+                      </Button>
+                      <ConfirmDelete 
+                        onConfirm={() => toast.success(`Utilisateur "${user.name}" supprimé`)}
+                        trigger={
+                          <Button variant="ghost" size="icon" className="h-9 w-9 rounded-lg hover:bg-destructive/10 hover:text-destructive transition-colors text-foreground">
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        }
+                      />
+                    </div>
+                  </td>
                 </motion.tr>
               ))}
             </tbody>
           </table>
         </div>
       </div>
+
+      <Dialog open={isEditOpen} onOpenChange={setIsEditOpen}>
+        <DialogContent className="max-w-3xl rounded-[2.5rem] border-none p-8 bg-background shadow-2xl">
+          {selectedUser && (
+            <UserForm 
+              mode="edit" 
+              initialData={selectedUser} 
+              onClose={() => setIsEditOpen(false)} 
+            />
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -1,17 +1,27 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame, Facebook, Twitter, Instagram, Linkedin, ArrowRight, User } from "lucide-react";
+import { Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame, Facebook, Twitter, Instagram, Linkedin, ArrowRight, User, Radio } from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
+import { useVideos } from "@/hooks";
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
+
+  // Fetch live video to check if there's a live stream
+  const { videos: liveVideos, isLoading: liveLoading } = useVideos({
+    initialParams: { is_live: true, page_size: 1 }
+  });
+  const hasLiveVideo = liveVideos && liveVideos.length > 0;
+
+  // Show live style while loading (optimistic) or when live video exists
+  const showLiveStyle = liveLoading || hasLiveVideo;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -22,7 +32,8 @@ export function Header() {
   const navLinks = [
     { name: "Accueil", href: "/" },
     { name: "Actualités", href: "/actualites" },
-    { name: "Web TV", href: "/web-tv", isLive: true },
+    { name: "Direct", href: "/direct", isLive: showLiveStyle },
+    { name: "Web TV", href: "/web-tv" },
     { name: "À Propos", href: "/about" },
     { name: "Contact", href: "/contact" },
   ];
@@ -87,8 +98,21 @@ export function Header() {
             <Search className="h-5 w-5" />
           </Button>
           
-            <Button asChild className="hidden sm:flex rounded-full px-8 font-black text-xs uppercase tracking-widest bg-primary hover:bg-primary/90 shadow-xl shadow-primary/20 transition-all hover:-translate-y-0.5 active:translate-y-0">
-               <Link href="/web-tv">Direct TV</Link>
+            <Button asChild className={cn(
+              "hidden sm:flex rounded-full px-8 font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0",
+              showLiveStyle
+                ? "bg-red-500 hover:bg-red-600 shadow-red-500/30"
+                : "bg-primary hover:bg-primary/90 shadow-primary/20"
+            )}>
+               <Link href="/direct" className="flex items-center gap-2">
+                 {showLiveStyle && (
+                   <span className="relative flex h-2 w-2">
+                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                     <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                   </span>
+                 )}
+                 {showLiveStyle ? "En Direct" : "Voir le Direct"}
+               </Link>
             </Button>
 
             <Button asChild variant="ghost" size="icon" className="hidden lg:flex rounded-full hover:bg-primary/10 hover:text-primary transition-all">

@@ -1,67 +1,49 @@
+"use client";
+
+import { useState } from "react";
 import { ArticleCard } from "@/components/ArticleCard";
 import { Badge } from "@/components/ui/badge";
-import { Filter, TrendingUp } from "lucide-react";
-
-const allArticles = [
-  {
-    id: "1",
-    title: "L'émergence des Smart Cities en Afrique : L'exemple de Kigali",
-    excerpt: "Kigali s'impose comme un modèle de développement urbain technologique sur le continent.",
-    category: "Technologie",
-    date: "13 Oct 2023",
-    image: "https://images.unsplash.com/photo-1516062423079-7ca13cdc7f5a?q=80&w=2000&auto=format&fit=crop",
-    readTime: "8 min",
-  },
-  {
-    id: "2",
-    title: "Éducation : Le boom des plateformes d'e-learning locales",
-    excerpt: "De plus en plus d'entrepreneurs africains lancent des solutions d'apprentissage en ligne adaptées aux réalités du continent.",
-    category: "Éducation",
-    date: "12 Oct 2023",
-    image: "https://images.unsplash.com/photo-1501504905252-473c47e087f8?q=80&w=1000&auto=format&fit=crop",
-    readTime: "5 min",
-  },
-  {
-    id: "3",
-    title: "Culture : Le retour en force de l'artisanat traditionnel",
-    excerpt: "Comment les jeunes designers réinventent les codes de l'artisanat ancestral pour le marché mondial.",
-    category: "Culture",
-    date: "11 Oct 2023",
-    image: "https://images.unsplash.com/photo-1534073828943-f801091bb18c?q=80&w=1000&auto=format&fit=crop",
-    readTime: "4 min",
-  },
-  {
-    id: "4",
-    title: "Société : Les enjeux de la transition énergétique",
-    excerpt: "Analyse des défis et opportunités du passage au vert pour les économies d'Afrique subsaharienne.",
-    category: "Société",
-    date: "10 Oct 2023",
-    image: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?q=80&w=1000&auto=format&fit=crop",
-    readTime: "6 min",
-  },
-  {
-    id: "5",
-    title: "Tech : Startups à suivre en 2024",
-    excerpt: "Notre sélection des pépites technologiques qui vont faire bouger les lignes l'année prochaine.",
-    category: "Tech",
-    date: "09 Oct 2023",
-    image: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1000&auto=format&fit=crop",
-    readTime: "7 min",
-  },
-  {
-    id: "6",
-    title: "Economie : La résilience des marchés ouest-africains",
-    excerpt: "Décryptage des dynamiques économiques régionales face aux enjeux mondiaux.",
-    category: "Economie",
-    date: "08 Oct 2023",
-    image: "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=1000&auto=format&fit=crop",
-    readTime: "5 min",
-  },
-];
-
-const categories = ["Tous", "Technologie", "Société", "Culture", "Éducation", "Economie", "Tech"];
+import { TrendingUp } from "lucide-react";
+import { useArticles, useCategories } from "@/hooks";
 
 export default function ActualitesPage() {
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+
+  // Fetch articles avec le hook
+  const {
+    articles,
+    pagination,
+    error: articlesError,
+    setFilters,
+    setPage
+  } = useArticles({
+    initialParams: {
+      page_size: 12,
+      ordering: '-published_at'
+    }
+  });
+
+  // Fetch catégories
+  const { data: categoriesData } = useCategories();
+
+  const categories = categoriesData || [];
+  const hasMore = pagination.hasNext;
+  const totalCount = pagination.totalCount;
+
+  const handleCategoryClick = (categorySlug: string | null) => {
+    setSelectedCategory(categorySlug);
+    // Utiliser setFilters pour mettre à jour la catégorie
+    if (categorySlug) {
+      setFilters({ category_slug: categorySlug });
+    } else {
+      setFilters({ category_slug: undefined });
+    }
+  };
+
+  const handleLoadMore = () => {
+    setPage(pagination.page + 1);
+  };
+
   return (
     <div className="container mx-auto px-4 py-16 space-y-16">
       <header className="max-w-3xl space-y-6">
@@ -79,32 +61,81 @@ export default function ActualitesPage() {
 
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-y py-8">
         <div className="flex items-center gap-4 overflow-x-auto pb-4 md:pb-0 scrollbar-hide">
-          <Badge className="h-10 px-6 rounded-full bg-primary text-white font-bold cursor-pointer whitespace-nowrap">
+          <Badge
+            onClick={() => handleCategoryClick(null)}
+            className={`h-10 px-6 rounded-full font-bold cursor-pointer whitespace-nowrap transition-all ${
+              selectedCategory === null
+                ? 'bg-primary text-white'
+                : 'bg-secondary/50 text-muted-foreground hover:bg-primary/10 hover:text-primary'
+            }`}
+          >
             Tous les articles
           </Badge>
-          {categories.filter(c => c !== "Tous").map((cat) => (
-            <Badge key={cat} variant="secondary" className="h-10 px-6 rounded-full bg-secondary/50 text-muted-foreground hover:bg-primary/10 hover:text-primary font-bold cursor-pointer transition-all whitespace-nowrap">
-              {cat}
+          {categories.map((cat) => (
+            <Badge
+              key={cat.id}
+              onClick={() => handleCategoryClick(cat.slug)}
+              variant="secondary"
+              className={`h-10 px-6 rounded-full font-bold cursor-pointer transition-all whitespace-nowrap ${
+                selectedCategory === cat.slug
+                  ? 'bg-primary text-white'
+                  : 'bg-secondary/50 text-muted-foreground hover:bg-primary/10 hover:text-primary'
+              }`}
+              style={selectedCategory === cat.slug && cat.color ? { backgroundColor: cat.color } : {}}
+            >
+              {cat.name}
             </Badge>
           ))}
         </div>
-        <div className="flex items-center gap-3 text-muted-foreground font-bold text-sm bg-muted/50 px-6 py-3 rounded-2xl cursor-pointer hover:bg-muted transition-colors whitespace-nowrap">
-          <Filter className="h-4 w-4" />
-          <span>Filtrer par date</span>
+        <div className="flex items-center gap-3 text-muted-foreground font-bold text-sm">
+          <span>{totalCount} article{totalCount > 1 ? 's' : ''}</span>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-        {allArticles.map((article) => (
-          <ArticleCard key={article.id} {...article} />
-        ))}
-      </div>
 
-      <div className="flex justify-center pt-12">
-        <button className="px-10 py-5 bg-zinc-950 text-white font-black uppercase tracking-widest text-xs rounded-full hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-950/20 active:scale-95">
-          Charger plus d'articles
-        </button>
-      </div>
+      {/* Error State */}
+      {articlesError && (
+        <div className="text-center py-20">
+          <p className="text-destructive font-medium">Une erreur est survenue lors du chargement des articles.</p>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-4 px-6 py-2 bg-primary text-white rounded-full font-bold"
+          >
+            Réessayer
+          </button>
+        </div>
+      )}
+
+      {/* Empty State */}
+      {!articlesError && articles.length === 0 && (
+        <div className="text-center py-20">
+          <p className="text-muted-foreground font-medium text-lg">
+            Aucun article trouvé
+            {selectedCategory && " dans cette catégorie"}.
+          </p>
+        </div>
+      )}
+
+      {/* Articles Grid */}
+      {articles.length > 0 && (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+          {articles.map((article, index) => (
+            <ArticleCard key={article.id} article={article} index={index} />
+          ))}
+        </div>
+      )}
+
+      {/* Load More Button */}
+      {hasMore && (
+        <div className="flex justify-center pt-12">
+          <button
+            onClick={handleLoadMore}
+            className="px-10 py-5 bg-zinc-950 text-white font-black uppercase tracking-widest text-xs rounded-full hover:bg-zinc-800 transition-all shadow-xl shadow-zinc-950/20 active:scale-95"
+          >
+            Charger plus d'articles
+          </button>
+        </div>
+      )}
     </div>
   );
 }

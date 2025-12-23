@@ -1,148 +1,275 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Play, Calendar, Clock, Tv, ArrowRight, Share2, Info } from "lucide-react";
-import Image from "next/image";
+import { Play, Tv, Loader2, Filter, Radio } from "lucide-react";
 import Link from "next/link";
 import { VideoCard } from "@/components/VideoCard";
+import { useVideos } from "@/hooks";
+import { useState } from "react";
 
-const videos = [
-  { 
-    id: "v1", 
-    title: "L'industrie du futur à Lagos : Immersion dans la tech nigériane", 
-    thumbnail: "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1000&auto=format&fit=crop", 
-    duration: "12:45",
-    date: "12 Oct 2023",
-    category: "Documentaire",
-    description: "Découvrez comment Lagos est devenue le hub technologique incontournable du continent africain."
-  },
-  { 
-    id: "v2", 
-    title: "Le retour du textile traditionnel : L'art du pagne revisité", 
-    thumbnail: "https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?q=80&w=1000&auto=format&fit=crop", 
-    duration: "08:20",
-    date: "10 Oct 2023",
-    category: "Culture",
-    description: "Immersion dans les ateliers des designers qui réinventent les codes de la mode africaine."
-  },
-  { 
-    id: "v3", 
-    title: "Reportage exclusif : Les fermes solaires géantes du Kenya", 
-    thumbnail: "https://images.unsplash.com/photo-1497435334941-8c899ee9e8e9?q=80&w=1000&auto=format&fit=crop", 
-    duration: "15:10",
-    date: "08 Oct 2023",
-    category: "Énergie",
-    description: "Le Kenya s'impose comme leader mondial de l'énergie renouvelable. Analyse d'un succès énergétique."
-  },
-  { 
-    id: "v4", 
-    title: "Talk : L'avenir de l'intelligence artificielle en Afrique", 
-    thumbnail: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1000&auto=format&fit=crop", 
-    duration: "24:30",
-    date: "05 Oct 2023",
-    category: "Innovation",
-    description: "Débat avec les meilleurs experts sur les opportunités de l'IA pour le développement du continent."
-  },
-];
+type VideoTypeFilter = 'all' | 'emission' | 'reportage' | 'interview' | 'documentary' | 'short';
+
+const VIDEO_TYPE_LABELS: Record<VideoTypeFilter, string> = {
+  all: 'Tout',
+  emission: 'Émissions',
+  reportage: 'Reportages',
+  interview: 'Interviews',
+  documentary: 'Documentaires',
+  short: 'Courts métrages',
+};
 
 export default function WebTVPage() {
-  const featuredVideo = videos[0];
+  const [activeFilter, setActiveFilter] = useState<VideoTypeFilter>('all');
+
+  // Fetch videos with optional type filter
+  const queryParams: any = {
+    page_size: 12,
+    ordering: '-published_at',
+    is_live: false, // Exclude live videos (they're on /direct page)
+  };
+
+  if (activeFilter !== 'all') {
+    queryParams.video_type = activeFilter;
+  }
+
+  const { videos, pagination, isLoading } = useVideos({
+    initialParams: queryParams
+  });
+
+  // Fetch featured video for hero
+  const { videos: featuredVideos, isLoading: featuredLoading } = useVideos({
+    initialParams: {
+      is_featured: true,
+      is_live: false,
+      page_size: 1,
+    }
+  });
+
+  const featuredVideo = featuredVideos?.[0];
 
   return (
     <div className="bg-background text-foreground min-h-screen pb-24">
-      {/* Immersive Hero */}
-      <section className="relative h-[90vh] w-full overflow-hidden">
-        <Image 
-          src={featuredVideo.thumbnail} 
-          alt={featuredVideo.title} 
-          fill 
-          className="object-cover opacity-60 scale-105 blur-sm"
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-background via-background/60 to-transparent" />
-        
-        <div className="container mx-auto px-4 h-full flex flex-col justify-end pb-24 relative z-10">
-          <div className="max-w-4xl space-y-8">
-            <div className="flex items-center gap-3">
-              <Badge className="bg-primary text-white border-none px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] shadow-2xl shadow-primary/40">
-                À LA UNE • YOUTUBE INTÉGRAL
-              </Badge>
-              <div className="flex items-center gap-2 text-primary font-black text-[10px] uppercase tracking-widest">
-                <div className="h-2 w-2 rounded-full bg-primary animate-pulse" />
-                <span>En direct</span>
+
+      {/* Hero Section with Featured Video */}
+      {featuredLoading ? (
+        <section className="relative min-h-[60vh] bg-gradient-to-br from-primary/5 to-background">
+          <div className="container mx-auto px-4 py-16">
+            <div className="animate-pulse space-y-6 max-w-4xl">
+              <div className="h-8 w-32 bg-muted rounded-full" />
+              <div className="h-16 w-3/4 bg-muted rounded-lg" />
+              <div className="h-24 w-full bg-muted rounded-lg" />
+            </div>
+          </div>
+        </section>
+      ) : featuredVideo ? (
+        <section className="relative min-h-[70vh] w-full overflow-hidden bg-gradient-to-br from-primary/10 via-background to-background">
+          {/* Background blur effects */}
+          <div className="absolute top-0 right-0 w-1/2 h-full bg-primary/5 blur-[150px]" />
+          <div className="absolute bottom-0 left-0 w-1/3 h-1/2 bg-accent/5 blur-[100px]" />
+
+          <div className="container mx-auto px-4 py-12 lg:py-20 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+              {/* Left: Info */}
+              <div className="space-y-8 order-2 lg:order-1">
+                <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
+                    <Tv className="h-4 w-4" />
+                    <span>Web TV</span>
+                  </div>
+                  <Badge
+                    className="font-black uppercase tracking-widest text-xs"
+                    style={{
+                      backgroundColor: featuredVideo.category?.color,
+                      color: '#fff',
+                    }}
+                  >
+                    {featuredVideo.category?.name || 'Vidéo'}
+                  </Badge>
+                </div>
+
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.95]">
+                  {featuredVideo.title}
+                </h1>
+
+                <p className="text-lg md:text-xl text-muted-foreground font-medium leading-relaxed max-w-xl">
+                  {featuredVideo.description?.substring(0, 200)}
+                  {featuredVideo.description && featuredVideo.description.length > 200 ? '...' : ''}
+                </p>
+
+                <div className="flex flex-wrap items-center gap-4">
+                  <Button
+                    size="lg"
+                    className="h-14 px-8 rounded-2xl bg-primary hover:bg-primary/90 text-white font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/30"
+                    asChild
+                  >
+                    <Link href={`/web-tv/${featuredVideo.slug}`}>
+                      <Play className="mr-2 h-5 w-5 fill-white" /> Regarder
+                    </Link>
+                  </Button>
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground font-semibold">
+                    <span className="px-3 py-1 bg-muted rounded-full border border-border">
+                      {featuredVideo.duration_formatted}
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Right: Thumbnail */}
+              <div className="order-1 lg:order-2">
+                <Link href={`/web-tv/${featuredVideo.slug}`} className="block group">
+                  <div className="relative rounded-3xl overflow-hidden shadow-2xl border border-border">
+                    <div className="aspect-video relative">
+                      <img
+                        src={featuredVideo.thumbnail_url}
+                        alt={featuredVideo.title}
+                        className="w-full h-full object-cover"
+                      />
+                      {/* Play overlay */}
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/40 transition-colors">
+                        <div className="h-20 w-20 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md border-2 border-white/50 group-hover:scale-110 transition-transform">
+                          <Play className="h-10 w-10 fill-white text-white translate-x-1" />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
               </div>
             </div>
-            
-            <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9]">
-              {featuredVideo.title}
-            </h1>
-            
-            <p className="text-xl md:text-2xl text-muted-foreground font-medium leading-tight max-w-2xl">
-              {featuredVideo.description}
+          </div>
+        </section>
+      ) : null}
+
+      {/* Direct CTA Banner */}
+      <section className="container mx-auto px-4 py-8">
+        <Link
+          href="/direct"
+          className="block rounded-3xl bg-gradient-to-r from-red-500 to-red-600 p-8 md:p-12 text-white hover:shadow-2xl hover:shadow-red-500/20 transition-all group"
+        >
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
+                <Radio className="h-8 w-8" />
+              </div>
+              <div>
+                <h3 className="text-2xl md:text-3xl font-black tracking-tight mb-1">
+                  GAM en Direct
+                </h3>
+                <p className="text-white/90 font-medium">
+                  Suivez notre direct en continu - Actualités et débats en temps réel
+                </p>
+              </div>
+            </div>
+            <Button
+              size="lg"
+              className="bg-white text-red-600 hover:bg-white/90 font-black rounded-full px-8 shadow-lg group-hover:scale-105 transition-transform"
+            >
+              Voir le direct
+              <Play className="ml-2 h-5 w-5 fill-current" />
+            </Button>
+          </div>
+        </Link>
+      </section>
+
+      {/* Filters & Video Grid */}
+      <section className="container mx-auto px-4 mt-16">
+
+        {/* Header with Filters */}
+        <div className="mb-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-8">
+            <div className="space-y-4">
+              <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
+                <Tv className="h-4 w-4" />
+                <span>Catalogue</span>
+              </div>
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter">
+                Toutes nos vidéos.
+              </h2>
+            </div>
+            <div className="text-muted-foreground font-medium">
+              {pagination.totalCount} vidéo{pagination.totalCount > 1 ? 's' : ''}
+            </div>
+          </div>
+
+          {/* Type Filters */}
+          <div className="flex items-center gap-3 flex-wrap">
+            <div className="flex items-center gap-2 text-muted-foreground text-sm font-semibold">
+              <Filter className="h-4 w-4" />
+              <span>Filtrer :</span>
+            </div>
+            {(Object.keys(VIDEO_TYPE_LABELS) as VideoTypeFilter[]).map((type) => (
+              <Button
+                key={type}
+                variant={activeFilter === type ? "default" : "outline"}
+                size="sm"
+                className="rounded-full font-bold text-xs uppercase tracking-wider"
+                onClick={() => setActiveFilter(type)}
+              >
+                {VIDEO_TYPE_LABELS[type]}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Loading State */}
+        {isLoading && (
+          <div className="flex items-center justify-center py-20">
+            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          </div>
+        )}
+
+        {/* Videos Grid */}
+        {!isLoading && videos.length > 0 && (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+            {videos.map((video) => (
+              <VideoCard key={video.id} video={video} />
+            ))}
+          </div>
+        )}
+
+        {/* Empty State */}
+        {!isLoading && videos.length === 0 && (
+          <div className="text-center py-20 space-y-4">
+            <Tv className="h-16 w-16 text-muted-foreground mx-auto" />
+            <h3 className="text-2xl font-black tracking-tight">Aucune vidéo trouvée</h3>
+            <p className="text-muted-foreground text-lg">
+              {activeFilter !== 'all'
+                ? `Aucune vidéo de type "${VIDEO_TYPE_LABELS[activeFilter]}" disponible.`
+                : 'Aucune vidéo disponible pour le moment.'}
             </p>
-
-            <div className="flex flex-wrap items-center gap-6 pt-4">
-              <Button size="lg" className="h-16 px-10 rounded-3xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-xs shadow-2xl shadow-primary/20" asChild>
-                <Link href={`/web-tv/${featuredVideo.id}`}>
-                  <Play className="mr-3 h-5 w-5 fill-white" /> Regarder maintenant
-                </Link>
+            {activeFilter !== 'all' && (
+              <Button
+                variant="outline"
+                className="rounded-full font-bold mt-4"
+                onClick={() => setActiveFilter('all')}
+              >
+                Voir toutes les vidéos
               </Button>
-              <Button size="lg" variant="outline" className="h-16 px-8 rounded-3xl border-border hover:bg-muted font-black uppercase tracking-widest text-xs transition-all">
-                <Info className="mr-3 h-5 w-5" /> Détails de la vidéo
-              </Button>
-            </div>
+            )}
           </div>
-        </div>
+        )}
       </section>
 
-      {/* Video Grid Section */}
-      <section className="container mx-auto px-4 mt-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
-          <div className="space-y-4">
-            <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
-              <Tv className="h-4 w-4" />
-              <span>Univers YouTube</span>
-            </div>
-            <h2 className="text-4xl md:text-6xl font-black tracking-tighter">L'intégralité de nos vidéos.</h2>
-          </div>
-          <div className="flex items-center gap-4">
-             <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-border hover:bg-muted">
-                Plus récents
-             </Button>
-             <Button variant="outline" className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-[10px] border-border hover:bg-muted">
-                Populaires
-             </Button>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
-          {videos.map((video) => (
-            <VideoCard key={video.id} {...video} />
-          ))}
-        </div>
-      </section>
-
-      {/* Playlist Section */}
-      <section className="container mx-auto px-4 mt-40">
+      {/* Newsletter Section */}
+      <section className="container mx-auto px-4 mt-32">
         <div className="rounded-[4rem] bg-card p-12 md:p-24 border border-border relative overflow-hidden">
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div className="space-y-8">
-               <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.9]">Ne manquez <br/>aucun direct.</h2>
-               <p className="text-xl text-muted-foreground font-medium leading-relaxed">
-                 Abonnez-vous à nos alertes pour recevoir une notification dès que nous passons en direct ou publions un nouveau reportage exclusif.
-               </p>
-               <div className="flex flex-col sm:flex-row gap-4">
-                 <input 
-                   placeholder="Votre adresse email" 
-                   className="flex-1 bg-muted border border-border rounded-2xl px-6 py-4 text-foreground focus:ring-2 focus:ring-primary outline-none"
-                 />
-                 <Button className="h-14 px-10 rounded-2xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
-                   S'abonner
-                 </Button>
-               </div>
-            </div>
-            <div className="grid grid-cols-2 gap-4">
-               {[1,2,3,4].map(i => (
-                 <div key={i} className="aspect-square rounded-3xl bg-muted animate-pulse" />
-               ))}
+          <div className="relative z-10 max-w-2xl mx-auto text-center space-y-8">
+            <h2 className="text-4xl md:text-6xl font-black tracking-tighter leading-[0.9]">
+              Ne manquez rien.
+            </h2>
+            <p className="text-xl text-muted-foreground font-medium leading-relaxed">
+              Abonnez-vous pour recevoir une notification à chaque nouvelle vidéo ou direct exclusif.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+              <input
+                type="email"
+                placeholder="Votre adresse email"
+                className="flex-1 bg-muted border border-border rounded-2xl px-6 py-4 text-foreground focus:ring-2 focus:ring-primary outline-none"
+              />
+              <Button className="h-14 px-10 rounded-2xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-xs shadow-lg shadow-primary/20">
+                S'abonner
+              </Button>
             </div>
           </div>
           <div className="absolute top-0 right-0 h-full w-1/3 bg-primary/5 blur-[100px] -z-10" />

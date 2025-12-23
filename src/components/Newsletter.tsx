@@ -2,18 +2,42 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Mail, ArrowRight, Sparkles, Send } from "lucide-react";
+import { Mail, ArrowRight, Sparkles, Send, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
+import { newsletterService, isValidEmail } from "@/lib/api/services/engagement.service";
 
 export function Newsletter() {
   const [email, setEmail] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (email) {
+
+    if (!email) {
+      toast.error("Veuillez entrer votre adresse email");
+      return;
+    }
+
+    if (!isValidEmail(email)) {
+      toast.error("Veuillez entrer une adresse email valide");
+      return;
+    }
+
+    setIsLoading(true);
+
+    try {
+      await newsletterService.subscribe(email, "homepage");
       toast.success("Bienvenue dans la communauté GAM !");
       setEmail("");
+    } catch (error: any) {
+      if (error?.message?.includes("déjà inscrit")) {
+        toast.info("Vous êtes déjà inscrit à notre newsletter !");
+      } else {
+        toast.error("Une erreur est survenue. Veuillez réessayer.");
+      }
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -71,9 +95,22 @@ export function Newsletter() {
                 </div>
               </div>
               
-              <Button type="submit" className="w-full h-20 rounded-3xl bg-primary text-primary-foreground hover:bg-primary/90 font-black text-xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 group">
-                Rejoindre le mouvement
-                <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
+              <Button
+                type="submit"
+                disabled={isLoading}
+                className="w-full h-20 rounded-3xl bg-primary text-primary-foreground hover:bg-primary/90 font-black text-xl shadow-2xl shadow-primary/20 transition-all hover:scale-[1.02] active:scale-95 group disabled:opacity-70 disabled:cursor-not-allowed"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-3 h-6 w-6 animate-spin" />
+                    Inscription en cours...
+                  </>
+                ) : (
+                  <>
+                    Rejoindre le mouvement
+                    <ArrowRight className="ml-3 h-6 w-6 transition-transform group-hover:translate-x-2" />
+                  </>
+                )}
               </Button>
             </form>
             

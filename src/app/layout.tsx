@@ -3,6 +3,7 @@ import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
+import { Toaster } from "sonner";
 import Script from "next/script";
 
 const spaceGrotesk = Space_Grotesk({
@@ -10,9 +11,53 @@ const spaceGrotesk = Space_Grotesk({
   variable: "--font-space-grotesk",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gam.africa';
+
+// Métadonnées globales avec OpenGraph (US-09, US-11)
 export const metadata: Metadata = {
-  title: "GAM – Génies Afrique Médias",
-  description: "Média panafricain dédié à l'innovation, la culture et l'actualité en Afrique.",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "GAM – Génies Afrique Médias",
+    template: "%s | GAM",
+  },
+  description: "Média panafricain dédié à l'innovation, la culture et l'actualité en Afrique. Découvrez nos articles, reportages et émissions Web TV.",
+  keywords: ["Afrique", "médias", "actualités", "innovation", "culture", "économie", "technologie", "web tv", "panafricain"],
+  authors: [{ name: "Génies Afrique Médias" }],
+  creator: "Génies Afrique Médias",
+  publisher: "Génies Afrique Médias",
+  openGraph: {
+    type: "website",
+    locale: "fr_FR",
+    url: SITE_URL,
+    siteName: "GAM - Génies Afrique Médias",
+    title: "GAM – Génies Afrique Médias",
+    description: "Média panafricain dédié à l'innovation, la culture et l'actualité en Afrique.",
+    images: [
+      {
+        url: `${SITE_URL}/og-image.jpg`,
+        width: 1200,
+        height: 630,
+        alt: "GAM - Génies Afrique Médias",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "GAM – Génies Afrique Médias",
+    description: "Média panafricain dédié à l'innovation, la culture et l'actualité en Afrique.",
+    images: [`${SITE_URL}/og-image.jpg`],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
 };
 
 export default function RootLayout({
@@ -36,6 +81,7 @@ export default function RootLayout({
           {children}
         </main>
         <Footer />
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );

@@ -1,3 +1,4 @@
+import { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, Clock, Share2, PlayCircle, Info } from "lucide-react";
@@ -11,6 +12,61 @@ import { getVideoThumbnailUrl, getVideoTypeLabel, getVideoEmbedUrl } from "@/typ
 
 export const revalidate = 60;
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gam.africa';
+
+interface PageProps {
+  params: Promise<{ slug: string }>;
+}
+
+// Generate metadata for SEO (US-11)
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+
+  try {
+    const video = await api.videos.getBySlug(slug);
+    const thumbnailUrl = getVideoThumbnailUrl(video);
+
+    return {
+      title: `${video.title} | GAM Web TV`,
+      description: video.description || video.meta_description || `Regardez "${video.title}" sur GAM Web TV.`,
+      keywords: video.tags?.split(',').map((t: string) => t.trim()) || [],
+      openGraph: {
+        title: video.title,
+        description: video.description || '',
+        url: `${SITE_URL}/web-tv/${slug}`,
+        siteName: 'GAM - Génies Afrique Médias',
+        type: 'video.other',
+        videos: video.youtube_id ? [
+          {
+            url: `https://www.youtube.com/watch?v=${video.youtube_id}`,
+            width: 1280,
+            height: 720,
+          },
+        ] : undefined,
+        images: thumbnailUrl ? [
+          {
+            url: thumbnailUrl,
+            width: 1280,
+            height: 720,
+            alt: video.title,
+          },
+        ] : undefined,
+      },
+      twitter: {
+        card: 'player',
+        title: video.title,
+        description: video.description || '',
+        images: thumbnailUrl ? [thumbnailUrl] : undefined,
+      },
+    };
+  } catch {
+    return {
+      title: 'Vidéo non trouvée | GAM Web TV',
+      description: 'Cette vidéo n\'existe pas ou a été supprimée.',
+    };
+  }
+}
+
 function formatDate(dateString: string | null): string {
   if (!dateString) return '';
   const date = new Date(dateString);
@@ -21,7 +77,7 @@ function formatDate(dateString: string | null): string {
   });
 }
 
-export default async function VideoPlayerPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function VideoPlayerPage({ params }: PageProps) {
   const { slug } = await params;
 
   let video: VideoWithRelated;

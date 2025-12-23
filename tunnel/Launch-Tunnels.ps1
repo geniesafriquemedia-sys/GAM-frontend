@@ -131,8 +131,9 @@ if (!$SkipDeploy) {
     Write-Info "Deploiement du Worker Backend..."
     Push-Location (Join-Path $ScriptDir "backend-proxy")
     try {
-        # Definir le secret TUNNEL_URL
-        Write-Host $BackendTunnelUrl | wrangler secret put TUNNEL_URL 2>$null
+        # Definir le secret TUNNEL_URL (echo envoie au pipeline, Write-Host non!)
+        Write-Host $BackendTunnelUrl
+        echo $BackendTunnelUrl | wrangler secret put TUNNEL_URL
         # Deployer
         wrangler deploy
         Write-Success "Worker Backend deploye"
@@ -146,8 +147,9 @@ if (!$SkipDeploy) {
     Write-Info "Deploiement du Worker Frontend..."
     Push-Location (Join-Path $ScriptDir "frontend-proxy")
     try {
-        # Definir le secret TUNNEL_URL
-        Write-Host $FrontendTunnelUrl | wrangler secret put TUNNEL_URL 2>$null
+        # Definir le secret TUNNEL_URL (echo envoie au pipeline, Write-Host non!)
+        Write-Host $FrontendTunnelUrl
+        echo $FrontendTunnelUrl | wrangler secret put TUNNEL_URL
         # Deployer
         wrangler deploy
         Write-Success "Worker Frontend deploye"

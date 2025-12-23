@@ -9,9 +9,11 @@ import type {
   PaginatedResponse,
   Article,
   ArticleSummary,
+  ArticleWithRelated,
   ArticleQueryParams,
   Video,
   VideoSummary,
+  VideoWithRelated,
   VideoQueryParams,
   Category,
   CategoryQueryParams,
@@ -36,10 +38,10 @@ export const articlesService = {
   },
 
   /**
-   * Détail d'un article par slug
+   * Détail d'un article par slug (avec articles liés)
    */
-  async getBySlug(slug: string): Promise<Article> {
-    return apiClient.get<Article>(ENDPOINTS.EDITORIAL.ARTICLE(slug));
+  async getBySlug(slug: string): Promise<ArticleWithRelated> {
+    return apiClient.get<ArticleWithRelated>(ENDPOINTS.EDITORIAL.ARTICLE(slug));
   },
 
   /**
@@ -100,10 +102,10 @@ export const articlesService = {
   },
 
   /**
-   * Détail article (SSR)
+   * Détail article (SSR) avec articles liés
    */
-  async getBySlugServer(slug: string): Promise<Article> {
-    return serverFetch<Article>(
+  async getBySlugServer(slug: string): Promise<ArticleWithRelated> {
+    return serverFetch<ArticleWithRelated>(
       ENDPOINTS.EDITORIAL.ARTICLE(slug),
       { next: { revalidate: CACHE_TIMES.ARTICLE_DETAIL, tags: [`article-${slug}`] } }
     );
@@ -126,10 +128,10 @@ export const videosService = {
   },
 
   /**
-   * Détail d'une vidéo par slug
+   * Détail d'une vidéo par slug (avec vidéos liées)
    */
-  async getBySlug(slug: string): Promise<Video> {
-    return apiClient.get<Video>(ENDPOINTS.EDITORIAL.VIDEO(slug));
+  async getBySlug(slug: string): Promise<VideoWithRelated> {
+    return apiClient.get<VideoWithRelated>(ENDPOINTS.EDITORIAL.VIDEO(slug));
   },
 
   /**
@@ -174,8 +176,8 @@ export const videosService = {
     );
   },
 
-  async getBySlugServer(slug: string): Promise<Video> {
-    return serverFetch<Video>(
+  async getBySlugServer(slug: string): Promise<VideoWithRelated> {
+    return serverFetch<VideoWithRelated>(
       ENDPOINTS.EDITORIAL.VIDEO(slug),
       { next: { revalidate: CACHE_TIMES.ARTICLE_DETAIL, tags: [`video-${slug}`] } }
     );

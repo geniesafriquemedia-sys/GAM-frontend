@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const { slug } = await params;
 
   try {
-    const article = await api.articles.getBySlug(slug);
+    const article = await api.articles.getBySlugServer(slug);
     const imageUrl = getArticleImageUrl(article);
 
     return {
@@ -82,7 +82,7 @@ export default async function ArticlePage({ params }: PageProps) {
   let article: ArticleWithRelated;
 
   try {
-    article = await api.articles.getBySlug(slug);
+    article = await api.articles.getBySlugServer(slug);
   } catch (error) {
     notFound();
   }

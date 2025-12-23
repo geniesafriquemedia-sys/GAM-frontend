@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { useVideos } from "@/hooks";
+import { useVideos, useTrendingTags } from "@/hooks";
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -22,6 +22,11 @@ export function Header() {
 
   // Show live style while loading (optimistic) or when live video exists
   const showLiveStyle = liveLoading || hasLiveVideo;
+
+  // Fetch trending tags from database
+  const { data: trendingTags, isLoading: tagsLoading } = useTrendingTags(5);
+  const defaultTags = ["Actualités", "Technologie", "Culture", "Économie", "Sport"];
+  const displayTags = trendingTags && trendingTags.length > 0 ? trendingTags : defaultTags;
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -246,9 +251,15 @@ export function Header() {
                 />
               </div>
               <div className="flex flex-wrap gap-4">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground self-center">Tendances :</span>
-                {["Smart Cities", "Fintech", "Afro-Design", "Solaire", "Culture"].map((tag) => (
-                  <Link key={tag} href={`/search?q=${tag}`} className="px-4 py-2 rounded-full bg-muted hover:bg-primary hover:text-white text-[10px] font-black uppercase tracking-widest transition-all">
+                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground self-center">
+                  {tagsLoading ? "Chargement..." : "Tendances :"}
+                </span>
+                {displayTags.map((tag) => (
+                  <Link
+                    key={tag}
+                    href={`/search?q=${encodeURIComponent(tag)}`}
+                    className="px-4 py-2 rounded-full bg-muted hover:bg-primary hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+                  >
                     {tag}
                   </Link>
                 ))}

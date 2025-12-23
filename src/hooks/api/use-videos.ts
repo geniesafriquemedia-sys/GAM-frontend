@@ -51,14 +51,17 @@ export function useVideos(options: UseVideosOptions = {}): UseVideosResult {
     ...initialParams,
   });
 
+  // Extraire les dépendances primitives pour éviter les re-renders inutiles
+  const { page, page_size, category, video_type, is_featured, is_live, tags, search, ordering } = params;
+
   const fetchVideos = useCallback(
     () => api.videos.getAll(params),
-    [JSON.stringify(params)]
+    [page, page_size, category, video_type, is_featured, is_live, tags, search, ordering]
   );
 
   const { data, isLoading, error, refetch } = useFetch<PaginatedResponse<VideoSummary>>(
     fetchVideos,
-    [JSON.stringify(params)],
+    [page, page_size, category, video_type, is_featured, is_live, tags, search, ordering],
     fetchOptions
   );
 
@@ -151,14 +154,16 @@ export function useVideosByType(
   params: Omit<VideoQueryParams, 'video_type'> = {},
   options: UseFetchOptions = {}
 ) {
+  const { page, page_size, category, is_featured, is_live, tags, search, ordering } = params;
+
   const fetchVideos = useCallback(
     () => api.videos.getByType(videoType, params),
-    [videoType, JSON.stringify(params)]
+    [videoType, page, page_size, category, is_featured, is_live, tags, search, ordering]
   );
 
   return useFetch<PaginatedResponse<VideoSummary>>(
     fetchVideos,
-    [videoType, JSON.stringify(params)],
+    [videoType, page, page_size, category, is_featured, is_live, tags, search, ordering],
     { enabled: !!videoType, ...options }
   );
 }
@@ -172,14 +177,16 @@ export function useVideosByCategory(
   params: Omit<VideoQueryParams, 'category'> = {},
   options: UseFetchOptions = {}
 ) {
+  const { page, page_size, video_type, is_featured, is_live, tags, search, ordering } = params;
+
   const fetchVideos = useCallback(
     () => api.videos.getByCategory(categorySlug, params),
-    [categorySlug, JSON.stringify(params)]
+    [categorySlug, page, page_size, video_type, is_featured, is_live, tags, search, ordering]
   );
 
   return useFetch<PaginatedResponse<VideoSummary>>(
     fetchVideos,
-    [categorySlug, JSON.stringify(params)],
+    [categorySlug, page, page_size, video_type, is_featured, is_live, tags, search, ordering],
     { enabled: !!categorySlug, ...options }
   );
 }

@@ -1,10 +1,7 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import { Clock, ArrowUpRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { motion, type Variants } from "framer-motion";
 import type { ArticleSummary } from "@/types";
 import { formatReadingTime, getArticleImageUrl } from "@/types";
 
@@ -12,18 +9,6 @@ interface ArticleCardProps {
   article: ArticleSummary;
   index?: number;
 }
-
-const cardVariants: Variants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.5,
-      ease: [0.16, 1, 0.3, 1]
-    }
-  }
-};
 
 function formatDate(dateString: string | null): string {
   if (!dateString) return '';
@@ -51,18 +36,16 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
   const readTimeText = formatReadingTime(reading_time);
 
   return (
-    <motion.article
-      variants={cardVariants}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-50px" }}
-      className="group flex flex-col space-y-5"
+    <article
+      className="group flex flex-col space-y-5 animate-in fade-in slide-in-from-bottom-4 duration-500"
+      style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
     >
       <Link href={`/articles/${slug}`} className="relative aspect-[16/11] overflow-hidden rounded-[2.5rem] shadow-sm transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-1">
         <Image
           src={imageUrl}
           alt={title}
           fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           className="object-cover transition-transform duration-700 group-hover:scale-110"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
@@ -118,6 +101,6 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
           </Link>
         </div>
       </div>
-    </motion.article>
+    </article>
   );
 }

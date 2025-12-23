@@ -78,6 +78,13 @@ async function getAuthors(): Promise<AuthorSlug[]> {
   }
 }
 
+// Helper pour valider les dates
+function safeDate(dateString: string | undefined | null): Date {
+  if (!dateString) return new Date();
+  const date = new Date(dateString);
+  return isNaN(date.getTime()) ? new Date() : date;
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Récupérer les données en parallèle
   const [articles, videos, categories, authors] = await Promise.all([
@@ -124,7 +131,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Pages d'articles
   const articlePages: MetadataRoute.Sitemap = articles.map((article) => ({
     url: `${SITE_URL}/articles/${article.slug}`,
-    lastModified: new Date(article.updated_at),
+    lastModified: safeDate(article.updated_at),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }));
@@ -132,7 +139,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Pages de vidéos
   const videoPages: MetadataRoute.Sitemap = videos.map((video) => ({
     url: `${SITE_URL}/web-tv/${video.slug}`,
-    lastModified: new Date(video.updated_at),
+    lastModified: safeDate(video.updated_at),
     changeFrequency: 'weekly' as const,
     priority: 0.7,
   }));

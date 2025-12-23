@@ -1,87 +1,86 @@
-"use client";
-
+import { Suspense } from "react";
+import { Metadata } from "next";
+import { api } from "@/lib/api";
 import { Hero } from "@/components/Hero";
 import { ArticleCard } from "@/components/ArticleCard";
 import { Newsletter } from "@/components/Newsletter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Play, TrendingUp, Loader2 } from "lucide-react";
+import { ArrowRight, Play, TrendingUp } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { motion } from "framer-motion";
-import { useArticles, useVideos } from "@/hooks";
 import { getVideoThumbnailUrl } from "@/types";
 import { ContinuousInfo } from "@/components/ContinuousInfo";
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.2
-    }
-  }
+// ISR - Régénération toutes les 5 minutes
+export const revalidate = 300;
+
+// Metadata SEO
+export const metadata: Metadata = {
+  title: "GAM - Génies Afrique Médias | Actualités & Web TV",
+  description: "Plateforme média panafricaine - Actualités, reportages, documentaires et émissions exclusives sur les transformations du continent africain.",
 };
 
-const itemVariants = {
-  hidden: { opacity: 0, y: 30 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      duration: 0.8,
-      ease: [0.16, 1, 0.3, 1] as const
-    }
+// Data fetching côté serveur avec Promise.all (parallèle)
+async function getHomeData() {
+  try {
+    const [featuredRes, latestRes, videosRes] = await Promise.all([
+      api.articles.getAllServer({ is_featured: true, page_size: 1, ordering: '-published_at' }),
+      api.articles.getAllServer({ page_size: 4, ordering: '-published_at' }),
+      api.videos.getAllServer({ page_size: 2, ordering: '-published_at' }),
+    ]);
+
+    return {
+      featuredArticle: featuredRes.results[0] || null,
+      latestArticles: featuredRes.results[0]
+        ? latestRes.results.filter(a => a.id !== featuredRes.results[0].id).slice(0, 4)
+        : latestRes.results.slice(0, 4),
+      videos: videosRes.results,
+    };
+  } catch (error) {
+    console.error('Error fetching home data:', error);
+    return {
+      featuredArticle: null,
+      latestArticles: [],
+      videos: [],
+    };
   }
-};
+}
 
-export default function Home() {
-  // Fetch featured article for Hero
-  const { articles: featuredArticles, isLoading: featuredLoading } = useArticles({
-    initialParams: {
-      is_featured: true,
-      page_size: 1,
-      ordering: '-published_at'
-    }
-  });
+// Loading skeleton pour ContinuousInfo
+function ContinuousInfoSkeleton() {
+  return (
+    <div className="h-full bg-card rounded-3xl border border-border p-6 animate-pulse">
+      <div className="h-6 w-32 bg-muted rounded mb-6" />
+      <div className="space-y-4">
+        {[1, 2, 3, 4].map(i => (
+          <div key={i} className="flex gap-4">
+            <div className="w-20 h-16 bg-muted rounded-xl flex-shrink-0" />
+            <div className="flex-1 space-y-2">
+              <div className="h-4 bg-muted rounded w-full" />
+              <div className="h-3 bg-muted rounded w-2/3" />
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-  // Fetch latest articles
-  const { articles: latestArticles, isLoading: latestLoading } = useArticles({
-    initialParams: {
-      page_size: 4,
-      ordering: '-published_at'
-    }
-  });
-
-  // Fetch featured videos
-  const { videos, isLoading: videosLoading } = useVideos({
-    initialParams: {
-      page_size: 2,
-      ordering: '-published_at'
-    }
-  });
-
-  const featuredArticle = featuredArticles?.[0] || null;
+export default async function Home() {
+  const { featuredArticle, latestArticles, videos } = await getHomeData();
 
   return (
     <div className="flex flex-col gap-32 pb-32">
       <section className="container mx-auto px-4 mt-6">
-        {/* Main Content Area */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Left Column: Hero + Feed */}
           <div className="lg:col-span-8 space-y-16">
             <Hero article={featuredArticle} />
 
-            {/* Header Section of Feed */}
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={containerVariants}
-              className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-8 border-t border-border/50"
-            >
-              <motion.div variants={itemVariants} className="space-y-6 max-w-2xl">
+            {/* Header Section */}
+            <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-8 border-t border-border/50">
+              <div className="space-y-6 max-w-2xl">
                 <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
                   <div className="p-2 bg-primary/10 rounded-lg">
                     <TrendingUp className="h-4 w-4" />
@@ -91,42 +90,22 @@ export default function Home() {
                 <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9]">
                   Pépites de <span className="text-primary italic">demain</span>.
                 </h2>
-              </motion.div>
-              <motion.div variants={itemVariants}>
-                <Button variant="outline" asChild className="rounded-2xl h-12 px-8 font-black border-primary/20 hover:bg-primary/5 hover:border-primary transition-all group text-sm">
-                  <Link href="/actualites">
-                    Tout le flux <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </Button>
-              </motion.div>
-            </motion.div>
-
-            {/* Loading State */}
-            {latestLoading && (
-              <div className="flex items-center justify-center py-20">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
-            )}
+              <Button variant="outline" asChild className="rounded-2xl h-12 px-8 font-black border-primary/20 hover:bg-primary/5 hover:border-primary transition-all group text-sm">
+                <Link href="/actualites">
+                  Tout le flux <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                </Link>
+              </Button>
+            </div>
 
-            {/* Articles Grid */}
-            {!latestLoading && latestArticles.length > 0 && (
-              <motion.div
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true, margin: "-100px" }}
-                variants={containerVariants}
-                className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12"
-              >
+            {/* Articles Grid - Server rendered */}
+            {latestArticles.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12">
                 {latestArticles.map((article, index) => (
-                  <motion.div key={article.id} variants={itemVariants}>
-                    <ArticleCard article={article} index={index} />
-                  </motion.div>
+                  <ArticleCard key={article.id} article={article} index={index} />
                 ))}
-              </motion.div>
-            )}
-
-            {/* Empty State */}
-            {!latestLoading && latestArticles.length === 0 && (
+              </div>
+            ) : (
               <div className="text-center py-20">
                 <p className="text-muted-foreground">Aucun article disponible pour le moment.</p>
               </div>
@@ -136,15 +115,19 @@ export default function Home() {
           {/* Right Column: Continuous Info */}
           <div className="lg:col-span-4 pl-4 relative">
             <div className="sticky top-24 h-[calc(100vh-6rem)] min-h-[600px]">
-              <ContinuousInfo excludeArticleId={featuredArticle?.id} />
+              <Suspense fallback={<ContinuousInfoSkeleton />}>
+                <ContinuousInfo excludeArticleId={featuredArticle?.id} />
+              </Suspense>
             </div>
           </div>
         </div>
       </section>
 
+      {/* Web TV Section */}
       <section className="relative bg-primary/5 py-32 text-foreground overflow-hidden">
         <div className="absolute top-0 right-0 w-[50%] h-full bg-gradient-to-l from-primary/10 to-transparent pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-primary/10 rounded-full blur-[100px] pointer-events-none" />
+
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-5 space-y-10">
@@ -166,26 +149,14 @@ export default function Home() {
                 </Link>
               </Button>
             </div>
-            <div className="lg:col-span-7">
-              {videosLoading && (
-                <div className="flex items-center justify-center py-20">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                </div>
-              )}
 
-              {!videosLoading && videos.length > 0 && (
-                <motion.div
-                  initial="hidden"
-                  whileInView="visible"
-                  viewport={{ once: true }}
-                  variants={containerVariants}
-                  className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                >
+            <div className="lg:col-span-7">
+              {videos.length > 0 ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {videos.slice(0, 2).map((video, index) => (
-                    <motion.div
+                    <div
                       key={video.id}
-                      variants={itemVariants}
-                      className={`group relative overflow-hidden rounded-[3rem] bg-card border border-border ${index === 1 ? 'md:translate-y-12' : ''}`}
+                      className={`group relative overflow-hidden rounded-[3rem] bg-card border border-border transition-transform duration-500 hover:-translate-y-2 ${index === 1 ? 'md:translate-y-12' : ''}`}
                     >
                       <Link href={`/web-tv/${video.slug}`} className="block">
                         <div className="relative aspect-[4/5]">
@@ -193,6 +164,7 @@ export default function Home() {
                             src={getVideoThumbnailUrl(video)}
                             alt={video.title}
                             fill
+                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             className="object-cover transition-transform duration-1000 group-hover:scale-110 opacity-60"
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent" />
@@ -211,12 +183,10 @@ export default function Home() {
                           </div>
                         </div>
                       </Link>
-                    </motion.div>
+                    </div>
                   ))}
-                </motion.div>
-              )}
-
-              {!videosLoading && videos.length === 0 && (
+                </div>
+              ) : (
                 <div className="text-center py-20">
                   <p className="text-muted-foreground">Aucune vidéo disponible pour le moment.</p>
                 </div>
@@ -226,6 +196,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Newsletter */}
       <Newsletter />
     </div>
   );

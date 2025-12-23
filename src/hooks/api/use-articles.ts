@@ -49,14 +49,17 @@ export function useArticles(options: UseArticlesOptions = {}): UseArticlesResult
     ...initialParams,
   });
 
+  // Extraire les dépendances primitives pour éviter les re-renders inutiles
+  const { page, page_size, category, category_slug, author, author_slug, is_featured, is_trending, tags, search, ordering } = params;
+
   const fetchArticles = useCallback(
     () => api.articles.getAll(params),
-    [JSON.stringify(params)]
+    [page, page_size, category, category_slug, author, author_slug, is_featured, is_trending, tags, search, ordering]
   );
 
   const { data, isLoading, error, refetch } = useFetch<PaginatedResponse<ArticleSummary>>(
     fetchArticles,
-    [JSON.stringify(params)],
+    [page, page_size, category, category_slug, author, author_slug, is_featured, is_trending, tags, search, ordering],
     fetchOptions
   );
 
@@ -144,14 +147,16 @@ export function useArticlesByCategory(
   params: Omit<ArticleQueryParams, 'category'> = {},
   options: UseFetchOptions = {}
 ) {
+  const { page, page_size, author, author_slug, is_featured, is_trending, tags, search, ordering } = params;
+
   const fetchArticles = useCallback(
     () => api.articles.getByCategory(categorySlug, params),
-    [categorySlug, JSON.stringify(params)]
+    [categorySlug, page, page_size, author, author_slug, is_featured, is_trending, tags, search, ordering]
   );
 
   return useFetch<PaginatedResponse<ArticleSummary>>(
     fetchArticles,
-    [categorySlug, JSON.stringify(params)],
+    [categorySlug, page, page_size, author, author_slug, is_featured, is_trending, tags, search, ordering],
     { enabled: !!categorySlug, ...options }
   );
 }
@@ -165,14 +170,16 @@ export function useArticlesByAuthor(
   params: Omit<ArticleQueryParams, 'author'> = {},
   options: UseFetchOptions = {}
 ) {
+  const { page, page_size, category, category_slug, is_featured, is_trending, tags, search, ordering } = params;
+
   const fetchArticles = useCallback(
     () => api.articles.getByAuthor(authorSlug, params),
-    [authorSlug, JSON.stringify(params)]
+    [authorSlug, page, page_size, category, category_slug, is_featured, is_trending, tags, search, ordering]
   );
 
   return useFetch<PaginatedResponse<ArticleSummary>>(
     fetchArticles,
-    [authorSlug, JSON.stringify(params)],
+    [authorSlug, page, page_size, category, category_slug, is_featured, is_trending, tags, search, ordering],
     { enabled: !!authorSlug, ...options }
   );
 }

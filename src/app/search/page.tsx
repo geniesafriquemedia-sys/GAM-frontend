@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -11,7 +11,33 @@ import { Search as SearchIcon, FileText, Play, User, Folder } from "lucide-react
 import { useSearch } from "@/hooks";
 import type { SearchContentType } from "@/types";
 
+// Loading skeleton for search page
+function SearchSkeleton() {
+  return (
+    <div className="container mx-auto px-4 py-16 space-y-12 animate-pulse">
+      <div className="space-y-6">
+        <div className="h-4 w-48 bg-muted rounded" />
+        <div className="h-16 w-3/4 bg-muted rounded" />
+      </div>
+      <div className="h-16 bg-muted rounded-2xl" />
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[1, 2, 3, 4, 5, 6].map((i) => (
+          <div key={i} className="aspect-video bg-muted rounded-2xl" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export default function SearchPage() {
+  return (
+    <Suspense fallback={<SearchSkeleton />}>
+      <SearchContent />
+    </Suspense>
+  );
+}
+
+function SearchContent() {
   const searchParams = useSearchParams();
   const q = searchParams.get("q") || "";
   const type = (searchParams.get("type") as SearchContentType) || "all";

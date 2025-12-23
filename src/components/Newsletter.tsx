@@ -68,7 +68,7 @@ export function Newsletter() {
                 L'Afrique <br /> dans votre <br /><span className="text-primary italic">boîte mail</span>.
               </h2>
               <p className="text-background/60 text-lg md:text-xl font-medium max-w-md leading-relaxed">
-                Rejoignez 50,000+ innovateurs. Pas de bruit, juste des pépites soigneusement sélectionnées.
+                Rejoignez notre communauté. Pas de bruit, juste des pépites soigneusement sélectionnées.
               </p>
             </div>
           </div>
@@ -113,19 +113,6 @@ export function Newsletter() {
                 )}
               </Button>
             </form>
-            
-            <div className="mt-10 flex items-center justify-center gap-6">
-              <div className="flex -space-x-3">
-                {[1, 2, 3, 4].map((i) => (
-                  <div key={i} className="h-10 w-10 rounded-full border-2 border-foreground bg-secondary/20 flex items-center justify-center overflow-hidden">
-                    <img src={`https://i.pravatar.cc/100?img=${i + 10}`} alt="User" />
-                  </div>
-                ))}
-              </div>
-              <p className="text-[10px] font-black uppercase tracking-widest text-background/40">
-                +50k MEMBRES
-              </p>
-            </div>
           </motion.div>
         </div>
       </motion.div>

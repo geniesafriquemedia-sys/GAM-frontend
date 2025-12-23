@@ -8,8 +8,22 @@ export interface Env {
   TUNNEL_URL: string;
 }
 
+// Fonction pour obtenir les headers CORS corrects
+function getCorsHeaders(request: Request): Record<string, string> {
+  const origin = request.headers.get('Origin') || 'https://gam-tunnel-front.geniesafriquemedia.workers.dev';
+
+  return {
+    'Access-Control-Allow-Origin': origin,
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, X-CSRFToken',
+    'Access-Control-Allow-Credentials': 'true',
+    'Access-Control-Max-Age': '86400',
+  };
+}
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const corsHeaders = getCorsHeaders(request);
     const tunnelUrl = env.TUNNEL_URL;
 
     if (!tunnelUrl) {
@@ -20,7 +34,7 @@ export default {
         status: 503,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          ...corsHeaders,
         }
       });
     }
@@ -32,12 +46,7 @@ export default {
     if (request.method === 'OPTIONS') {
       return new Response(null, {
         status: 204,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-          'Access-Control-Allow-Headers': 'Content-Type, Authorization, X-Requested-With, X-CSRFToken',
-          'Access-Control-Max-Age': '86400',
-        }
+        headers: corsHeaders,
       });
     }
 
@@ -68,9 +77,9 @@ export default {
 
       // Ajouter les headers CORS à la réponse
       const responseHeaders = new Headers(response.headers);
-      responseHeaders.set('Access-Control-Allow-Origin', '*');
-      responseHeaders.set('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE, OPTIONS');
-      responseHeaders.set('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With, X-CSRFToken');
+      Object.entries(corsHeaders).forEach(([key, value]) => {
+        responseHeaders.set(key, value);
+      });
 
       return new Response(response.body, {
         status: response.status,
@@ -86,7 +95,7 @@ export default {
         status: 502,
         headers: {
           'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*',
+          ...corsHeaders,
         }
       });
     }

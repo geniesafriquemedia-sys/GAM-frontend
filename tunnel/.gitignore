@@ -1,0 +1,9 @@
+# Logs
+logs/
+*.log
+
+# Generated files
+current-urls.txt
+
+# Node modules (if wrangler installs any)
+node_modules/

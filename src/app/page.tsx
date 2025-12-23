@@ -11,6 +11,7 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useArticles, useVideos } from "@/hooks";
 import { getVideoThumbnailUrl } from "@/types";
+import { ContinuousInfo } from "@/components/ContinuousInfo";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -30,7 +31,7 @@ const itemVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: [0.16, 1, 0.3, 1]
+      ease: [0.16, 1, 0.3, 1] as const
     }
   }
 };
@@ -65,66 +66,80 @@ export default function Home() {
 
   return (
     <div className="flex flex-col gap-32 pb-32">
-      <Hero article={featuredArticle} />
+      <section className="container mx-auto px-4 mt-6">
+        {/* Main Content Area */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
+          {/* Left Column: Hero + Feed */}
+          <div className="lg:col-span-8 space-y-16">
+            <Hero article={featuredArticle} />
 
-      <section className="container mx-auto px-4">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={containerVariants}
-          className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
-        >
-          <motion.div variants={itemVariants} className="space-y-6 max-w-2xl">
-            <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <TrendingUp className="h-4 w-4" />
-              </div>
-              <span>Le Flux GAM</span>
-            </div>
-            <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9]">
-              Pépites de <span className="text-primary italic">demain</span>.
-            </h2>
-          </motion.div>
-          <motion.div variants={itemVariants}>
-            <Button variant="outline" asChild className="rounded-2xl h-14 px-10 font-black border-primary/20 hover:bg-primary/5 hover:border-primary transition-all group">
-              <Link href="/actualites">
-                Tout le flux <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-              </Link>
-            </Button>
-          </motion.div>
-        </motion.div>
-
-        {/* Loading State */}
-        {latestLoading && (
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        )}
-
-        {/* Articles Grid */}
-        {!latestLoading && latestArticles.length > 0 && (
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            variants={containerVariants}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-10 gap-y-20"
-          >
-            {latestArticles.map((article, index) => (
-              <motion.div key={article.id} variants={itemVariants}>
-                <ArticleCard article={article} index={index} />
+            {/* Header Section of Feed */}
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, margin: "-100px" }}
+              variants={containerVariants}
+              className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-8 border-t border-border/50"
+            >
+              <motion.div variants={itemVariants} className="space-y-6 max-w-2xl">
+                <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <TrendingUp className="h-4 w-4" />
+                  </div>
+                  <span>Le Flux GAM</span>
+                </div>
+                <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9]">
+                  Pépites de <span className="text-primary italic">demain</span>.
+                </h2>
               </motion.div>
-            ))}
-          </motion.div>
-        )}
+              <motion.div variants={itemVariants}>
+                <Button variant="outline" asChild className="rounded-2xl h-12 px-8 font-black border-primary/20 hover:bg-primary/5 hover:border-primary transition-all group text-sm">
+                  <Link href="/actualites">
+                    Tout le flux <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+                  </Link>
+                </Button>
+              </motion.div>
+            </motion.div>
 
-        {/* Empty State */}
-        {!latestLoading && latestArticles.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-muted-foreground">Aucun article disponible pour le moment.</p>
+            {/* Loading State */}
+            {latestLoading && (
+              <div className="flex items-center justify-center py-20">
+                <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            )}
+
+            {/* Articles Grid */}
+            {!latestLoading && latestArticles.length > 0 && (
+              <motion.div
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: "-100px" }}
+                variants={containerVariants}
+                className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-12"
+              >
+                {latestArticles.map((article, index) => (
+                  <motion.div key={article.id} variants={itemVariants}>
+                    <ArticleCard article={article} index={index} />
+                  </motion.div>
+                ))}
+              </motion.div>
+            )}
+
+            {/* Empty State */}
+            {!latestLoading && latestArticles.length === 0 && (
+              <div className="text-center py-20">
+                <p className="text-muted-foreground">Aucun article disponible pour le moment.</p>
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Right Column: Continuous Info */}
+          <div className="lg:col-span-4 pl-4 relative">
+            <div className="sticky top-24 h-[calc(100vh-6rem)] min-h-[600px]">
+              <ContinuousInfo excludeArticleId={featuredArticle?.id} />
+            </div>
+          </div>
+        </div>
       </section>
 
       <section className="relative bg-primary/5 py-32 text-foreground overflow-hidden">

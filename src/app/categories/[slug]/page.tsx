@@ -22,7 +22,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
 
     // Fetch articles in this category
     const articlesResponse = await api.articles.getAll({
-      category: slug,
+      category_slug: slug,
       page_size: 12,
       ordering: '-published_at'
     });

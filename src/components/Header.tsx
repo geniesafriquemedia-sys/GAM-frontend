@@ -1,13 +1,39 @@
 "use client";
 
 import Link from "next/link";
-import { Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame, Facebook, Twitter, Instagram, Linkedin, ArrowRight, User, Radio } from "lucide-react";
+import {
+  Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame,
+  Facebook, Twitter, Instagram, Linkedin, ArrowRight, User,
+  Briefcase, BookOpen, Film, Music, Camera, Heart, Star, Zap, TrendingUp
+} from "lucide-react";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { useVideos, useTrendingTags } from "@/hooks";
+import { useVideos, useTrendingTags, useCategories } from "@/hooks";
+import type { Category } from "@/types";
+
+// Icon mapping based on src/types/editorial/category.ts
+const ICON_MAP: Record<string, any> = {
+  globe: Globe,
+  briefcase: Briefcase,
+  cpu: Cpu,
+  book: BookOpen,
+  film: Film,
+  music: Music,
+  camera: Camera,
+  heart: Heart,
+  star: Star,
+  zap: Zap,
+  users: Users,
+  trending: TrendingUp,
+  culture: Palette, // Mapping additional common keys
+  societe: Users,
+  economie: Globe,
+  sport: Flame,
+  tech: Cpu
+};
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
@@ -28,6 +54,13 @@ export function Header() {
   const defaultTags = ["Actualités", "Technologie", "Culture", "Économie", "Sport"];
   const displayTags = trendingTags && trendingTags.length > 0 ? trendingTags : defaultTags;
 
+  // Fetch categories dynamically
+  const { data: categoriesData, isLoading: categoriesLoading } = useCategories({
+    enabled: true
+  });
+
+  const categories = categoriesData || [];
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll);
@@ -43,13 +76,10 @@ export function Header() {
     { name: "Contact", href: "/contact" },
   ];
 
-  const categories = [
-    { name: "Technologie", href: "/categories/tech", icon: Cpu },
-    { name: "Culture", href: "/categories/culture", icon: Palette },
-    { name: "Société", href: "/categories/societe", icon: Users },
-    { name: "Économie", href: "/categories/economie", icon: Globe },
-    { name: "Sport", href: "/categories/sport", icon: Flame },
-  ];
+  const getCategoryIcon = (iconName: string) => {
+    // Try reliable mapping, fallback to Globe if missing
+    return ICON_MAP[iconName.toLowerCase()] || Globe;
+  };
 
   return (
     <header className={cn(
@@ -66,7 +96,7 @@ export function Header() {
               Génies Afrique Médias
             </span>
           </Link>
-          
+
           <nav className="hidden lg:flex items-center gap-8 text-xs font-black uppercase tracking-widest">
             {navLinks.map((link) => (
               <Link
@@ -94,37 +124,37 @@ export function Header() {
         </div>
 
         <div className="flex items-center gap-3">
-          <Button 
-            variant="ghost" 
-            size="icon" 
+          <Button
+            variant="ghost"
+            size="icon"
             className="hidden sm:flex rounded-full hover:bg-primary/10 hover:text-primary transition-all active:scale-90"
             onClick={() => setIsSearchOpen(!isSearchOpen)}
           >
             <Search className="h-5 w-5" />
           </Button>
-          
-            <Button asChild className={cn(
-              "hidden sm:flex rounded-full px-8 font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0",
-              showLiveStyle
-                ? "bg-red-500 hover:bg-red-600 shadow-red-500/30"
-                : "bg-primary hover:bg-primary/90 shadow-primary/20"
-            )}>
-               <Link href="/direct" className="flex items-center gap-2">
-                 {showLiveStyle && (
-                   <span className="relative flex h-2 w-2">
-                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                     <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                   </span>
-                 )}
-                 {showLiveStyle ? "En Direct" : "Voir le Direct"}
-               </Link>
-            </Button>
 
-            <Button asChild variant="ghost" size="icon" className="hidden lg:flex rounded-full hover:bg-primary/10 hover:text-primary transition-all">
-              <Link href="/login">
-                <User className="h-5 w-5" />
-              </Link>
-            </Button>
+          <Button asChild className={cn(
+            "hidden sm:flex rounded-full px-8 font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0",
+            showLiveStyle
+              ? "bg-red-500 hover:bg-red-600 shadow-red-500/30"
+              : "bg-primary hover:bg-primary/90 shadow-primary/20"
+          )}>
+            <Link href="/direct" className="flex items-center gap-2">
+              {showLiveStyle && (
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
+                </span>
+              )}
+              {showLiveStyle ? "En Direct" : "Voir le Direct"}
+            </Link>
+          </Button>
+
+          <Button asChild variant="ghost" size="icon" className="hidden lg:flex rounded-full hover:bg-primary/10 hover:text-primary transition-all">
+            <Link href="/login">
+              <User className="h-5 w-5" />
+            </Link>
+          </Button>
 
 
           <Sheet>
@@ -137,7 +167,7 @@ export function Header() {
               <div className="flex flex-col h-full relative">
                 {/* African Pattern Overlay */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6zM36 4V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
-                
+
                 {/* Sidebar Header */}
                 <div className="p-8 pb-4 flex items-center justify-between border-b border-primary/5 bg-muted/20 relative z-10">
                   <div className="flex flex-col">
@@ -180,17 +210,27 @@ export function Header() {
                       Catégories
                     </h4>
                     <div className="grid grid-cols-2 gap-3">
-                      {categories.map((cat) => (
-                        <SheetClose asChild key={cat.href}>
-                          <Link 
-                            href={cat.href}
-                            className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 hover:bg-primary hover:text-white transition-all duration-300 group"
-                          >
-                            <cat.icon className="h-4 w-4 text-primary group-hover:text-white" />
-                            <span className="text-xs font-bold uppercase tracking-wider">{cat.name}</span>
-                          </Link>
-                        </SheetClose>
-                      ))}
+                      {categoriesLoading ? (
+                        // Skeleton loading state
+                        Array.from({ length: 4 }).map((_, i) => (
+                          <div key={i} className="h-12 rounded-2xl bg-muted/30 animate-pulse" />
+                        ))
+                      ) : (
+                        categories.map((cat) => {
+                          const Icon = getCategoryIcon(cat.icon || "globe");
+                          return (
+                            <SheetClose asChild key={cat.id}>
+                              <Link
+                                href={`/categories/${cat.slug}`}
+                                className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 hover:bg-primary hover:text-white transition-all duration-300 group"
+                              >
+                                <Icon className="h-4 w-4 text-primary group-hover:text-white" />
+                                <span className="text-xs font-bold uppercase tracking-wider">{cat.name}</span>
+                              </Link>
+                            </SheetClose>
+                          );
+                        })
+                      )}
                     </div>
                   </div>
 
@@ -231,9 +271,9 @@ export function Header() {
       {isSearchOpen && (
         <div className="absolute top-16 left-0 w-full bg-background/98 backdrop-blur-3xl border-b border-primary/10 p-12 animate-in fade-in slide-in-from-top-4 md:block hidden shadow-2xl z-40">
           <div className="container mx-auto max-w-4xl relative">
-             <Button 
-              variant="ghost" 
-              size="icon" 
+            <Button
+              variant="ghost"
+              size="icon"
               className="absolute -top-6 -right-6 rounded-full"
               onClick={() => setIsSearchOpen(false)}
             >

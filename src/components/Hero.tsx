@@ -4,8 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, Share2 } from "lucide-react";
+import { ArrowRight, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { ShareMenu } from "@/components/ShareMenu";
 import type { ArticleSummary } from "@/types";
 import { getArticleImageUrl } from "@/types";
 
@@ -33,52 +34,52 @@ export function Hero({ article }: HeroProps) {
           initial={{ opacity: 0, scale: 0.98 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative min-h-[650px] md:min-h-[800px] w-full overflow-hidden rounded-[3rem] md:rounded-[4rem] bg-foreground text-background shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)]"
+          className="relative flex flex-col justify-end min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-foreground text-background shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"
         >
-            <div className="absolute inset-0">
-              <Image
-                src={imageUrl}
-                alt={article.title}
-                fill
-                className="object-cover opacity-60 transition-transform duration-[2s]"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-            </div>
+          <div className="absolute inset-0 z-0">
+            <Image
+              src={imageUrl}
+              alt={article.title}
+              fill
+              className="object-cover opacity-60 transition-transform duration-[2s]"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+          </div>
 
-          <div className="absolute inset-0 flex flex-col justify-end p-8 md:p-20 lg:p-24">
-            <div className="max-w-4xl space-y-10">
+          <div className="relative z-10 w-full p-5 md:p-10 lg:p-12 mt-auto">
+            <div className="max-w-3xl space-y-3 md:space-y-5">
               <motion.div
                 initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: 0.3 }}
-                className="flex items-center gap-4"
+                className="flex items-center gap-2.5"
               >
-                <Badge className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-5 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] border-none">
+                <Badge className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-3 py-0.5 text-[9px] font-black uppercase tracking-[0.15em] border-none">
                   Éditorial
                 </Badge>
                 {article.category && (
-                  <div className="flex items-center gap-2 text-secondary">
-                    <Sparkles className="h-4 w-4 fill-secondary animate-pulse" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">{article.category.name}</span>
+                  <div className="flex items-center gap-1.5 text-secondary">
+                    <Sparkles className="h-3 w-3 fill-secondary animate-pulse" />
+                    <span className="text-[9px] font-black uppercase tracking-[0.15em]">{article.category.name}</span>
                   </div>
                 )}
               </motion.div>
 
-                <motion.h1
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: 0.4, duration: 0.8 }}
-                  className="text-5xl font-black leading-[0.95] tracking-tighter md:text-7xl lg:text-8xl max-w-5xl"
-                >
-                  {article.title}
-                </motion.h1>
+              <motion.h1
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.4, duration: 0.8 }}
+                className="text-2xl font-black leading-[1.1] tracking-tighter md:text-4xl lg:text-5xl max-w-2xl"
+              >
+                {article.title}
+              </motion.h1>
 
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.5 }}
-                className="text-lg text-background/60 md:text-xl lg:text-2xl line-clamp-2 max-w-2xl font-medium leading-relaxed"
+                className="text-xs text-background/70 md:text-sm lg:text-base line-clamp-2 max-w-lg font-medium leading-relaxed"
               >
                 {article.excerpt}
               </motion.p>
@@ -87,21 +88,19 @@ export function Hero({ article }: HeroProps) {
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.6 }}
-                className="flex flex-wrap items-center gap-6 pt-6"
+                className="flex flex-wrap items-center gap-3 pt-1"
               >
-                <Button asChild size="lg" className="rounded-2xl px-12 h-18 text-lg font-black bg-primary text-primary-foreground shadow-2xl shadow-primary/40 transition-all hover:scale-105 hover:-translate-y-1 active:scale-95 group">
-                  <Link href={`/articles/${article.slug}`} className="flex items-center gap-3">
+                <Button asChild size="lg" className="rounded-lg px-5 h-10 text-xs font-black bg-primary text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:-translate-y-1 active:scale-95 group">
+                  <Link href={`/articles/${article.slug}`} className="flex items-center gap-2">
                     Lire l'histoire
-                    <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-2" />
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
 
-                <button className="flex items-center gap-3 group text-background/60 hover:text-white transition-colors">
-                  <div className="h-14 w-14 flex items-center justify-center rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md transition-all group-hover:bg-white/10 group-hover:border-white/20">
-                    <Share2 className="h-5 w-5" />
-                  </div>
-                  <span className="text-xs font-black uppercase tracking-widest hidden sm:block">Partager</span>
-                </button>
+                <ShareMenu
+                  title={article.title}
+                  url={`${typeof window !== 'undefined' ? window.location.origin : ''}/articles/${article.slug}`}
+                />
               </motion.div>
             </div>
           </div>

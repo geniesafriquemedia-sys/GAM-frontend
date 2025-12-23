@@ -31,7 +31,30 @@ const nextConfig: NextConfig = {
       }
     }
   },
-  allowedDevOrigins: ['*.orchids.page'],
+  // Support pour les tunnels Cloudflare et dev origins
+  allowedDevOrigins: [
+    '*.orchids.page',
+    '*.trycloudflare.com',
+    '*.workers.dev',
+  ],
+  // Rewrites pour proxy API en mode tunnel (optionnel)
+  async rewrites() {
+    // En production ou via tunnel, utiliser le chemin relatif /api
+    // qui sera intercepté par le Worker Cloudflare
+    const backendUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+
+    // Si l'API URL est relative (/api), pas besoin de rewrites
+    if (backendUrl.startsWith('/')) {
+      return [];
+    }
+
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${backendUrl.replace('/api/v1', '')}/:path*`,
+      },
+    ];
+  },
 } as NextConfig;
 
 export default nextConfig;

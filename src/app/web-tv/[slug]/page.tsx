@@ -1,11 +1,12 @@
 import { Metadata } from "next";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, Share2, PlayCircle, Info } from "lucide-react";
+import { ArrowLeft, Clock, PlayCircle, Info } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { VideoCard } from "@/components/VideoCard";
+import { SocialShare } from "@/components/SocialShare";
 import { api } from "@/lib/api";
 import type { VideoWithRelated } from "@/types";
 import { getVideoThumbnailUrl, getVideoTypeLabel, getVideoEmbedUrl } from "@/types";
@@ -160,11 +161,9 @@ export default async function VideoPlayerPage({ params }: PageProps) {
                         <span className="text-foreground text-xs">{formattedDate}</span>
                       </div>
                     </div>
-                    <div className="flex gap-3">
-                      <Button variant="ghost" size="icon" className="h-12 w-12 rounded-full bg-muted border border-border hover:bg-primary hover:text-white hover:border-primary transition-all">
-                        <Share2 className="h-5 w-5" />
-                      </Button>
-                      <Button asChild className="rounded-full h-12 px-8 font-black uppercase tracking-widest text-xs bg-primary text-white shadow-lg shadow-primary/20">
+                    <div className="flex flex-wrap items-center gap-4">
+                      <SocialShare url={`${SITE_URL}/web-tv/${video.slug}`} title={title} />
+                      <Button asChild className="rounded-full h-10 px-6 font-black uppercase tracking-widest text-xs bg-primary text-white shadow-lg shadow-primary/20">
                         <a href={`https://www.youtube.com/watch?v=${youtube_id}`} target="_blank" rel="noopener noreferrer">
                           Voir sur YouTube
                         </a>

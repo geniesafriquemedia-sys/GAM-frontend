@@ -4,11 +4,12 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Play, Tv, Loader2, Filter, Radio } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { VideoCard } from "@/components/VideoCard";
 import { useVideos } from "@/hooks";
-import { useState } from "react";
+import type { VideoType } from "@/types";
 
-type VideoTypeFilter = 'all' | 'emission' | 'reportage' | 'interview' | 'documentary' | 'short';
+type VideoTypeFilter = 'all' | VideoType;
 
 const VIDEO_TYPE_LABELS: Record<VideoTypeFilter, string> = {
   all: 'Tout',
@@ -20,22 +21,32 @@ const VIDEO_TYPE_LABELS: Record<VideoTypeFilter, string> = {
 };
 
 export default function WebTVPage() {
+  // Track active filter for UI
   const [activeFilter, setActiveFilter] = useState<VideoTypeFilter>('all');
 
-  // Fetch videos with optional type filter
-  const queryParams: any = {
-    page_size: 12,
-    ordering: '-published_at',
-    is_live: false, // Exclude live videos (they're on /direct page)
-  };
-
-  if (activeFilter !== 'all') {
-    queryParams.video_type = activeFilter;
-  }
-
-  const { videos, pagination, isLoading } = useVideos({
-    initialParams: queryParams
+  // Fetch videos with filter support
+  const {
+    videos,
+    pagination,
+    isLoading,
+    setVideoType,
+  } = useVideos({
+    initialParams: {
+      page_size: 12,
+      ordering: '-published_at',
+      is_live: false,
+    }
   });
+
+  // Handler for filter change
+  const handleFilterChange = (type: VideoTypeFilter) => {
+    setActiveFilter(type);
+    if (type === 'all') {
+      setVideoType(undefined);
+    } else {
+      setVideoType(type);
+    }
+  };
 
   // Fetch featured video for hero
   const { videos: featuredVideos, isLoading: featuredLoading } = useVideos({
@@ -204,7 +215,7 @@ export default function WebTVPage() {
                 variant={activeFilter === type ? "default" : "outline"}
                 size="sm"
                 className="rounded-full font-bold text-xs uppercase tracking-wider"
-                onClick={() => setActiveFilter(type)}
+                onClick={() => handleFilterChange(type)}
               >
                 {VIDEO_TYPE_LABELS[type]}
               </Button>
@@ -242,7 +253,7 @@ export default function WebTVPage() {
               <Button
                 variant="outline"
                 className="rounded-full font-bold mt-4"
-                onClick={() => setActiveFilter('all')}
+                onClick={() => handleFilterChange('all')}
               >
                 Voir toutes les vidéos
               </Button>

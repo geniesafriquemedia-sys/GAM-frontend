@@ -36,6 +36,8 @@ const nextConfig: NextConfig = {
     '*.orchids.page',
     '*.trycloudflare.com',
     '*.workers.dev',
+    'gam-tunnel-front.geniesafriquemedia.workers.dev',
+    'gam-tunnel-back.geniesafriquemedia.workers.dev',
   ],
   // Rewrites pour proxy API en mode tunnel (optionnel)
   async rewrites() {

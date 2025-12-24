@@ -51,6 +51,7 @@ export function useFetch<T>(
 
   const mountedRef = useRef(true);
   const fetchIdRef = useRef(0);
+  const isFirstMount = useRef(true);
 
   const fetchData = useCallback(async () => {
     if (!enabled) return;
@@ -106,14 +107,21 @@ export function useFetch<T>(
   useEffect(() => {
     mountedRef.current = true;
 
-    if (refetchOnMount) {
-      fetchData();
+    // Skip fetch on initial mount if refetchOnMount is false AND we have initial data
+    if (isFirstMount.current) {
+      isFirstMount.current = false;
+      if (!refetchOnMount && initialData) {
+        return;
+      }
     }
+
+    // Fetch when deps change (or on mount if refetchOnMount is true)
+    fetchData();
 
     return () => {
       mountedRef.current = false;
     };
-  }, [...deps, refetchOnMount]);
+  }, [...deps]);
 
   return {
     ...state,

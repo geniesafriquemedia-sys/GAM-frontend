@@ -43,11 +43,11 @@ export function Footer() {
             </div>
 
             <div>
-              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Exploration</h3>
+              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Catégories</h3>
               <ul className="space-y-4 font-bold">
-                <li><Link href="/categories/tech" className="hover:text-primary transition-colors">Tech & Innovation</Link></li>
-                <li><Link href="/categories/societe" className="hover:text-primary transition-colors">Impact & Société</Link></li>
-                <li><Link href="/categories/culture" className="hover:text-primary transition-colors">Art & Culture</Link></li>
+                <li><Link href="/categories/innovation-tech" className="hover:text-primary transition-colors">Innovation & Tech</Link></li>
+                <li><Link href="/categories/culture-patrimoine" className="hover:text-primary transition-colors">Culture & Patrimoine</Link></li>
+                <li><Link href="/categories/sport" className="hover:text-primary transition-colors">Sport</Link></li>
               </ul>
             </div>
 
@@ -64,7 +64,7 @@ export function Footer() {
         
         <div className="mt-24 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            © {new Date().getFullYear()} Génies Afrique Médias (GAM). Fait avec passion.
+            © {new Date().getFullYear()} GAM MÉDIAS. TOUS DROITS RÉSERVÉS.
           </p>
           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             <Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions Légales</Link>

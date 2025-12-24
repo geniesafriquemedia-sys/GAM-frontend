@@ -121,11 +121,13 @@ export interface Article {
   slug: string;
   excerpt: string;
   featured_image: string | null;
+  image_url: string;                // URL de l'image (uploadée ou externe)
   featured_image_caption: string;
   author: AuthorSummary;
   category: CategorySummary;
   tags: string;                    // "tag1, tag2, tag3"
-  body: ArticleBlock[];            // Blocs StreamField
+  tags_list: string[];             // Tags en tableau
+  body_blocks: ArticleBlock[];     // Blocs StreamField (Wagtail)
   content: string;                 // Contenu HTML legacy
   reading_time: number;            // Minutes
   views_count: number;
@@ -146,6 +148,7 @@ export interface ArticleSummary {
   slug: string;
   excerpt: string;
   featured_image: string | null;
+  image_url: string;                // URL de l'image (uploadée ou externe)
   author: AuthorSummary;
   category: CategorySummary;
   reading_time: number;
@@ -202,7 +205,8 @@ export function getArticleImageUrl(
   article: Article | ArticleSummary,
   fallback = '/images/article-placeholder.jpg'
 ): string {
-  return article.featured_image || fallback;
+  // Priorité: image_url (inclut uploaded et external), puis featured_image, puis fallback
+  return article.image_url || article.featured_image || fallback;
 }
 
 // =============================================================================

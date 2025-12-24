@@ -1,11 +1,12 @@
 import { ArticleCard } from "@/components/ArticleCard";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Folder } from "lucide-react";
+import { ArrowRight, Folder, ImageIcon } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { api } from "@/lib/api";
+import { getMediaUrl } from "@/lib/api/config";
 import type { Category, ArticleSummary } from "@/types";
 
 export const revalidate = 60;
@@ -115,16 +116,23 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
                 </Link>
               </Button>
             </div>
-            {articles[0]?.featured_image && (
-              <div className="relative aspect-square rounded-[3rem] overflow-hidden rotate-3 shadow-2xl">
-                <Image
-                  src={articles[0].featured_image}
-                  alt={category.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
+            {(() => {
+              const firstArticleImageUrl = articles[0]?.image_url ? getMediaUrl(articles[0].image_url) : null;
+              return firstArticleImageUrl ? (
+                <div className="relative aspect-square rounded-[3rem] overflow-hidden rotate-3 shadow-2xl">
+                  <Image
+                    src={firstArticleImageUrl}
+                    alt={category.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              ) : (
+                <div className="relative aspect-square rounded-[3rem] overflow-hidden rotate-3 shadow-2xl flex items-center justify-center bg-zinc-800">
+                  <ImageIcon className="h-24 w-24 opacity-20 text-zinc-500" />
+                </div>
+              );
+            })()}
           </div>
           <div
             className="absolute inset-0 opacity-20"

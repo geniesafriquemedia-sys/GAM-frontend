@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, ArrowUpRight } from "lucide-react";
+import { Clock, ArrowUpRight, ImageIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { ArticleSummary } from "@/types";
-import { formatReadingTime, getArticleImageUrl } from "@/types";
+import { formatReadingTime } from "@/types";
+import { getMediaUrl } from "@/lib/api/config";
 
 interface ArticleCardProps {
   article: ArticleSummary;
@@ -20,18 +21,43 @@ function formatDate(dateString: string | null): string {
   });
 }
 
+// Placeholder component quand pas d'image disponible
+function ImagePlaceholder({ categoryColor }: { categoryColor?: string }) {
+  return (
+    <div
+      className="absolute inset-0 flex flex-col items-center justify-center"
+      style={{
+        background: categoryColor
+          ? `linear-gradient(135deg, ${categoryColor}15 0%, ${categoryColor}30 100%)`
+          : 'linear-gradient(135deg, hsl(var(--primary)/0.1) 0%, hsl(var(--primary)/0.2) 100%)'
+      }}
+    >
+      <ImageIcon
+        className="h-16 w-16 mb-3 opacity-30"
+        style={{ color: categoryColor || 'hsl(var(--primary))' }}
+      />
+      <span className="text-xs font-medium opacity-50 uppercase tracking-wider">
+        Image à venir
+      </span>
+    </div>
+  );
+}
+
 export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
   const {
     slug,
     title,
     excerpt,
     category,
-    featured_image,
     reading_time,
     published_at
   } = article;
 
-  const imageUrl = getArticleImageUrl(article);
+  // Priorité: image_url (backend calcule: uploaded > external), sinon null
+  // getMediaUrl ajoute le préfixe http://localhost:8000 pour les chemins relatifs (/media/...)
+  const rawImageUrl = article.image_url || null;
+  const imageUrl = rawImageUrl ? getMediaUrl(rawImageUrl) : null;
+  const hasImage = !!imageUrl;
   const formattedDate = formatDate(published_at);
   const readTimeText = formatReadingTime(reading_time);
 
@@ -41,13 +67,17 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
       style={{ animationDelay: `${index * 100}ms`, animationFillMode: 'both' }}
     >
       <Link href={`/articles/${slug}`} className="relative aspect-[16/11] overflow-hidden rounded-[2.5rem] shadow-sm transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.1)] hover:-translate-y-1">
-        <Image
-          src={imageUrl}
-          alt={title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover transition-transform duration-700 group-hover:scale-110"
-        />
+        {hasImage ? (
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+          />
+        ) : (
+          <ImagePlaceholder categoryColor={category?.color} />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
         {category && (

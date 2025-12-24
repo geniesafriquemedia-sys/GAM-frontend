@@ -4,11 +4,11 @@ import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles } from "lucide-react";
+import { ArrowRight, Sparkles, ImageIcon } from "lucide-react";
 import { motion } from "framer-motion";
 import { ShareMenu } from "@/components/ShareMenu";
 import type { ArticleSummary } from "@/types";
-import { getArticleImageUrl } from "@/types";
+import { getMediaUrl } from "@/lib/api/config";
 
 interface HeroProps {
   article: ArticleSummary | null;
@@ -25,7 +25,11 @@ export function Hero({ article }: HeroProps) {
     );
   }
 
-  const imageUrl = getArticleImageUrl(article);
+  // Priorité: image_url (backend calcule: uploaded > external)
+  // getMediaUrl ajoute le préfixe http://localhost:8000 pour les chemins relatifs (/media/...)
+  const rawImageUrl = article.image_url || null;
+  const imageUrl = rawImageUrl ? getMediaUrl(rawImageUrl) : null;
+  const hasImage = !!imageUrl;
 
   return (
     <section className="relative w-full overflow-hidden bg-background pt-6">
@@ -37,13 +41,26 @@ export function Hero({ article }: HeroProps) {
           className="relative flex flex-col justify-end min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-foreground text-background shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"
         >
           <div className="absolute inset-0 z-0">
-            <Image
-              src={imageUrl}
-              alt={article.title}
-              fill
-              className="object-cover opacity-60 transition-transform duration-[2s]"
-              priority
-            />
+            {hasImage ? (
+              <Image
+                src={imageUrl}
+                alt={article.title}
+                fill
+                className="object-cover opacity-60 transition-transform duration-[2s]"
+                priority
+              />
+            ) : (
+              <div
+                className="absolute inset-0 flex flex-col items-center justify-center"
+                style={{
+                  background: article.category?.color
+                    ? `linear-gradient(135deg, ${article.category.color}30 0%, ${article.category.color}60 100%)`
+                    : 'linear-gradient(135deg, hsl(var(--primary)/0.3) 0%, hsl(var(--primary)/0.5) 100%)'
+                }}
+              >
+                <ImageIcon className="h-24 w-24 opacity-20 text-white" />
+              </div>
+            )}
             <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
           </div>
 

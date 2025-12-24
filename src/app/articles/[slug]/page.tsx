@@ -4,13 +4,14 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { User, Share2, Bookmark, MessageCircle, ChevronRight } from "lucide-react";
+import { User, Share2, Bookmark, MessageCircle, ChevronRight, ImageIcon } from "lucide-react";
 import { SocialShare } from "@/components/SocialShare";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleBody } from "@/components/ArticleBody";
 import { api } from "@/lib/api";
-import type { ArticleWithRelated } from "@/types";
-import { formatReadingTime, getArticleImageUrl } from "@/types";
+import { getMediaUrl } from "@/lib/api/config";
+import type { ArticleWithRelated, ArticleSummary } from "@/types";
+import { formatReadingTime } from "@/types";
 
 // Revalidate toutes les 60 secondes
 export const revalidate = 60;
@@ -21,13 +22,20 @@ interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Helper pour obtenir l'URL d'image d'un article
+// getMediaUrl ajoute le préfixe http://localhost:8000 pour les chemins relatifs (/media/...)
+function getImageUrl(article: ArticleWithRelated | ArticleSummary): string | null {
+  const rawUrl = article.image_url || null;
+  return rawUrl ? getMediaUrl(rawUrl) : null;
+}
+
 // Generate metadata for SEO (US-11)
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
 
   try {
     const article = await api.articles.getBySlugServer(slug);
-    const imageUrl = getArticleImageUrl(article);
+    const imageUrl = getImageUrl(article);
 
     return {
       title: `${article.title} | GAM`,
@@ -94,11 +102,12 @@ export default async function ArticlePage({ params }: PageProps) {
     author,
     reading_time,
     published_at,
-    body,
+    body_blocks,
+    content,
     related_articles
   } = article;
 
-  const imageUrl = getArticleImageUrl(article);
+  const imageUrl = getImageUrl(article);
   const formattedDate = formatDate(published_at);
   const readTimeText = formatReadingTime(reading_time);
 
@@ -212,7 +221,17 @@ export default async function ArticlePage({ params }: PageProps) {
 
           {/* Main Content */}
           <div className="lg:col-span-8">
-            <ArticleBody blocks={body || []} />
+            {/* Afficher les blocs StreamField si disponibles, sinon le contenu legacy */}
+            {body_blocks && body_blocks.length > 0 ? (
+              <ArticleBody blocks={body_blocks} />
+            ) : content ? (
+              <div
+                className="prose prose-zinc prose-2xl dark:prose-invert max-w-none prose-headings:font-black prose-headings:tracking-tighter prose-headings:text-primary prose-p:font-medium prose-p:text-muted-foreground prose-p:leading-relaxed prose-img:rounded-[3rem] prose-strong:text-foreground prose-strong:font-black"
+                dangerouslySetInnerHTML={{ __html: content }}
+              />
+            ) : (
+              <p className="text-muted-foreground italic">Aucun contenu disponible pour cet article.</p>
+            )}
 
             <div className="mt-24 p-16 bg-zinc-950 rounded-[4rem] text-white relative overflow-hidden shadow-2xl shadow-primary/20">
               <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-12">
@@ -252,22 +271,31 @@ export default async function ArticlePage({ params }: PageProps) {
                   Articles liés
                 </h3>
                 <div className="grid gap-8">
-                  {related_articles.slice(0, 3).map(item => (
-                    <Link key={item.id} href={`/articles/${item.slug}`} className="group flex flex-col gap-4">
-                      <div className="relative aspect-video rounded-[2rem] overflow-hidden shadow-lg ring-1 ring-primary/5">
-                        <Image
-                          src={getArticleImageUrl(item)}
-                          alt={item.title}
-                          fill
-                          className="object-cover group-hover:scale-110 transition-transform duration-700"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
-                          <span className="text-[10px] font-black uppercase tracking-widest text-white">Lire l'article</span>
+                  {related_articles.slice(0, 3).map(item => {
+                    const itemImageUrl = getImageUrl(item);
+                    return (
+                      <Link key={item.id} href={`/articles/${item.slug}`} className="group flex flex-col gap-4">
+                        <div className="relative aspect-video rounded-[2rem] overflow-hidden shadow-lg ring-1 ring-primary/5">
+                          {itemImageUrl ? (
+                            <Image
+                              src={itemImageUrl}
+                              alt={item.title}
+                              fill
+                              className="object-cover group-hover:scale-110 transition-transform duration-700"
+                            />
+                          ) : (
+                            <div className="absolute inset-0 flex flex-col items-center justify-center bg-gradient-to-br from-primary/10 to-primary/20">
+                              <ImageIcon className="h-10 w-10 opacity-30 text-primary" />
+                            </div>
+                          )}
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-6">
+                            <span className="text-[10px] font-black uppercase tracking-widest text-white">Lire l'article</span>
+                          </div>
                         </div>
-                      </div>
-                      <h4 className="text-lg font-black leading-tight tracking-tight group-hover:text-primary transition-colors">{item.title}</h4>
-                    </Link>
-                  ))}
+                        <h4 className="text-lg font-black leading-tight tracking-tight group-hover:text-primary transition-colors">{item.title}</h4>
+                      </Link>
+                    );
+                  })}
                 </div>
               </div>
             )}

@@ -70,7 +70,6 @@ export function Header() {
   const navLinks = [
     { name: "Accueil", href: "/" },
     { name: "Actualités", href: "/actualites" },
-    { name: "Direct", href: "/direct", isLive: showLiveStyle },
     { name: "Web TV", href: "/web-tv" },
     { name: "À Propos", href: "/about" },
     { name: "Contact", href: "/contact" },
@@ -258,7 +257,7 @@ export function Header() {
                     ))}
                   </div>
                   <p className="text-[10px] font-bold text-center text-muted-foreground uppercase tracking-[0.2em]">
-                    &copy; 2024 GAM MÉDIAS. TOUS DROITS RÉSERVÉS.
+                    &copy; {new Date().getFullYear()} GAM MÉDIAS. TOUS DROITS RÉSERVÉS.
                   </p>
                 </div>
               </div>

@@ -48,7 +48,7 @@ export default async function AboutPage() {
               Qui sommes-nous
             </Badge>
             <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] text-gradient">
-              Génies Afrique Médias.
+              Geniesdafriquemedia.
             </h1>
             <p className="text-2xl md:text-4xl font-medium text-muted-foreground leading-tight">
               Le média de référence qui célèbre l'innovation, la culture et l'excellence du continent africain.

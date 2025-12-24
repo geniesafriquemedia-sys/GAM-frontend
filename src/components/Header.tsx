@@ -92,7 +92,7 @@ export function Header() {
               GAM
             </span>
             <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground hidden sm:block">
-              Génies Afrique Médias
+              Geniesdafriquemedia
             </span>
           </Link>
 

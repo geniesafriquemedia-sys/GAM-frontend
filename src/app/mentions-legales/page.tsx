@@ -15,7 +15,7 @@ export default function MentionsLegalesPage() {
           <section className="space-y-4">
             <h2 className="text-3xl font-black tracking-tight">Éditeur du site</h2>
             <p className="text-muted-foreground font-medium leading-relaxed">
-              Le site <strong>GAM (Génies Afrique Médias)</strong> est édité par la société GAM MEDIA SAS, au capital de 1 000 000 FCFA, immatriculée au Registre du Commerce et des Sociétés de Yaoundé sous le numéro RC/YAO/2023/B/000.
+              Le site <strong>GAM (Geniesdafriquemedia)</strong> est édité par la société GAM MEDIA SAS, au capital de 1 000 000 FCFA, immatriculée au Registre du Commerce et des Sociétés de Yaoundé sous le numéro RC/YAO/2023/B/000.
             </p>
             <p className="text-muted-foreground font-medium leading-relaxed">
               Siège social : Cité de l'Innovation, Quartier Bastos, Yaoundé, Cameroun.<br/>

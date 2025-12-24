@@ -5,7 +5,7 @@ import { DirectContent } from "@/components/DirectContent";
 export const revalidate = 60;
 
 export const metadata = {
-  title: "Direct | GAM - Génies Afrique Médias",
+  title: "Direct | GAM - Geniesdafriquemedia",
   description: "Suivez GAM en direct. Actualités, débats et reportages exclusifs en temps réel sur les transformations du continent africain.",
 };
 

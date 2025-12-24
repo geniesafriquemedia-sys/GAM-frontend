@@ -5,7 +5,7 @@ import { ActualitesList } from "@/components/ActualitesList";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Actualités | GAM - Génies Afrique Médias",
+  title: "Actualités | GAM - Geniesdafriquemedia",
   description: "Toute l'actualité de GAM. Décryptage, analyses et reportages exclusifs sur les transformations du continent africain.",
 };
 

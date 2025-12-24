@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: video.title,
         description: video.description || '',
         url: `${SITE_URL}/web-tv/${slug}`,
-        siteName: 'GAM - Génies Afrique Médias',
+        siteName: 'GAM - Geniesdafriquemedia',
         type: 'video.other',
         videos: video.youtube_id ? [
           {

@@ -11,7 +11,7 @@ export function Footer() {
               <span className="text-5xl font-black tracking-tighter text-primary">GAM</span>
             </Link>
             <p className="text-xl font-medium text-muted-foreground leading-relaxed max-w-md">
-              Génies Afrique Médias : Redéfinir la narration africaine à travers l'innovation, la culture et l'impact.
+              Geniesdafriquemedia : Redéfinir la narration africaine à travers l'innovation, la culture et l'impact.
             </p>
             <div className="flex gap-4">
               {[

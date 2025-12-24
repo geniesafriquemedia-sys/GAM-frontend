@@ -17,7 +17,7 @@ export const revalidate = 300;
 
 // Metadata SEO
 export const metadata: Metadata = {
-  title: "GAM - Génies Afrique Médias | Actualités & Web TV",
+  title: "GAM - Geniesdafriquemedia | Actualités & Web TV",
   description: "Plateforme média panafricaine - Actualités, reportages, documentaires et émissions exclusives sur les transformations du continent africain.",
 };
 

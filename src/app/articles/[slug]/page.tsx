@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
         title: article.title,
         description: article.excerpt || '',
         url: `${SITE_URL}/articles/${slug}`,
-        siteName: 'GAM - Génies Afrique Médias',
+        siteName: 'GAM - Geniesdafriquemedia',
         type: 'article',
         publishedTime: article.published_at || undefined,
         authors: article.author ? [article.author.name] : undefined,

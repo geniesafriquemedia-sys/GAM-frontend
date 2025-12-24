@@ -5,7 +5,7 @@ import { WebTvList } from "@/components/WebTvList";
 export const revalidate = 300;
 
 export const metadata = {
-  title: "Web TV | GAM - Génies Afrique Médias",
+  title: "Web TV | GAM - Geniesdafriquemedia",
   description: "Découvrez nos reportages, documentaires et émissions exclusives sur les transformations du continent africain.",
 };
 

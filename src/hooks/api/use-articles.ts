@@ -9,6 +9,7 @@ import { api } from '@/lib/api';
 import type {
   Article,
   ArticleSummary,
+  ArticleWithRelated,
   ArticleQueryParams,
   PaginatedResponse,
 } from '@/types';
@@ -17,11 +18,14 @@ import type {
 // useArticles - Liste paginée
 // =============================================================================
 
-export interface UseArticlesOptions extends UseFetchOptions {
+export interface UseArticlesOptions extends UseFetchOptions<PaginatedResponse<ArticleSummary>> {
   initialParams?: ArticleQueryParams;
 }
 
 export interface UseArticlesResult {
+  // ... existing interface ...
+  // This interface is just for context, I will only replace the implementation part
+  // if I can't match strictly. But let's try to match the implementation.
   articles: ArticleSummary[];
   pagination: {
     page: number;
@@ -107,7 +111,7 @@ export function useArticles(options: UseArticlesOptions = {}): UseArticlesResult
 // useArticle - Détail article
 // =============================================================================
 
-export interface UseArticleOptions extends UseFetchOptions {
+export interface UseArticleOptions extends UseFetchOptions<ArticleWithRelated> {
   slug: string;
 }
 
@@ -119,7 +123,7 @@ export function useArticle(options: UseArticleOptions) {
     [slug]
   );
 
-  return useFetch<Article>(fetchArticle, [slug], {
+  return useFetch<ArticleWithRelated>(fetchArticle, [slug], {
     enabled: !!slug,
     ...fetchOptions,
   });

@@ -9,6 +9,7 @@ import { api } from '@/lib/api';
 import type {
   Video,
   VideoSummary,
+  VideoWithRelated,
   VideoQueryParams,
   VideoType,
   PaginatedResponse,
@@ -18,7 +19,7 @@ import type {
 // useVideos - Liste paginée
 // =============================================================================
 
-export interface UseVideosOptions extends UseFetchOptions {
+export interface UseVideosOptions extends UseFetchOptions<PaginatedResponse<VideoSummary>> {
   initialParams?: VideoQueryParams;
 }
 
@@ -114,7 +115,7 @@ export function useVideos(options: UseVideosOptions = {}): UseVideosResult {
 // useVideo - Détail vidéo
 // =============================================================================
 
-export interface UseVideoOptions extends UseFetchOptions {
+export interface UseVideoOptions extends UseFetchOptions<VideoWithRelated> {
   slug: string;
 }
 
@@ -126,7 +127,7 @@ export function useVideo(options: UseVideoOptions) {
     [slug]
   );
 
-  return useFetch<Video>(fetchVideo, [slug], {
+  return useFetch<VideoWithRelated>(fetchVideo, [slug], {
     enabled: !!slug,
     ...fetchOptions,
   });

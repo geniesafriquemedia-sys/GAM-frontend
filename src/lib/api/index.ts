@@ -39,6 +39,7 @@ import {
 } from './services/editorial.service';
 import { searchService } from './services/search.service';
 import { newsletterService, contactService } from './services/engagement.service';
+import { kpiService } from './services/kpi.service';
 
 // =============================================================================
 // API NAMESPACE
@@ -61,6 +62,9 @@ export const api = {
   // Engagement
   newsletter: newsletterService,
   contact: contactService,
+
+  // KPI
+  kpi: kpiService,
 } as const;
 
 // =============================================================================

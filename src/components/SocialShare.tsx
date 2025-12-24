@@ -42,7 +42,7 @@ export function SocialShare({ url, title }: { url: string; title: string }) {
       <Button
         variant="outline"
         size="icon"
-        className="rounded-full h-9 w-9 hover:bg-green-500 hover:text-white hover:border-green-500 transition-all"
+        className="rounded-full h-9 w-9 text-foreground hover:bg-green-500 hover:border-green-500 transition-all"
         onClick={shareOnWhatsApp}
         title="Partager sur WhatsApp"
       >
@@ -51,7 +51,7 @@ export function SocialShare({ url, title }: { url: string; title: string }) {
       <Button
         variant="outline"
         size="icon"
-        className="rounded-full h-9 w-9 hover:bg-blue-600 hover:text-white hover:border-blue-600 transition-all"
+        className="rounded-full h-9 w-9 text-foreground hover:bg-blue-600 hover:border-blue-600 transition-all"
         onClick={() => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`, '_blank')}
         title="Partager sur Facebook"
       >
@@ -60,7 +60,7 @@ export function SocialShare({ url, title }: { url: string; title: string }) {
       <Button
         variant="outline"
         size="icon"
-        className="rounded-full h-9 w-9 hover:bg-sky-500 hover:text-white hover:border-sky-500 transition-all"
+        className="rounded-full h-9 w-9 text-foreground hover:bg-sky-500 hover:border-sky-500 transition-all"
         onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`, '_blank')}
         title="Partager sur X (Twitter)"
       >
@@ -69,7 +69,7 @@ export function SocialShare({ url, title }: { url: string; title: string }) {
       <Button
         variant="outline"
         size="icon"
-        className="rounded-full h-9 w-9 hover:bg-blue-700 hover:text-white hover:border-blue-700 transition-all"
+        className="rounded-full h-9 w-9 text-foreground hover:bg-blue-700 hover:border-blue-700 transition-all"
         onClick={() => window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`, '_blank')}
         title="Partager sur LinkedIn"
       >
@@ -78,7 +78,7 @@ export function SocialShare({ url, title }: { url: string; title: string }) {
       <Button
         variant="outline"
         size="icon"
-        className="rounded-full h-9 w-9 hover:bg-primary hover:text-white hover:border-primary transition-all"
+        className="rounded-full h-9 w-9 text-foreground hover:bg-primary hover:border-primary transition-all"
         onClick={copyToClipboard}
         title="Copier le lien"
       >

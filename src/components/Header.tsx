@@ -107,12 +107,6 @@ export function Header() {
                 )}
               >
                 {link.name}
-                {link.isLive && (
-                  <span className="absolute -top-1 -right-6 flex h-2.5 w-2.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-accent"></span>
-                  </span>
-                )}
                 <span className={cn(
                   "absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300",
                   pathname === link.href ? "w-full" : "w-0 group-hover:w-full"
@@ -162,7 +156,7 @@ export function Header() {
                 <Menu className="h-6 w-6 group-hover:scale-110 transition-transform" />
               </Button>
             </SheetTrigger>
-            <SheetContent side="right" className="w-full sm:max-w-md p-0 bg-background overflow-hidden border-l border-primary/10">
+            <SheetContent side="right" className="w-full sm:max-w-md p-0 bg-background overflow-hidden border-l border-primary/10 [&>button]:hidden">
               <div className="flex flex-col h-full relative">
                 {/* African Pattern Overlay */}
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6zM36 4V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
@@ -173,8 +167,10 @@ export function Header() {
                     <span className="text-2xl font-black tracking-tighter text-primary leading-none">GAM</span>
                     <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-1">Menu de Navigation</span>
                   </div>
-                  <SheetClose className="rounded-full h-10 w-10 flex items-center justify-center hover:bg-background transition-colors">
-                    <X className="h-5 w-5" />
+                  <SheetClose asChild>
+                    <Button variant="ghost" size="icon" className="rounded-full h-10 w-10 hover:bg-background transition-colors">
+                      <X className="h-5 w-5" />
+                    </Button>
                   </SheetClose>
                 </div>
 
@@ -192,7 +188,6 @@ export function Header() {
                         >
                           <div className="flex items-center gap-4">
                             {link.name}
-                            {link.isLive && <span className="h-2 w-2 rounded-full bg-accent animate-pulse" />}
                           </div>
                           <ArrowRight className={cn(
                             "h-6 w-6 opacity-0 -translate-x-4 transition-all group-hover:opacity-100 group-hover:translate-x-0 text-primary",

@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Sparkles, ImageIcon } from "lucide-react";
 import { motion } from "framer-motion";
-import { ShareMenu } from "@/components/ShareMenu";
 import type { ArticleSummary } from "@/types";
 import { getMediaUrl } from "@/lib/api/config";
 
@@ -113,11 +112,6 @@ export function Hero({ article }: HeroProps) {
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </Link>
                 </Button>
-
-                <ShareMenu
-                  title={article.title}
-                  url={`${typeof window !== 'undefined' ? window.location.origin : ''}/articles/${article.slug}`}
-                />
               </motion.div>
             </div>
           </div>

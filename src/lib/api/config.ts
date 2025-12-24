@@ -87,7 +87,8 @@ export const MAX_PAGE_SIZE = 100;
 export const CACHE_TIMES = {
   HOMEPAGE: 60,           // 1 minute
   ARTICLES: 60,           // 1 minute
-  ARTICLE_DETAIL: 300,    // 5 minutes
+  ARTICLE_DETAIL: 60,     // 1 minute (réduit de 5m pour plus de réactivité)
+  VIDEO_DETAIL: 60,       // 1 minute
   CATEGORIES: 600,        // 10 minutes
   AUTHORS: 600,           // 10 minutes
   SEARCH: 30,             // 30 secondes

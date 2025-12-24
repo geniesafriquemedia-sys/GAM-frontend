@@ -17,10 +17,11 @@ export interface UseFetchState<T> {
   isSuccess: boolean;
 }
 
-export interface UseFetchOptions {
+export interface UseFetchOptions<T = any> {
   enabled?: boolean;
   refetchOnMount?: boolean;
-  onSuccess?: <T>(data: T) => void;
+  initialData?: T | null;
+  onSuccess?: (data: T) => void;
   onError?: (error: string) => void;
 }
 
@@ -36,16 +37,16 @@ export interface UseFetchResult<T> extends UseFetchState<T> {
 export function useFetch<T>(
   fetchFn: () => Promise<T>,
   deps: unknown[] = [],
-  options: UseFetchOptions = {}
+  options: UseFetchOptions<T> = {}
 ): UseFetchResult<T> {
-  const { enabled = true, refetchOnMount = true, onSuccess, onError } = options;
+  const { enabled = true, refetchOnMount = true, initialData, onSuccess, onError } = options;
 
   const [state, setState] = useState<UseFetchState<T>>({
-    data: null,
+    data: initialData ?? null,
     isLoading: false,
     error: null,
     isError: false,
-    isSuccess: false,
+    isSuccess: !!initialData,
   });
 
   const mountedRef = useRef(true);

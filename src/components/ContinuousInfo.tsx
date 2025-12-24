@@ -3,13 +3,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useArticles, useVideos } from "@/hooks";
-import { Loader2, Clock, Play } from "lucide-react";
+import { Loader2, Clock, Play, Image as ImageIcon } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-import { getVideoThumbnailUrl, type ArticleSummary, type VideoSummary } from "@/types";
+import { getVideoThumbnailUrl, type ArticleSummary, type VideoSummary, type PaginatedResponse } from "@/types";
+import { getMediaUrl } from "@/lib/api";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -39,30 +40,38 @@ type ContentItem =
     | { type: 'video'; data: VideoSummary };
 
 interface ContinuousInfoProps {
-    excludeArticleId?: number;
+    excludeArticleIds?: number[];
+    initialArticles?: PaginatedResponse<ArticleSummary>;
+    initialVideos?: PaginatedResponse<VideoSummary>;
 }
 
-export function ContinuousInfo({ excludeArticleId }: ContinuousInfoProps) {
+export function ContinuousInfo({
+    excludeArticleIds = [],
+    initialArticles,
+    initialVideos
+}: ContinuousInfoProps) {
     const { articles, isLoading: articlesLoading } = useArticles({
         initialParams: {
-            page_size: 10, // Fetch slightly more to account for exclusion
+            page_size: 15,
             ordering: '-published_at'
-        }
+        },
+        initialData: initialArticles,
+        refetchOnMount: false
     });
 
     const { videos, isLoading: videosLoading } = useVideos({
         initialParams: {
             page_size: 4,
             ordering: '-published_at'
-        }
+        },
+        initialData: initialVideos,
+        refetchOnMount: false
     });
 
     const isLoading = articlesLoading || videosLoading;
 
-    // Filter out the hero article if ID is provided
-    const filteredArticles = excludeArticleId
-        ? articles.filter(a => a.id !== excludeArticleId)
-        : articles;
+    // Filter out excluced articles
+    const filteredArticles = articles.filter(a => !excludeArticleIds.includes(a.id));
 
     // Mix articles and videos, sorted by published date
     const mixedContent: ContentItem[] = [
@@ -121,19 +130,40 @@ export function ContinuousInfo({ excludeArticleId }: ContinuousInfoProps) {
                                         <div className="absolute -left-[29px] top-1 h-3 w-3 rounded-full border-2 border-background bg-muted-foreground/30 group-hover:bg-primary group-hover:scale-125 transition-all" />
 
                                         <Link href={`/articles/${article.slug}`} className="block group-hover:translate-x-1 transition-transform">
-                                            <div className="flex items-center gap-2 mb-1">
-                                                <span className="text-xs font-bold text-primary tabular-nums">
-                                                    {time}
-                                                </span>
-                                                {article.category && (
-                                                    <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold">
-                                                        {article.category.name}
+                                            <div className="flex flex-col gap-1.5">
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs font-bold text-primary tabular-nums">
+                                                        {time}
                                                     </span>
-                                                )}
+                                                    {article.category && (
+                                                        <span className="text-[9px] uppercase tracking-wider text-muted-foreground font-semibold">
+                                                            {article.category.name}
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                <div className="flex gap-3 relative">
+                                                    <h4 className="font-bold leading-snug group-hover:text-primary transition-colors line-clamp-3 text-sm flex-1">
+                                                        {article.title}
+                                                    </h4>
+
+                                                    {/* Article Thumbnail */}
+                                                    <div className="relative h-16 w-24 flex-shrink-0 rounded-md overflow-hidden bg-muted">
+                                                        {article.image_url ? (
+                                                            <Image
+                                                                src={getMediaUrl(article.image_url)}
+                                                                alt={article.title}
+                                                                fill
+                                                                className="object-cover group-hover:scale-105 transition-transform duration-300"
+                                                            />
+                                                        ) : (
+                                                            <div className="absolute inset-0 flex items-center justify-center bg-secondary/50">
+                                                                <ImageIcon className="h-6 w-6 text-muted-foreground/50" />
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
                                             </div>
-                                            <h4 className="font-bold leading-snug group-hover:text-primary transition-colors line-clamp-2 text-sm">
-                                                {article.title}
-                                            </h4>
                                         </Link>
                                     </motion.div>
                                 );
@@ -167,17 +197,13 @@ export function ContinuousInfo({ excludeArticleId }: ContinuousInfoProps) {
                                                     </h4>
 
                                                     {/* Small Thumbnail */}
-                                                    <div className="relative h-14 w-20 flex-shrink-0 rounded-md overflow-hidden bg-muted">
+                                                    <div className="relative h-16 w-24 flex-shrink-0 rounded-md overflow-hidden bg-muted">
                                                         <Image
                                                             src={getVideoThumbnailUrl(video)}
                                                             alt={video.title}
                                                             fill
                                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                                                         />
-                                                        {/* Duration Badge */}
-                                                        <div className="absolute bottom-0.5 right-0.5 bg-black/80 text-white text-[8px] px-1 py-0 rounded-[2px] font-bold">
-                                                            {video.duration_formatted}
-                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

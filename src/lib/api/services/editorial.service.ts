@@ -59,9 +59,9 @@ export const articlesService = {
    */
   async getByCategory(
     categorySlug: string,
-    params?: Omit<ArticleQueryParams, 'category'>
+    params?: Omit<ArticleQueryParams, 'category_slug'>
   ): Promise<PaginatedResponse<ArticleSummary>> {
-    return this.getAll({ ...params, category: categorySlug });
+    return this.getAll({ ...params, category_slug: categorySlug });
   },
 
   /**
@@ -69,9 +69,9 @@ export const articlesService = {
    */
   async getByAuthor(
     authorSlug: string,
-    params?: Omit<ArticleQueryParams, 'author'>
+    params?: Omit<ArticleQueryParams, 'author_slug'>
   ): Promise<PaginatedResponse<ArticleSummary>> {
-    return this.getAll({ ...params, author: authorSlug });
+    return this.getAll({ ...params, author_slug: authorSlug });
   },
 
   /**
@@ -179,7 +179,7 @@ export const videosService = {
   async getBySlugServer(slug: string): Promise<VideoWithRelated> {
     return serverFetch<VideoWithRelated>(
       ENDPOINTS.EDITORIAL.VIDEO(slug),
-      { next: { revalidate: CACHE_TIMES.ARTICLE_DETAIL, tags: [`video-${slug}`] } }
+      { next: { revalidate: CACHE_TIMES.VIDEO_DETAIL, tags: [`video-${slug}`] } }
     );
   },
 };

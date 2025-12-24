@@ -129,3 +129,15 @@ export {
   groupArticlesByCategory,
   getLatestContent,
 } from './homepage';
+
+// =============================================================================
+// KPI
+// =============================================================================
+export type {
+  PlatformKPI,
+} from './kpi';
+
+export {
+  formatKPINumber,
+  formatKPIWithPlus,
+} from './kpi';

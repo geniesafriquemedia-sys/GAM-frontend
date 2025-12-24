@@ -38,9 +38,6 @@ export function VideoCard({ video }: VideoCardProps) {
             <Play className="h-6 w-6 fill-foreground group-hover:fill-white text-foreground group-hover:text-white translate-x-0.5 transition-colors" />
           </div>
         </div>
-        <div className="absolute bottom-4 right-4 bg-background/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-bold tracking-widest text-foreground">
-          {duration_formatted}
-        </div>
         {is_live && (
           <div className="absolute top-4 left-4 bg-red-500 text-white px-3 py-1 rounded-full text-[10px] font-bold tracking-widest flex items-center gap-2">
             <span className="h-2 w-2 rounded-full bg-white animate-pulse" />
@@ -60,10 +57,6 @@ export function VideoCard({ video }: VideoCardProps) {
           >
             {category?.name || typeLabel}
           </Badge>
-          <div className="flex items-center text-[9px] font-black uppercase tracking-widest text-muted-foreground">
-            <Clock className="h-3 w-3 mr-1" />
-            {is_live ? 'LIVE' : 'VOD'}
-          </div>
         </div>
         <Link href={`/web-tv/${slug}`} className="block group-hover:text-primary transition-colors">
           <h3 className="text-xl font-black leading-tight tracking-tight line-clamp-2 text-foreground">

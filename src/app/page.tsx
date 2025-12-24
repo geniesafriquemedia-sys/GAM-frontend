@@ -24,10 +24,12 @@ export const metadata: Metadata = {
 // Data fetching côté serveur avec Promise.all (parallèle)
 async function getHomeData() {
   try {
-    const [featuredRes, latestRes, videosRes] = await Promise.all([
+    const [featuredRes, latestRes, videosRes, continuousArticles, continuousVideos] = await Promise.all([
       api.articles.getAllServer({ is_featured: true, page_size: 1, ordering: '-published_at' }),
       api.articles.getAllServer({ page_size: 4, ordering: '-published_at' }),
       api.videos.getAllServer({ page_size: 2, ordering: '-published_at' }),
+      api.articles.getAllServer({ page_size: 15, ordering: '-published_at' }),
+      api.videos.getAllServer({ page_size: 4, ordering: '-published_at' }),
     ]);
 
     return {
@@ -36,6 +38,8 @@ async function getHomeData() {
         ? latestRes.results.filter(a => a.id !== featuredRes.results[0].id).slice(0, 4)
         : latestRes.results.slice(0, 4),
       videos: videosRes.results,
+      continuousArticles,
+      continuousVideos,
     };
   } catch (error) {
     console.error('Error fetching home data:', error);
@@ -43,6 +47,8 @@ async function getHomeData() {
       featuredArticle: null,
       latestArticles: [],
       videos: [],
+      continuousArticles: { count: 0, next: null, previous: null, results: [] },
+      continuousVideos: { count: 0, next: null, previous: null, results: [] },
     };
   }
 }
@@ -68,7 +74,13 @@ function ContinuousInfoSkeleton() {
 }
 
 export default async function Home() {
-  const { featuredArticle, latestArticles, videos } = await getHomeData();
+  const {
+    featuredArticle,
+    latestArticles,
+    videos,
+    continuousArticles,
+    continuousVideos,
+  } = await getHomeData();
 
   return (
     <div className="flex flex-col gap-32 pb-32">
@@ -115,9 +127,14 @@ export default async function Home() {
           {/* Right Column: Continuous Info */}
           <div className="lg:col-span-4 pl-4 relative">
             <div className="sticky top-24 h-[calc(100vh-6rem)] min-h-[600px]">
-              <Suspense fallback={<ContinuousInfoSkeleton />}>
-                <ContinuousInfo excludeArticleId={featuredArticle?.id} />
-              </Suspense>
+              <ContinuousInfo
+                excludeArticleIds={[
+                  ...(featuredArticle ? [featuredArticle.id] : []),
+                  ...latestArticles.map(a => a.id)
+                ]}
+                initialArticles={continuousArticles}
+                initialVideos={continuousVideos}
+              />
             </div>
           </div>
         </div>

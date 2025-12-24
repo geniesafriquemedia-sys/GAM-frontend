@@ -83,7 +83,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 flex items-center gap-8 text-muted-foreground text-xs font-bold uppercase tracking-widest">
-          <span>© 2024 GAM MEDIA</span>
+          <span>© {new Date().getFullYear()} GAM MEDIA</span>
           <div className="h-px w-12 bg-border" />
           <span>PUISSANCE ÉDITORIALE</span>
         </div>

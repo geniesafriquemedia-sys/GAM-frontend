@@ -3,8 +3,41 @@ import { Globe, Users, Target, Award, ArrowRight } from "lucide-react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { api } from "@/lib/api";
+import { formatKPIWithPlus, formatKPINumber } from "@/types";
 
-export default function AboutPage() {
+// Revalidate every 10 minutes
+export const revalidate = 600;
+
+export default async function AboutPage() {
+  // Fetch KPIs from API
+  let kpis = null;
+  try {
+    kpis = await api.kpi.getPlatformKPIServer();
+  } catch (error) {
+    console.error('Failed to fetch KPIs:', error);
+  }
+
+  // Stats with real data from database (no simulated values)
+  const stats = [
+    {
+      label: "Articles publiés",
+      value: kpis?.total_articles ? formatKPIWithPlus(kpis.total_articles) : "0"
+    },
+    {
+      label: "Lecteurs mensuels",
+      value: kpis?.monthly_readers ? formatKPINumber(kpis.monthly_readers) : "0"
+    },
+    {
+      label: "Pays couverts",
+      value: kpis?.countries_covered?.toString() || "0"
+    },
+    {
+      label: "Experts TV",
+      value: kpis?.tv_experts ? formatKPIWithPlus(kpis.tv_experts) : "0"
+    },
+  ];
+
   return (
     <div className="flex flex-col gap-32 pb-32">
       {/* Hero */}
@@ -29,10 +62,10 @@ export default function AboutPage() {
       <section className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <div className="relative aspect-square rounded-[4rem] overflow-hidden shadow-2xl rotate-2">
-            <Image 
-              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop" 
-              alt="Notre Vision" 
-              fill 
+            <Image
+              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop"
+              alt="Notre Vision"
+              fill
               className="object-cover"
             />
           </div>
@@ -63,12 +96,7 @@ export default function AboutPage() {
       <section className="bg-zinc-950 py-32 text-white">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
-            {[
-              { label: "Articles publiés", value: "500+" },
-              { label: "Lecteurs mensuels", value: "1.2M" },
-              { label: "Pays couverts", value: "54" },
-              { label: "Experts TV", value: "150" },
-            ].map((stat, i) => (
+            {stats.map((stat, i) => (
               <div key={i} className="space-y-2 text-center">
                 <p className="text-5xl md:text-7xl font-black tracking-tighter text-primary">{stat.value}</p>
                 <p className="text-xs font-black uppercase tracking-widest text-zinc-500">{stat.label}</p>
@@ -82,7 +110,7 @@ export default function AboutPage() {
       <section className="container mx-auto px-4">
         <div className="rounded-[4rem] bg-secondary/30 p-12 md:p-24 text-center space-y-12 relative overflow-hidden">
           <div className="max-w-3xl mx-auto space-y-6 relative z-10">
-            <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.9]">Rejoignez <br/> l'aventure GAM.</h2>
+            <h2 className="text-4xl md:text-7xl font-black tracking-tighter leading-[0.9]">Rejoignez <br /> l'aventure GAM.</h2>
             <p className="text-xl text-muted-foreground font-medium">
               Vous êtes passionné par l'Afrique et l'innovation ? Nous sommes toujours à la recherche de nouveaux talents.
             </p>

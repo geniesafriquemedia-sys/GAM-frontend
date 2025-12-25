@@ -91,20 +91,20 @@ export default function ContactPage() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
                   <label className="text-xs font-black uppercase tracking-widest px-1">Nom Complet</label>
-                  <Input placeholder="Jean Dupont" className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
+                  <Input placeholder="Votre nom et prénom" className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
                 </div>
                 <div className="space-y-3">
                   <label className="text-xs font-black uppercase tracking-widest px-1">E-mail</label>
-                  <Input type="email" placeholder="jean@exemple.com" className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
+                  <Input type="email" placeholder="votre@email.com" className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
                 </div>
               </div>
               <div className="space-y-3">
                 <label className="text-xs font-black uppercase tracking-widest px-1">Sujet</label>
-                <Input placeholder="Collaboration, Publicité, Suggestion..." className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
+                <Input placeholder="Partenariat, Presse, Publicité, Autre..." className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
               </div>
               <div className="space-y-3">
                 <label className="text-xs font-black uppercase tracking-widest px-1">Message</label>
-                <Textarea placeholder="Dites-nous tout..." className="min-h-[200px] p-6 rounded-[2rem] bg-white border-none shadow-sm focus-visible:ring-primary resize-none" />
+                <Textarea placeholder="Décrivez votre demande ou votre projet..." className="min-h-[200px] p-6 rounded-[2rem] bg-white border-none shadow-sm focus-visible:ring-primary resize-none" />
               </div>
               <Button size="lg" className="w-full h-20 rounded-3xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-sm shadow-2xl shadow-primary/20">
                 Envoyer le message <Send className="ml-3 h-5 w-5" />

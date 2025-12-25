@@ -52,7 +52,7 @@ export default function LoginPage() {
         </div>
 
         <Link href="/" className="relative z-10 text-3xl font-black tracking-tighter text-foreground flex items-center gap-2">
-          GAM<span className="text-primary italic">.media</span>
+          GAM
         </Link>
 
         <div className="relative z-10 space-y-6">
@@ -83,7 +83,7 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 flex items-center gap-8 text-muted-foreground text-xs font-bold uppercase tracking-widest">
-          <span>© {new Date().getFullYear()} GAM MEDIA</span>
+          <span>© {new Date().getFullYear()} GAM MÉDIAS</span>
           <div className="h-px w-12 bg-border" />
           <span>PUISSANCE ÉDITORIALE</span>
         </div>

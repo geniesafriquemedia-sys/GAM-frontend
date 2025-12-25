@@ -3,7 +3,7 @@
 import Link from "next/link";
 import {
   Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame,
-  Facebook, Twitter, Instagram, Linkedin, ArrowRight, User,
+  Facebook, Twitter, Instagram, Linkedin, ArrowRight,
   Briefcase, BookOpen, Film, Music, Camera, Heart, Star, Zap, TrendingUp
 } from "lucide-react";
 import { useState, useEffect } from "react";
@@ -140,12 +140,6 @@ export function Header() {
                 </span>
               )}
               {showLiveStyle ? "En Direct" : "Voir le Direct"}
-            </Link>
-          </Button>
-
-          <Button asChild variant="ghost" size="icon" className="hidden lg:flex rounded-full hover:bg-primary/10 hover:text-primary transition-all">
-            <Link href="/login">
-              <User className="h-5 w-5" />
             </Link>
           </Button>
 

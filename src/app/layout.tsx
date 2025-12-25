@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+import { LayoutWrapper } from "@/components/LayoutWrapper";
 import { Toaster } from "sonner";
 import Script from "next/script";
 
@@ -76,11 +75,9 @@ export default function RootLayout({
           strategy="afterInteractive"
           data-orchids-project-id="79e8ea26-6a0e-44db-a3d8-0caba34fa0c5"
         />
-        <Header />
-        <main className="min-h-screen">
+        <LayoutWrapper>
           {children}
-        </main>
-        <Footer />
+        </LayoutWrapper>
         <Toaster position="top-center" richColors />
       </body>
     </html>

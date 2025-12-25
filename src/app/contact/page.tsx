@@ -38,7 +38,7 @@ export default function ContactPage() {
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">E-mail</h3>
-                  <p className="text-2xl font-black tracking-tight">contact@gam-media.com</p>
+                  <p className="text-2xl font-black tracking-tight">geniesdafriquemedia@gmail.com</p>
                 </div>
               </div>
 
@@ -48,7 +48,7 @@ export default function ContactPage() {
                 </div>
                 <div className="space-y-2">
                   <h3 className="text-sm font-black uppercase tracking-widest text-muted-foreground">Téléphone</h3>
-                  <p className="text-2xl font-black tracking-tight">+237 600 000 000</p>
+                  <p className="text-2xl font-black tracking-tight">+241 66 79 76 00</p>
                 </div>
               </div>
 

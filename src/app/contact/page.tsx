@@ -1,12 +1,63 @@
 "use client";
 
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Send, Instagram, Twitter, Facebook, Linkedin } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Instagram, Twitter, Facebook, Linkedin, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { contactService, validateContactForm } from "@/lib/api/services/engagement.service";
+import type { ContactRequest } from "@/types";
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState<ContactRequest>({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState<Partial<Record<keyof ContactRequest, string>>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<"idle" | "success" | "error">("idle");
+  const [submitMessage, setSubmitMessage] = useState("");
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    // Clear error when user types
+    if (errors[name as keyof ContactRequest]) {
+      setErrors((prev) => ({ ...prev, [name]: undefined }));
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Validate form
+    const validation = validateContactForm(formData);
+    if (!validation.isValid) {
+      setErrors(validation.errors);
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitStatus("idle");
+    setErrors({});
+
+    try {
+      const response = await contactService.send(formData);
+      setSubmitStatus("success");
+      setSubmitMessage(response.message || "Votre message a été envoyé avec succès !");
+      // Reset form
+      setFormData({ name: "", email: "", subject: "", message: "" });
+    } catch (error: unknown) {
+      setSubmitStatus("error");
+      const errorMessage = error instanceof Error ? error.message : "Une erreur est survenue. Veuillez réessayer.";
+      setSubmitMessage(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
   return (
     <div className="flex flex-col gap-24 pb-24">
       {/* Hero Header */}
@@ -87,27 +138,92 @@ export default function ContactPage() {
               <p className="text-muted-foreground font-medium">Nous vous répondrons sous 24h.</p>
             </div>
 
-            <form className="space-y-8" onSubmit={(e) => e.preventDefault()}>
+            {/* Status Messages */}
+            {submitStatus === "success" && (
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-green-50 text-green-700 border border-green-200">
+                <CheckCircle className="h-5 w-5 shrink-0" />
+                <p className="font-medium">{submitMessage}</p>
+              </div>
+            )}
+            {submitStatus === "error" && (
+              <div className="flex items-center gap-3 p-4 rounded-2xl bg-red-50 text-red-700 border border-red-200">
+                <AlertCircle className="h-5 w-5 shrink-0" />
+                <p className="font-medium">{submitMessage}</p>
+              </div>
+            )}
+
+            <form className="space-y-8" onSubmit={handleSubmit}>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-xs font-black uppercase tracking-widest px-1">Nom Complet</label>
-                  <Input placeholder="Votre nom et prénom" className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
+                  <label htmlFor="name" className="text-xs font-black uppercase tracking-widest px-1">Nom Complet</label>
+                  <Input
+                    id="name"
+                    name="name"
+                    value={formData.name}
+                    onChange={handleChange}
+                    placeholder="Votre nom et prénom"
+                    className={`h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary ${errors.name ? 'ring-2 ring-red-500' : ''}`}
+                    disabled={isSubmitting}
+                  />
+                  {errors.name && <p className="text-red-500 text-sm px-1">{errors.name}</p>}
                 </div>
                 <div className="space-y-3">
-                  <label className="text-xs font-black uppercase tracking-widest px-1">E-mail</label>
-                  <Input type="email" placeholder="votre@email.com" className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
+                  <label htmlFor="email" className="text-xs font-black uppercase tracking-widest px-1">E-mail</label>
+                  <Input
+                    id="email"
+                    name="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    placeholder="votre@email.com"
+                    className={`h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary ${errors.email ? 'ring-2 ring-red-500' : ''}`}
+                    disabled={isSubmitting}
+                  />
+                  {errors.email && <p className="text-red-500 text-sm px-1">{errors.email}</p>}
                 </div>
               </div>
               <div className="space-y-3">
-                <label className="text-xs font-black uppercase tracking-widest px-1">Sujet</label>
-                <Input placeholder="Partenariat, Presse, Publicité, Autre..." className="h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary" />
+                <label htmlFor="subject" className="text-xs font-black uppercase tracking-widest px-1">Sujet</label>
+                <Input
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  placeholder="Partenariat, Presse, Publicité, Autre..."
+                  className={`h-16 px-6 rounded-2xl bg-white border-none shadow-sm focus-visible:ring-primary ${errors.subject ? 'ring-2 ring-red-500' : ''}`}
+                  disabled={isSubmitting}
+                />
+                {errors.subject && <p className="text-red-500 text-sm px-1">{errors.subject}</p>}
               </div>
               <div className="space-y-3">
-                <label className="text-xs font-black uppercase tracking-widest px-1">Message</label>
-                <Textarea placeholder="Décrivez votre demande ou votre projet..." className="min-h-[200px] p-6 rounded-[2rem] bg-white border-none shadow-sm focus-visible:ring-primary resize-none" />
+                <label htmlFor="message" className="text-xs font-black uppercase tracking-widest px-1">Message</label>
+                <Textarea
+                  id="message"
+                  name="message"
+                  value={formData.message}
+                  onChange={handleChange}
+                  placeholder="Décrivez votre demande ou votre projet..."
+                  className={`min-h-[200px] p-6 rounded-[2rem] bg-white border-none shadow-sm focus-visible:ring-primary resize-none ${errors.message ? 'ring-2 ring-red-500' : ''}`}
+                  disabled={isSubmitting}
+                />
+                {errors.message && <p className="text-red-500 text-sm px-1">{errors.message}</p>}
               </div>
-              <Button size="lg" className="w-full h-20 rounded-3xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-sm shadow-2xl shadow-primary/20">
-                Envoyer le message <Send className="ml-3 h-5 w-5" />
+              <Button
+                type="submit"
+                size="lg"
+                className="w-full h-20 rounded-3xl bg-primary text-white hover:bg-primary/90 font-black uppercase tracking-widest text-sm shadow-2xl shadow-primary/20 disabled:opacity-50"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? (
+                  <>
+                    <Loader2 className="mr-3 h-5 w-5 animate-spin" />
+                    Envoi en cours...
+                  </>
+                ) : (
+                  <>
+                    Envoyer le message <Send className="ml-3 h-5 w-5" />
+                  </>
+                )}
               </Button>
             </form>
           </div>

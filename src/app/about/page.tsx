@@ -47,7 +47,7 @@ export default async function AboutPage() {
             <Badge className="bg-primary text-white border-none px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
               Qui sommes-nous
             </Badge>
-            <h1 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.85] text-gradient">
+            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] text-gradient break-words">
               Geniesdafriquemedia.
             </h1>
             <p className="text-2xl md:text-4xl font-medium text-muted-foreground leading-tight">
@@ -63,8 +63,8 @@ export default async function AboutPage() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
           <div className="relative aspect-square rounded-[4rem] overflow-hidden shadow-2xl rotate-2">
             <Image
-              src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=1000&auto=format&fit=crop"
-              alt="Notre Vision"
+              src="/images/geneis.png"
+              alt="Génies d'Afrique Media"
               fill
               className="object-cover"
             />

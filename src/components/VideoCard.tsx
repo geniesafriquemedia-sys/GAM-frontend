@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Play, Clock } from "lucide-react";
+import { Play } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import type { VideoSummary } from "@/types";
 import { getVideoThumbnailUrl, getVideoTypeLabel } from "@/types";
@@ -15,7 +15,6 @@ export function VideoCard({ video }: VideoCardProps) {
   const {
     slug,
     title,
-    duration_formatted,
     video_type,
     category,
     is_live

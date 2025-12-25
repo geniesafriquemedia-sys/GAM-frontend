@@ -191,9 +191,6 @@ export default async function Home() {
                             </div>
                           </div>
                           <div className="absolute bottom-8 left-8 right-8 space-y-3">
-                            <Badge className="bg-primary/20 backdrop-blur-md text-primary border-primary/30 text-[9px] font-black uppercase tracking-widest">
-                              {video.duration_formatted}
-                            </Badge>
                             <h3 className="text-2xl font-black leading-tight tracking-tighter group-hover:text-primary transition-colors line-clamp-2">
                               {video.title}
                             </h3>

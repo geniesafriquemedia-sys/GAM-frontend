@@ -105,11 +105,6 @@ export function WebTvList({ initialVideos, featuredVideo }: WebTvListProps) {
                                             <Play className="mr-2 h-5 w-5 fill-white" /> Regarder
                                         </Link>
                                     </Button>
-                                    <div className="flex items-center gap-2 text-sm text-muted-foreground font-semibold">
-                                        <span className="px-3 py-1 bg-muted rounded-full border border-border">
-                                            {featuredVideo.duration_formatted}
-                                        </span>
-                                    </div>
                                 </div>
                             </div>
 

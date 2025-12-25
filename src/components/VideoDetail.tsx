@@ -2,7 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, Clock, PlayCircle, Info } from "lucide-react";
+import { ArrowLeft, PlayCircle, Info } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { VideoCard } from "@/components/VideoCard";

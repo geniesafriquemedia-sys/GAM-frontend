@@ -3,7 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useArticles, useVideos } from "@/hooks";
-import { Loader2, Clock, Play, Image as ImageIcon } from "lucide-react";
+import { Loader2, Play, Image as ImageIcon } from "lucide-react";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale";
 import { ScrollArea } from "@/components/ui/scroll-area";

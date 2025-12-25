@@ -207,9 +207,6 @@ export function DirectContent({ initialLiveVideo, initialRecentVideos }: DirectC
                                                     <h4 className="font-bold leading-tight text-sm line-clamp-2 group-hover:text-primary transition-colors text-foreground">
                                                         {video.title}
                                                     </h4>
-                                                    <p className="text-xs text-muted-foreground">
-                                                        {video.duration_formatted}
-                                                    </p>
                                                 </div>
                                             </Link>
                                         ))}

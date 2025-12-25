@@ -47,7 +47,7 @@ export default async function AboutPage() {
             <Badge className="bg-primary text-white border-none px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em]">
               Qui sommes-nous
             </Badge>
-            <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter leading-[0.85] text-gradient break-words">
+            <h1 className="text-2xl xs:text-3xl sm:text-4xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.85] text-gradient">
               Geniesdafriquemedia.
             </h1>
             <p className="text-2xl md:text-4xl font-medium text-muted-foreground leading-tight">

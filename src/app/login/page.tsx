@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,34 +9,33 @@ import { motion } from "framer-motion";
 import { LogIn, ArrowLeft, ShieldCheck, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { api } from "@/lib/api";
 
-// URL du dashboard Wagtail CMS (configuré sur /cms/ dans le backend)
-const WAGTAIL_ADMIN_URL = process.env.NEXT_PUBLIC_WAGTAIL_URL || "http://localhost:8000/cms/";
+// Backend URL pour la connexion session - utilise le tunnel backend directement
+const getSessionLoginUrl = () => {
+  // En production/tunnel, utiliser le backend tunnel
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
+  if (apiUrl.includes("gam-tunnel-back")) {
+    return "https://gam-tunnel-back.geniesafriquemedia.workers.dev/api/v1/auth/session/login/";
+  }
+  // En développement local
+  return "http://localhost:8000/api/v1/auth/session/login/";
+};
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
+  const searchParams = useSearchParams();
   const [error, setError] = useState<string | null>(null);
+  const [sessionLoginUrl, setSessionLoginUrl] = useState("");
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      // Authentification via l'API
-      await api.auth.login({ email, password });
-
-      // Redirection vers le dashboard Wagtail Admin
-      window.location.href = WAGTAIL_ADMIN_URL;
-    } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Identifiants incorrects";
-      setError(errorMessage);
-      setIsLoading(false);
+  useEffect(() => {
+    // Définir l'URL côté client
+    setSessionLoginUrl(getSessionLoginUrl());
+    
+    // Vérifier les erreurs dans l'URL
+    const errorParam = searchParams.get('error');
+    if (errorParam === 'invalid_credentials') {
+      setError('Email ou mot de passe incorrect');
     }
-  };
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-background flex overflow-hidden text-foreground">
@@ -114,53 +114,40 @@ export default function LoginPage() {
             </motion.div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Form POST directement vers le backend pour créer la session */}
+          <form action={sessionLoginUrl} method="POST" className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-muted-foreground font-bold text-xs uppercase tracking-widest">
                 Email
               </Label>
               <Input
                 id="email"
+                name="email"
                 type="email"
                 placeholder="votre@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
                 className="bg-muted border-border text-foreground rounded-2xl h-14 px-6 focus:ring-primary focus:border-primary transition-all font-medium"
                 required
-                disabled={isLoading}
               />
             </div>
             <div className="space-y-2">
-              <div className="flex items-center justify-between">
-                <Label htmlFor="password" className="text-muted-foreground font-bold text-xs uppercase tracking-widest">
-                  Mot de passe
-                </Label>
-              </div>
+              <Label htmlFor="password" className="text-muted-foreground font-bold text-xs uppercase tracking-widest">
+                Mot de passe
+              </Label>
               <Input
                 id="password"
+                name="password"
                 type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
                 className="bg-muted border-border text-foreground rounded-2xl h-14 px-6 focus:ring-primary focus:border-primary transition-all"
                 required
-                disabled={isLoading}
               />
             </div>
             <Button
               type="submit"
               className="w-full rounded-2xl h-14 font-black text-lg bg-primary hover:bg-primary/90 text-white shadow-2xl shadow-primary/20 transition-all hover:-translate-y-1 active:scale-95 group"
-              disabled={isLoading}
             >
-              {isLoading ? (
-                <span className="flex items-center gap-2">
-                  <div className="h-4 w-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Connexion en cours...
-                </span>
-              ) : (
-                <span className="flex items-center justify-center gap-2">
-                  Se connecter <LogIn className="h-5 w-5 transition-transform group-hover:translate-x-1" />
-                </span>
-              )}
+              <span className="flex items-center justify-center gap-2">
+                Se connecter <LogIn className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+              </span>
             </Button>
           </form>
 

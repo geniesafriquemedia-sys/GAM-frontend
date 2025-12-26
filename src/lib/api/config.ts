@@ -7,7 +7,11 @@
 // BASE URLs
 // =============================================================================
 
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1';
+// Server-side (SSR) uses Docker internal network, client-side uses localhost
+const isServer = typeof window === 'undefined';
+export const API_BASE_URL = isServer
+  ? (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1')
+  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1');
 export const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_URL || 'http://localhost:8000';
 
 // =============================================================================

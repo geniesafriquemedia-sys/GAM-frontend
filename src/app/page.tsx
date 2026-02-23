@@ -43,15 +43,23 @@ async function getHomeData() {
       api.categories.getAllServer(),
     ]);
 
-    const featuredArticles = featuredRes.results.slice(0, 3);
-    const featuredIds = new Set(featuredArticles.map((a) => a.id));
+    // Compléter le hero avec les derniers articles si moins de 3 featured
+    let heroArticles = featuredRes.results.slice(0, 3);
+    if (heroArticles.length < 3) {
+      const heroIds = new Set(heroArticles.map((a) => a.id));
+      const extras = latestRes.results
+        .filter((a) => !heroIds.has(a.id))
+        .slice(0, 3 - heroArticles.length);
+      heroArticles = [...heroArticles, ...extras];
+    }
 
+    const featuredIds = new Set(heroArticles.map((a) => a.id));
     const latestArticles = latestRes.results
       .filter((a) => !featuredIds.has(a.id))
       .slice(0, 4);
 
     return {
-      featuredArticles,
+      featuredArticles: heroArticles,
       latestArticles,
       videos: videosRes.results,
       continuousArticles,

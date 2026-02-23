@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Clock, TrendingUp, ImageIcon } from "lucide-react";
+import { ArrowRight, Clock, TrendingUp, ImageIcon, UserCircle2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { ArticleSummary } from "@/types";
 import { formatReadingTime } from "@/types";
@@ -163,16 +163,40 @@ export function Hero({ articles }: HeroProps) {
               )}
             </div>
 
-            {/* CTA */}
-            <Button
-              asChild
-              size="lg"
-              className="rounded-lg px-5 h-10 text-xs font-black bg-primary hover:bg-primary/90 transition-colors"
-            >
-              <Link href={`/articles/${article.slug}`}>
-                Lire l&apos;histoire <ArrowRight className="h-3.5 w-3.5 ml-1" />
-              </Link>
-            </Button>
+            {/* Author + CTA row */}
+            <div className="flex items-center gap-4 flex-wrap">
+              {/* Author */}
+              {article.author && (
+                <div className="flex items-center gap-2">
+                  <div className="h-7 w-7 rounded-full overflow-hidden border border-white/20 flex-shrink-0 bg-white/10 flex items-center justify-center">
+                    {article.author.photo ? (
+                      <Image
+                        src={getMediaUrl(article.author.photo)}
+                        alt={article.author.name}
+                        width={28}
+                        height={28}
+                        className="object-cover w-full h-full"
+                      />
+                    ) : (
+                      <UserCircle2 className="h-5 w-5 text-white/60" />
+                    )}
+                  </div>
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-background/60">
+                    {article.author.name}
+                  </span>
+                </div>
+              )}
+
+              <Button
+                asChild
+                size="lg"
+                className="rounded-lg px-5 h-10 text-xs font-black bg-primary hover:bg-primary/90 transition-colors"
+              >
+                <Link href={`/articles/${article.slug}`}>
+                  Lire l&apos;histoire <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </motion.div>
       </AnimatePresence>

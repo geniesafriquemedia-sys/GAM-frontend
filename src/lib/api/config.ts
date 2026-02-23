@@ -110,6 +110,8 @@ export const CACHE_TIMES = {
 export function getMediaUrl(path: string | null): string {
   if (!path) return '';
   if (path.startsWith('http')) return path;
+  // Éviter les doubles URLs (ex: cloudinary.com/upload/https://...)
+  if (path.includes('http')) return path.substring(path.indexOf('http'));
   return `${MEDIA_BASE_URL}${path}`;
 }
 

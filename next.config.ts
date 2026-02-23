@@ -25,10 +25,10 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   // Proxy API pour éviter les erreurs CORS en développement local
-  // Uniquement actif si NEXT_PUBLIC_API_URL est une URL externe (pas relative)
+  // Uniquement en dev (NODE_ENV=development) pour éviter les boucles en production
   async rewrites() {
+    if (process.env.NODE_ENV !== 'development') return [];
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
-    // Ne créer le proxy que si l'URL est externe (commence par http)
     if (!apiUrl.startsWith('http')) return [];
     const baseUrl = apiUrl.replace('/api/v1', '');
     return [

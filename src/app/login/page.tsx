@@ -10,14 +10,13 @@ import { LogIn, ArrowLeft, ShieldCheck, AlertCircle } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 
-// Backend URL pour la connexion session - utilise le tunnel backend directement
+// Backend URL pour la connexion session
 const getSessionLoginUrl = () => {
-  // En production/tunnel, utiliser le backend tunnel
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || "";
-  if (apiUrl.includes("gam-tunnel-back")) {
-    return "https://gam-tunnel-back.geniesafriquemedia.workers.dev/api/v1/auth/session/login/";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  if (apiUrl) {
+    return `${apiUrl}/auth/session/login/`;
   }
-  // En développement local
+  // Fallback développement local
   return "http://localhost:8000/api/v1/auth/session/login/";
 };
 

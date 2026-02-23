@@ -5,8 +5,8 @@ import path from "node:path";
 const loaderPath = require.resolve('orchids-visual-edits/loader.js');
 
 const nextConfig: NextConfig = {
-  // Output standalone pour Docker
-  output: 'standalone',
+  // Output standalone désactivé - utilise npm start dans Docker
+  // output: 'standalone',
   images: {
     remotePatterns: [
       {
@@ -29,6 +29,10 @@ const nextConfig: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  // Ignorer les erreurs de fetch pendant le build
+  experimental: {
+    fallbackNodePolyfills: false,
   },
   turbopack: {
     rules: {

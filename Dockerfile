@@ -90,16 +90,20 @@ ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
 
-# Copier les fichiers nécessaires depuis le builder
+# Copier les fichiers de package
+COPY --from=builder /app/package.json ./package.json
+
+# Copier les node_modules nécessaires
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copier les fichiers next.config
+COPY --from=builder /app/next.config.ts ./next.config.ts
+
+# Copier les fichiers publics
 COPY --from=builder /app/public ./public
 
-# Configurer le cache Next.js avec les bonnes permissions
-RUN mkdir .next && chown nextjs:nodejs .next
-
-# Copier le build standalone (si configuré) ou le build standard
-# Le standalone de Next.js crée une structure complète avec server.js à la racine
-COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
-COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Copier le build complet de Next.js
+COPY --from=builder --chown=nextjs:nodejs /app/.next ./.next
 
 # Passer à l'utilisateur non-root
 USER nextjs
@@ -111,5 +115,5 @@ EXPOSE 3000
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/', (r) => process.exit(r.statusCode === 200 ? 0 : 1))"
 
-# Commande de production - server.js est créé par Next.js standalone à la racine
-CMD ["node", "server.js"]
+# Commande de production - Utiliser next start au lieu de server.js standalone
+CMD ["npm", "start"]

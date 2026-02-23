@@ -12,6 +12,9 @@ import Image from "next/image";
 import { getVideoThumbnailUrl } from "@/types";
 import { ContinuousInfo } from "@/components/ContinuousInfo";
 
+// Force dynamic rendering (no static generation during build)
+export const dynamic = 'force-dynamic';
+
 // ISR - Régénération toutes les 5 minutes
 export const revalidate = 300;
 

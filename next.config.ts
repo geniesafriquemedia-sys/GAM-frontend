@@ -25,14 +25,13 @@ const nextConfig: NextConfig = {
     ignoreDuringBuilds: true,
   },
   // Proxy API pour éviter les erreurs CORS en développement local
+  // Uniquement actif si NEXT_PUBLIC_API_URL est une URL externe (pas relative)
   async rewrites() {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.geniesdafriquemedia.com/api/v1';
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || '';
+    // Ne créer le proxy que si l'URL est externe (commence par http)
+    if (!apiUrl.startsWith('http')) return [];
     const baseUrl = apiUrl.replace('/api/v1', '');
     return [
-      {
-        source: '/api/proxy/:path*',
-        destination: `${baseUrl}/api/v1/:path*`,
-      },
       {
         source: '/api/v1/:path*',
         destination: `${baseUrl}/api/v1/:path*`,

@@ -70,6 +70,16 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV NODE_ENV=production
 
+# Déclarer les build args Railway (obligatoire pour que Docker les accepte)
+# NEXT_PUBLIC_* doivent être disponibles au moment du build Next.js
+# car ils sont injectés statiquement dans le bundle JavaScript
+ARG NEXT_PUBLIC_API_URL
+ARG NEXT_PUBLIC_MEDIA_URL
+ARG NEXT_PUBLIC_SITE_URL
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+ENV NEXT_PUBLIC_MEDIA_URL=$NEXT_PUBLIC_MEDIA_URL
+ENV NEXT_PUBLIC_SITE_URL=$NEXT_PUBLIC_SITE_URL
+
 # Build de l'application
 RUN npm run build
 

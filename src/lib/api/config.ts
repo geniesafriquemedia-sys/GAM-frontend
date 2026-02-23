@@ -13,7 +13,7 @@
 const isServer = typeof window === 'undefined';
 export const API_BASE_URL = isServer
   ? (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1')
-  : '/api/proxy';
+  : '/api/v1';
 export const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_URL || 'http://localhost:8000';
 
 // =============================================================================

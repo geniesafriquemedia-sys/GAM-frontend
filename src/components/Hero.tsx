@@ -1,134 +1,237 @@
 "use client";
 
+import { useState, useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Sparkles, ImageIcon } from "lucide-react";
-import { motion } from "framer-motion";
+import { ArrowRight, Clock, TrendingUp, ImageIcon } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import type { ArticleSummary } from "@/types";
+import { formatReadingTime } from "@/types";
 import { getMediaUrl } from "@/lib/api/config";
 
 interface HeroProps {
-  article: ArticleSummary | null;
+  articles: ArticleSummary[];
 }
 
-export function Hero({ article }: HeroProps) {
-  if (!article) {
+function formatDate(dateString: string | null): string {
+  if (!dateString) return "";
+  return new Date(dateString).toLocaleDateString("fr-FR", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+const SLIDE_DURATION = 5000; // ms
+
+export function Hero({ articles }: HeroProps) {
+  const [current, setCurrent] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const count = articles.length;
+
+  const goTo = useCallback(
+    (index: number) => {
+      setCurrent(((index % count) + count) % count);
+    },
+    [count]
+  );
+
+  const next = useCallback(() => goTo(current + 1), [current, goTo]);
+
+  // Auto-rotate
+  useEffect(() => {
+    if (paused || count <= 1) return;
+    timerRef.current = setTimeout(next, SLIDE_DURATION);
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [current, paused, count, next]);
+
+  // Empty / loading state
+  if (!articles || count === 0) {
     return (
-      <section className="relative w-full overflow-hidden bg-background pt-6">
-        <div className="container mx-auto px-4">
-          <div className="relative min-h-[650px] md:min-h-[800px] w-full overflow-hidden rounded-[3rem] md:rounded-[4rem] bg-muted animate-pulse" />
-        </div>
-      </section>
+      <div className="relative min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-muted animate-pulse" />
     );
   }
 
-  // Priorité: image_url (backend calcule: uploaded > external)
-  // getMediaUrl ajoute le préfixe http://localhost:8000 pour les chemins relatifs (/media/...)
-  const rawImageUrl = article.image_url || null;
-  const imageUrl = rawImageUrl ? getMediaUrl(rawImageUrl) : null;
-  const hasImage = !!imageUrl;
+  const article = articles[current];
+  const imageUrl = article.image_url ? getMediaUrl(article.image_url) : null;
 
   return (
-    <section className="relative w-full overflow-hidden bg-background pt-6">
-      <div className="container mx-auto px-4">
+    <div
+      className="relative min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-foreground text-background shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+    >
+      {/* ── Background image with cross-fade ── */}
+      <AnimatePresence mode="sync">
         <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="relative flex flex-col justify-end min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-foreground text-background shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"
+          key={`bg-${article.id}`}
+          className="absolute inset-0 z-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8, ease: "easeInOut" }}
         >
-          <div className="absolute inset-0 z-0">
-            {hasImage ? (
-              <Image
-                src={imageUrl}
-                alt={article.title}
-                fill
-                className="object-cover opacity-60 transition-transform duration-[2s]"
-                priority
-              />
-            ) : (
-              <div
-                className="absolute inset-0 flex flex-col items-center justify-center"
-                style={{
-                  background: article.category?.color
+          {imageUrl ? (
+            <Image
+              src={imageUrl}
+              alt={article.title}
+              fill
+              className="object-cover opacity-60"
+              priority
+              sizes="(max-width: 1024px) 100vw, 67vw"
+            />
+          ) : (
+            <div
+              className="absolute inset-0 flex items-center justify-center"
+              style={{
+                background:
+                  article.category?.color
                     ? `linear-gradient(135deg, ${article.category.color}30 0%, ${article.category.color}60 100%)`
-                    : 'linear-gradient(135deg, hsl(var(--primary)/0.3) 0%, hsl(var(--primary)/0.5) 100%)'
-                }}
-              >
-                <ImageIcon className="h-24 w-24 opacity-20 text-white" />
-              </div>
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
-          </div>
+                    : "linear-gradient(135deg, hsl(var(--primary)/0.3) 0%, hsl(var(--primary)/0.5) 100%)",
+              }}
+            >
+              <ImageIcon className="h-24 w-24 opacity-20 text-white" />
+            </div>
+          )}
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+        </motion.div>
+      </AnimatePresence>
 
-          <div className="relative z-10 w-full p-5 md:p-10 lg:p-12 mt-auto">
-            <div className="max-w-3xl space-y-3 md:space-y-5">
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.3 }}
-                className="flex items-center gap-2.5"
-              >
-                <Badge className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-full px-3 py-0.5 text-[9px] font-black uppercase tracking-[0.15em] border-none">
-                  Éditorial
+      {/* ── Content ── */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`content-${article.id}`}
+          className="relative z-10 flex flex-col justify-end h-full min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full p-5 md:p-10 lg:p-12"
+          initial={{ opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -16 }}
+          transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <div className="max-w-3xl space-y-3 md:space-y-5">
+            {/* Badges row */}
+            <div className="flex items-center flex-wrap gap-2">
+              {article.category && (
+                <Badge
+                  className="rounded-full px-3 py-0.5 text-[9px] font-black uppercase tracking-[0.15em] border-none"
+                  style={{
+                    backgroundColor: article.category.color
+                      ? `${article.category.color}25`
+                      : "hsl(var(--primary)/0.2)",
+                    color: article.category.color || "hsl(var(--primary))",
+                  }}
+                >
+                  {article.category.name}
                 </Badge>
-                {article.category && (
-                  <div className="flex items-center gap-1.5 text-secondary">
-                    <Sparkles className="h-3 w-3 fill-secondary animate-pulse" />
-                    <span className="text-[9px] font-black uppercase tracking-[0.15em]">{article.category.name}</span>
-                  </div>
-                )}
-              </motion.div>
+              )}
+              {article.is_trending && (
+                <Badge className="bg-primary text-primary-foreground rounded-full px-3 py-0.5 text-[9px] font-black uppercase tracking-[0.15em] border-none flex items-center gap-1">
+                  <TrendingUp className="h-3 w-3" />
+                  Tendance
+                </Badge>
+              )}
+            </div>
 
-              <motion.h1
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.8 }}
-                className="text-2xl font-black leading-[1.1] tracking-tighter md:text-4xl lg:text-5xl max-w-2xl"
-              >
-                {article.title}
-              </motion.h1>
+            {/* Title */}
+            <h1 className="text-2xl font-black leading-[1.1] tracking-tighter md:text-4xl lg:text-5xl max-w-2xl">
+              {article.title}
+            </h1>
 
-              <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="text-xs text-background/70 md:text-sm lg:text-base line-clamp-2 max-w-lg font-medium leading-relaxed"
-              >
+            {/* Excerpt */}
+            {article.excerpt && (
+              <p className="text-xs text-background/70 md:text-sm line-clamp-2 max-w-lg font-medium leading-relaxed">
                 {article.excerpt}
-              </motion.p>
+              </p>
+            )}
 
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6 }}
-                className="flex flex-wrap items-center gap-3 pt-1"
-              >
-                <Button asChild size="lg" className="rounded-lg px-5 h-10 text-xs font-black bg-primary text-primary-foreground shadow-lg shadow-primary/25 transition-all hover:scale-105 hover:-translate-y-1 active:scale-95 group">
-                  <Link href={`/articles/${article.slug}`} className="flex items-center gap-2">
-                    Lire l'histoire
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                  </Link>
-                </Button>
-              </motion.div>
+            {/* Meta row */}
+            <div className="flex items-center gap-4 text-[10px] font-black uppercase tracking-[0.2em] text-background/50">
+              {article.published_at && (
+                <span>{formatDate(article.published_at)}</span>
+              )}
+              {article.reading_time > 0 && (
+                <span className="flex items-center gap-1.5">
+                  <Clock className="h-3 w-3" />
+                  {formatReadingTime(article.reading_time)}
+                </span>
+              )}
             </div>
-          </div>
 
-          {/* Progress Indicators */}
-          <div className="absolute bottom-12 right-12 hidden lg:flex flex-col gap-6 items-end">
-            <div className="flex gap-3">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className={`h-1.5 transition-all duration-500 rounded-full ${i === 1 ? 'w-16 bg-primary shadow-[0_0_15px_rgba(var(--primary),0.8)]' : 'w-3 bg-white/20'}`} />
-              ))}
-            </div>
-            <div className="text-[10px] font-black uppercase tracking-[0.3em] text-background/40">
-              01 / 03 STORIES
-            </div>
+            {/* CTA */}
+            <Button
+              asChild
+              size="lg"
+              className="rounded-lg px-5 h-10 text-xs font-black bg-primary hover:bg-primary/90 transition-colors"
+            >
+              <Link href={`/articles/${article.slug}`}>
+                Lire l&apos;histoire <ArrowRight className="h-3.5 w-3.5 ml-1" />
+              </Link>
+            </Button>
           </div>
         </motion.div>
-      </div>
-    </section>
+      </AnimatePresence>
+
+      {/* ── Progress indicators (bottom-right) ── */}
+      {count > 1 && (
+        <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-20 flex flex-col gap-4 items-end">
+          {/* Dot/bar selectors */}
+          <div className="flex gap-2 items-center">
+            {articles.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => {
+                  setPaused(true);
+                  goTo(i);
+                  // resume after interaction
+                  setTimeout(() => setPaused(false), 2000);
+                }}
+                aria-label={`Aller à l'article ${i + 1}`}
+                className="focus:outline-none group"
+              >
+                <motion.div
+                  animate={{
+                    width: i === current ? 40 : 10,
+                    opacity: i === current ? 1 : 0.3,
+                  }}
+                  transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+                  className="h-1.5 rounded-full bg-white"
+                  style={{ width: i === current ? 40 : 10 }}
+                />
+              </button>
+            ))}
+          </div>
+
+          {/* Counter */}
+          <div className="text-[10px] font-black uppercase tracking-[0.3em] text-background/40 tabular-nums">
+            {String(current + 1).padStart(2, "0")} /{" "}
+            {String(count).padStart(2, "0")} STORIES
+          </div>
+
+          {/* Pause indicator */}
+          {paused && (
+            <div className="text-[8px] font-black uppercase tracking-[0.2em] text-background/30">
+              En pause
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* ── Auto-progress bar (bottom edge) ── */}
+      {count > 1 && !paused && (
+        <motion.div
+          key={`progress-${article.id}`}
+          className="absolute bottom-0 left-0 h-[3px] bg-primary z-20 origin-left"
+          initial={{ scaleX: 0 }}
+          animate={{ scaleX: 1 }}
+          transition={{ duration: SLIDE_DURATION / 1000, ease: "linear" }}
+        />
+      )}
+    </div>
   );
 }

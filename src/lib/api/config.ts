@@ -8,11 +8,12 @@
 // BASE URLs
 // =============================================================================
 
-// Server-side (SSR) uses Docker internal network, client-side uses localhost
+// Server-side: appel direct à l'API
+// Client-side: passe par le proxy Next.js /api/proxy pour éviter les CORS en dev
 const isServer = typeof window === 'undefined';
 export const API_BASE_URL = isServer
   ? (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1')
-  : (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1');
+  : '/api/proxy';
 export const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_URL || 'http://localhost:8000';
 
 // =============================================================================

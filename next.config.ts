@@ -24,6 +24,17 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
+  // Proxy API pour éviter les erreurs CORS en développement local
+  async rewrites() {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://api.geniesdafriquemedia.com/api/v1';
+    const baseUrl = apiUrl.replace('/api/v1', '');
+    return [
+      {
+        source: '/api/proxy/:path*',
+        destination: `${baseUrl}/api/v1/:path*`,
+      },
+    ];
+  },
 } as NextConfig;
 
 export default nextConfig;

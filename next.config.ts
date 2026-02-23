@@ -30,10 +30,6 @@ const nextConfig: NextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // Ignorer les erreurs de fetch pendant le build
-  experimental: {
-    fallbackNodePolyfills: false,
-  },
   turbopack: {
     rules: {
       "*.{jsx,tsx}": {

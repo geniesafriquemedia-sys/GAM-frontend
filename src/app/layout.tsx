@@ -46,13 +46,6 @@ export const metadata: Metadata = {
     description: "Média panafricain dédié à l'innovation, la culture et l'actualité en Afrique.",
     images: [`${SITE_URL}/og-image.jpg`],
   },
-  icons: {
-    icon: [
-      { url: "/images/logo.png", type: "image/png" },
-    ],
-    apple: "/images/logo.png",
-    shortcut: "/images/logo.png",
-  },
   robots: {
     index: true,
     follow: true,

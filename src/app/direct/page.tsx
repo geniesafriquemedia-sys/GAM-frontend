@@ -1,9 +1,6 @@
 import { api } from "@/lib/api";
 import { DirectContent } from "@/components/DirectContent";
 
-// Force dynamic rendering (no static generation during build)
-export const dynamic = 'force-dynamic';
-
 // ISR - Régénération toutes les 60 secondes pour le direct
 export const revalidate = 60;
 

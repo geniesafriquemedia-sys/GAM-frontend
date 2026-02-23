@@ -1,9 +1,6 @@
 import { api } from "@/lib/api";
 import { ActualitesList } from "@/components/ActualitesList";
 
-// Force dynamic rendering
-export const dynamic = 'force-dynamic';
-
 // ISR - Régénération toutes les 5 minutes
 export const revalidate = 300;
 

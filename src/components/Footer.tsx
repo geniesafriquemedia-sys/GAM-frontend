@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin, MoveRight } from "lucide-react";
 
 export function Footer() {
@@ -6,12 +7,18 @@ export function Footer() {
     <footer className="w-full border-t bg-background pt-24 pb-12">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
-          <div className="lg:col-span-5 space-y-8">
+          <div className="lg:col-span-5 space-y-8 flex flex-col items-center text-center lg:items-start lg:text-left">
             <Link href="/" className="inline-block">
-              <span className="text-5xl font-black tracking-tighter text-primary">GAM</span>
+              <Image
+                src="/images/logo.png"
+                alt="Génies d'Afrique Media"
+                width={600}
+                height={200}
+                className="h-48 w-auto object-contain"
+              />
             </Link>
             <p className="text-xl font-medium text-muted-foreground leading-relaxed max-w-md">
-              Geniesdafriquemedia : Redéfinir la narration africaine à travers l'innovation, la culture et l'impact.
+              Redéfinir la narration africaine à travers l'innovation, la culture et l'impact.
             </p>
             <div className="flex gap-4">
               {[
@@ -64,7 +71,7 @@ export function Footer() {
         
         <div className="mt-24 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            © {new Date().getFullYear()} GAM MÉDIAS. TOUS DROITS RÉSERVÉS.
+            © {new Date().getFullYear()} GÉNIES D'AFRIQUE MEDIA. TOUS DROITS RÉSERVÉS.
           </p>
           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             <Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions Légales</Link>

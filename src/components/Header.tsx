@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import {
   Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame,
   Facebook, Twitter, Instagram, Linkedin, ArrowRight,
@@ -83,17 +84,19 @@ export function Header() {
   return (
     <header className={cn(
       "sticky top-0 z-50 w-full transition-all duration-300",
-      isScrolled ? "bg-background/95 backdrop-blur-xl border-b h-16 shadow-lg shadow-primary/5" : "bg-transparent h-20"
+      isScrolled ? "bg-background/95 backdrop-blur-xl border-b h-20 shadow-lg shadow-primary/5" : "bg-transparent h-32"
     )}>
       <div className="container mx-auto flex h-full items-center justify-between px-4 lg:px-8">
         <div className="flex items-center gap-12">
-          <Link href="/" className="group flex flex-col items-start -space-y-1">
-            <span className="text-3xl lg:text-4xl font-black tracking-tighter text-primary group-hover:scale-105 transition-transform origin-left">
-              GAM
-            </span>
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground hidden sm:block">
-              Geniesdafriquemedia
-            </span>
+          <Link href="/" className="group flex items-center">
+            <Image
+              src="/images/logo.png"
+              alt="Génies d'Afrique Media"
+              width={400}
+              height={133}
+              className="h-20 lg:h-28 w-auto object-contain"
+              priority
+            />
           </Link>
 
           <nav className="hidden lg:flex items-center gap-8 text-xs font-black uppercase tracking-widest">
@@ -156,11 +159,14 @@ export function Header() {
                 <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6zM36 4V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")` }} />
 
                 {/* Sidebar Header */}
-                <div className="p-8 pb-4 flex items-center justify-between border-b border-primary/5 bg-muted/20 relative z-10">
-                  <div className="flex flex-col">
-                    <span className="text-2xl font-black tracking-tighter text-primary leading-none">GAM</span>
-                    <span className="text-[8px] font-black uppercase tracking-widest text-muted-foreground mt-1">Menu de Navigation</span>
-                  </div>
+                <div className="p-6 pb-4 flex items-center justify-between border-b border-primary/5 bg-muted/20 relative z-10">
+                  <Image
+                    src="/images/logo.png"
+                    alt="Génies d'Afrique Media"
+                    width={280}
+                    height={93}
+                    className="h-16 w-auto object-contain"
+                  />
                   <SheetClose asChild>
                     <Button variant="ghost" size="icon" className="rounded-full h-10 w-10 hover:bg-background transition-colors">
                       <X className="h-5 w-5" />
@@ -246,7 +252,7 @@ export function Header() {
                     ))}
                   </div>
                   <p className="text-[10px] font-bold text-center text-muted-foreground uppercase tracking-[0.2em]">
-                    &copy; {new Date().getFullYear()} GAM MÉDIAS. TOUS DROITS RÉSERVÉS.
+                    &copy; {new Date().getFullYear()} GÉNIES D'AFRIQUE MEDIA. TOUS DROITS RÉSERVÉS.
                   </p>
                 </div>
               </div>

@@ -1,6 +1,7 @@
 /**
  * Configuration API
  * URLs et constantes
+ * Updated: 2026-02-23 - Force rebuild with env vars
  */
 
 // =============================================================================

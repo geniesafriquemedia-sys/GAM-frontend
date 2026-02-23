@@ -6,6 +6,9 @@ import Link from "next/link";
 import { api } from "@/lib/api";
 import { formatKPIWithPlus, formatKPINumber } from "@/types";
 
+// Force dynamic rendering to avoid build-time fetch errors
+export const dynamic = 'force-dynamic';
+
 // Revalidate every 10 minutes
 export const revalidate = 600;
 

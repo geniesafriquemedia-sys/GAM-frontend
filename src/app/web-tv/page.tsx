@@ -1,6 +1,9 @@
 import { api } from "@/lib/api";
 import { WebTvList } from "@/components/WebTvList";
 
+// Force dynamic rendering to avoid build-time fetch errors
+export const dynamic = 'force-dynamic';
+
 // ISR - Régénération toutes les 5 minutes
 export const revalidate = 300;
 

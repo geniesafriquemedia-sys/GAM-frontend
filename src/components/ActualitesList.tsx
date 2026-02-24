@@ -128,7 +128,7 @@ export function ActualitesList({ initialArticles, initialCategories }: Actualite
 
             {/* Articles Grid */}
             {articles.length > 0 && (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-16">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-x-8 lg:gap-y-16">
                     {articles.map((article, index) => (
                         <ArticleCard key={article.id} article={article} index={index} />
                     ))}

@@ -64,7 +64,7 @@ export function Hero({ articles }: HeroProps) {
 
   return (
     <div
-      className="relative min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-foreground text-background shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"
+      className="relative min-h-[350px] sm:min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-foreground text-background shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -109,7 +109,7 @@ export function Hero({ articles }: HeroProps) {
       <AnimatePresence mode="wait">
         <motion.div
           key={`content-${article.id}`}
-          className="relative z-10 flex flex-col justify-end h-full min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full p-5 md:p-10 lg:p-12"
+          className="relative z-10 flex flex-col justify-end h-full min-h-[350px] sm:min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full p-4 sm:p-5 md:p-10 lg:p-12"
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -16 }}
@@ -140,13 +140,13 @@ export function Hero({ articles }: HeroProps) {
             </div>
 
             {/* Title */}
-            <h1 className="text-2xl font-black leading-[1.1] tracking-tighter md:text-4xl lg:text-5xl max-w-2xl">
+            <h1 className="text-xl sm:text-2xl font-black leading-[1.1] tracking-tighter md:text-4xl lg:text-5xl max-w-2xl">
               {article.title}
             </h1>
 
             {/* Excerpt */}
             {article.excerpt && (
-              <p className="text-xs text-background/70 md:text-sm line-clamp-2 max-w-lg font-medium leading-relaxed">
+              <p className="text-[11px] sm:text-xs text-background/70 md:text-sm line-clamp-2 max-w-lg font-medium leading-relaxed">
                 {article.excerpt}
               </p>
             )}
@@ -197,7 +197,7 @@ export function Hero({ articles }: HeroProps) {
 
       {/* ── Progress indicators (bottom-right) ── */}
       {count > 1 && (
-        <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 z-20 flex flex-col gap-4 items-end">
+        <div className="absolute bottom-4 sm:bottom-8 right-4 sm:right-8 md:bottom-12 md:right-12 z-20 flex flex-col gap-2 sm:gap-4 items-end">
           {/* Dot/bar selectors */}
           <div className="flex gap-2 items-center">
             {articles.map((_, i) => (

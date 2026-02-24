@@ -76,7 +76,7 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
       {/* Image wrapper */}
       <Link
         href={`/articles/${slug}`}
-        className="relative aspect-[16/11] overflow-hidden rounded-[2.5rem] shadow-sm transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:-translate-y-1.5"
+        className="relative aspect-[4/3] sm:aspect-[16/11] overflow-hidden rounded-[1.5rem] sm:rounded-[2rem] md:rounded-[2.5rem] shadow-sm transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.12)] hover:-translate-y-1.5"
       >
         {hasImage ? (
           <Image
@@ -144,28 +144,28 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
       </Link>
 
       {/* Text content */}
-      <div className="flex flex-col space-y-3 px-2">
+      <div className="flex flex-col space-y-2 sm:space-y-3 px-1 sm:px-2">
         {/* Meta row */}
-        <div className="flex items-center gap-3">
-          <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary/60">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-primary/60">
             {formattedDate}
           </span>
           <div className="h-px flex-1 bg-primary/10" />
-          <div className="flex items-center text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
-            <Clock className="mr-1.5 h-3.5 w-3.5 text-primary" />
+          <div className="flex items-center text-[9px] sm:text-[10px] font-black uppercase tracking-[0.15em] sm:tracking-[0.2em] text-muted-foreground">
+            <Clock className="mr-1 sm:mr-1.5 h-3 sm:h-3.5 w-3 sm:w-3.5 text-primary" />
             {readTimeText}
           </div>
         </div>
 
         {/* Title */}
         <Link href={`/articles/${slug}`} className="block">
-          <h3 className="text-2xl font-black leading-[1.1] tracking-tighter transition-colors group-hover:text-primary">
+          <h3 className="text-xl sm:text-2xl font-black leading-[1.1] tracking-tighter transition-colors group-hover:text-primary">
             {title}
           </h3>
         </Link>
 
         {/* Excerpt */}
-        <p className="text-sm text-muted-foreground/80 line-clamp-2 font-medium leading-relaxed">
+        <p className="text-xs sm:text-sm text-muted-foreground/80 line-clamp-3 sm:line-clamp-2 font-medium leading-relaxed">
           {excerpt}
         </p>
 

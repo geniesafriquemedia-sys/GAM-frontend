@@ -389,7 +389,7 @@ export function Header() {
               width={400}
               height={133}
               style={{ height: logoHeight, width: "auto" }}
-              className="object-contain transition-all duration-300"
+              className="object-contain transition-all duration-300 max-h-14 sm:max-h-16 md:max-h-20"
               priority
             />
           </Link>
@@ -435,7 +435,7 @@ export function Header() {
             size="icon"
             aria-label="Rechercher"
             className={cn(
-              "hidden sm:flex rounded-full transition-all",
+              "flex rounded-full transition-all",
               isSearchOpen
                 ? "bg-primary text-white hover:bg-primary/90"
                 : "hover:bg-primary/10 hover:text-primary"
@@ -470,21 +470,23 @@ export function Header() {
           {/* Live / Direct button */}
           <Button
             asChild
+            size="sm"
             className={cn(
-              "hidden sm:flex rounded-full px-6 lg:px-8 font-black text-xs uppercase tracking-widest shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0",
+              "flex rounded-full px-3 sm:px-6 lg:px-8 font-black text-[10px] sm:text-xs uppercase tracking-widest shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0",
               showLiveStyle
                 ? "bg-red-500 hover:bg-red-600 shadow-red-500/30"
                 : "bg-primary hover:bg-primary/90 shadow-primary/20"
             )}
           >
-            <Link href="/direct" className="flex items-center gap-2">
+            <Link href="/direct" className="flex items-center gap-1 sm:gap-2">
               {showLiveStyle && (
-                <span className="relative flex h-2 w-2">
+                <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
+                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-white" />
                 </span>
               )}
-              {showLiveStyle ? "En Direct" : "Voir le Direct"}
+              <span className="hidden xs:inline">{showLiveStyle ? "En Direct" : "Voir Direct"}</span>
+              <span className="xs:hidden">📡</span>
             </Link>
           </Button>
 

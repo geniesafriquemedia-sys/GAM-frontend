@@ -10,7 +10,7 @@ import {
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVideos, useTrendingTags, useCategories } from "@/hooks";
@@ -85,60 +85,105 @@ function HeaderSearch({ isOpen, onClose, trendingTags, tagsLoading }: HeaderSear
   };
 
   return (
-    <AnimatePresence>
-      {isOpen && (
-        <motion.div
-          key="search-overlay"
-          initial={{ opacity: 0, y: -12 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -12 }}
-          transition={{ duration: 0.22, ease: "easeOut" }}
-          className="absolute top-full left-0 w-full bg-background/98 backdrop-blur-3xl border-b border-primary/10 shadow-2xl z-40 hidden md:block"
-        >
-          <div className="container mx-auto max-w-4xl px-4 py-12">
-            <form onSubmit={handleSubmit} className="space-y-8">
-              <div className="relative group flex items-center gap-4">
-                <Search className="h-8 w-8 text-primary flex-shrink-0 transition-transform group-focus-within:scale-110" />
-                <input
-                  ref={inputRef}
-                  type="search"
-                  value={value}
-                  onChange={(e) => setValue(e.target.value)}
-                  placeholder="Rechercher un sujet, un article, une vidéo..."
-                  className="flex-1 bg-transparent border-b-4 border-primary/20 pb-3 text-4xl font-black tracking-tighter focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/30"
-                />
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={onClose}
-                  className="rounded-full flex-shrink-0"
-                >
-                  <X className="h-6 w-6" />
-                </Button>
-              </div>
+    <>
+      {/* Desktop Search Overlay */}
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div
+            key="search-overlay-desktop"
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.22, ease: "easeOut" }}
+            className="absolute top-full left-0 w-full bg-background/98 backdrop-blur-3xl border-b border-primary/10 shadow-2xl z-40 hidden md:block"
+          >
+            <div className="container mx-auto max-w-4xl px-4 py-12">
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="relative group flex items-center gap-4">
+                  <Search className="h-8 w-8 text-primary flex-shrink-0 transition-transform group-focus-within:scale-110" />
+                  <input
+                    ref={inputRef}
+                    type="search"
+                    value={value}
+                    onChange={(e) => setValue(e.target.value)}
+                    placeholder="Rechercher un sujet, un article, une vidéo..."
+                    className="flex-1 bg-transparent border-b-4 border-primary/20 pb-3 text-4xl font-black tracking-tighter focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/30"
+                  />
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon"
+                    onClick={onClose}
+                    className="rounded-full flex-shrink-0"
+                  >
+                    <X className="h-6 w-6" />
+                  </Button>
+                </div>
 
-              {/* Trending tags */}
-              <div className="flex flex-wrap items-center gap-3 pl-12">
-                <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                  {tagsLoading ? "Chargement..." : "Tendances :"}
-                </span>
+                {/* Trending tags */}
+                <div className="flex flex-wrap items-center gap-3 pl-12">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                    {tagsLoading ? "Chargement..." : "Tendances :"}
+                  </span>
+                  {trendingTags.map((tag) => (
+                    <button
+                      key={tag}
+                      type="button"
+                      onClick={() => handleTagClick(tag)}
+                      className="px-4 py-2 rounded-full bg-muted hover:bg-primary hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+                    >
+                      {tag}
+                    </button>
+                  ))}
+                </div>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* Mobile Search Sheet */}
+      <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
+        <SheetContent side="top" className="md:hidden h-[90vh] overflow-y-auto">
+          <SheetHeader className="mb-6">
+            <SheetTitle className="text-2xl font-black">Recherche</SheetTitle>
+          </SheetHeader>
+          
+          <form onSubmit={handleSubmit} className="space-y-6">
+            <div className="relative group flex items-center gap-3">
+              <Search className="h-6 w-6 text-primary flex-shrink-0" />
+              <input
+                type="search"
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
+                placeholder="Rechercher..."
+                autoFocus
+                className="flex-1 bg-transparent border-b-2 border-primary/20 pb-2 text-xl font-bold tracking-tight focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/40"
+              />
+            </div>
+
+            {/* Trending tags mobile */}
+            <div className="space-y-3">
+              <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">
+                {tagsLoading ? "Chargement..." : "Tendances"}
+              </span>
+              <div className="flex flex-wrap gap-2">
                 {trendingTags.map((tag) => (
                   <button
                     key={tag}
                     type="button"
                     onClick={() => handleTagClick(tag)}
-                    className="px-4 py-2 rounded-full bg-muted hover:bg-primary hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+                    className="px-3 py-1.5 rounded-full bg-muted hover:bg-primary hover:text-white text-xs font-bold uppercase tracking-wide transition-all"
                   >
                     {tag}
                   </button>
                 ))}
               </div>
-            </form>
-          </div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+            </div>
+          </form>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }
 

@@ -82,8 +82,10 @@ self.addEventListener('fetch', (event) => {
             return cachedResponse;
           }
           return fetch(request).then((networkResponse) => {
-            // Mettre en cache l'image pour la prochaine fois
-            cache.put(request, networkResponse.clone());
+            // Mettre en cache seulement les images GET avec succès
+            if (request.method === 'GET' && networkResponse.status === 200) {
+              cache.put(request, networkResponse.clone());
+            }
             return networkResponse;
           }).catch(() => {
             // Image par défaut en cas d'erreur
@@ -100,11 +102,13 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
       fetch(request)
         .then((response) => {
-          // Mettre en cache la page pour une consultation hors ligne
-          const responseClone = response.clone();
-          caches.open(RUNTIME_CACHE).then((cache) => {
-            cache.put(request, responseClone);
-          });
+          // Mettre en cache seulement les pages GET avec succès
+          if (request.method === 'GET' && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(RUNTIME_CACHE).then((cache) => {
+              cache.put(request, responseClone);
+            });
+          }
           return response;
         })
         .catch(() => {
@@ -124,11 +128,13 @@ self.addEventListener('fetch', (event) => {
         return cachedResponse;
       }
       return fetch(request).then((response) => {
-        // Mettre en cache pour la prochaine fois
-        const responseClone = response.clone();
-        caches.open(RUNTIME_CACHE).then((cache) => {
-          cache.put(request, responseClone);
-        });
+        // Mettre en cache seulement les requêtes GET
+        if (request.method === 'GET' && response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(RUNTIME_CACHE).then((cache) => {
+            cache.put(request, responseClone);
+          });
+        }
         return response;
       });
     })

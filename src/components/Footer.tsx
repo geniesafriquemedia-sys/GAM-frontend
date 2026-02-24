@@ -46,6 +46,7 @@ export function Footer() {
                 <li><Link href="/" className="hover:text-primary transition-colors flex items-center group">Accueil <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" /></Link></li>
                 <li><Link href="/actualites" className="hover:text-primary transition-colors flex items-center group">Actualités <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" /></Link></li>
                 <li><Link href="/web-tv" className="hover:text-primary transition-colors flex items-center group">Web TV <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" /></Link></li>
+                <li><Link href="/faq" className="hover:text-primary transition-colors flex items-center group">FAQ <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" /></Link></li>
               </ul>
             </div>
 
@@ -63,6 +64,7 @@ export function Footer() {
               <ul className="space-y-4 font-bold">
                 <li><Link href="/contact" className="hover:text-primary transition-colors">Nous contacter</Link></li>
                 <li><Link href="/about" className="hover:text-primary transition-colors">À propos</Link></li>
+                <li><Link href="/faq" className="hover:text-primary transition-colors">Questions Fréquentes</Link></li>
                 <li><Link href="/partenariats" className="hover:text-primary transition-colors">Devenir partenaire</Link></li>
               </ul>
             </div>

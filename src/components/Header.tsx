@@ -197,6 +197,9 @@ interface MobileNavProps {
 }
 
 function MobileNav({ navLinks, pathname, categories, categoriesLoading, getCategoryIcon }: MobileNavProps) {
+  const [year, setYear] = useState<number | null>(null);
+  useEffect(() => { setYear(new Date().getFullYear()); }, []);
+
   return (
     <SheetContent
       side="right"
@@ -343,7 +346,7 @@ function MobileNav({ navLinks, pathname, categories, categoriesLoading, getCateg
             ))}
           </div>
           <p className="text-[10px] font-bold text-center text-muted-foreground uppercase tracking-[0.2em]">
-            &copy; {new Date().getFullYear()} GÉNIES D'AFRIQUE MEDIA. TOUS DROITS RÉSERVÉS.
+            &copy; {year ?? ''} GÉNIES D'AFRIQUE MEDIA. TOUS DROITS RÉSERVÉS.
           </p>
         </div>
       </motion.div>
@@ -433,7 +436,7 @@ export function Header() {
               width={400}
               height={133}
               style={{ height: logoHeight, width: "auto" }}
-              className="object-contain transition-all duration-300 max-h-14 sm:max-h-16 md:max-h-20"
+              className="object-contain transition-all duration-300 max-h-16 sm:max-h-20 md:max-h-24 lg:max-h-28"
               priority
             />
           </Link>

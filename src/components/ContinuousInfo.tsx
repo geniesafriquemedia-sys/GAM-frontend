@@ -4,8 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useArticles, useVideos } from "@/hooks";
 import { Loader2, Play, Image as ImageIcon } from "lucide-react";
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
+import { useState, useEffect } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
@@ -45,11 +44,25 @@ interface ContinuousInfoProps {
     initialVideos?: PaginatedResponse<VideoSummary>;
 }
 
+// Format a UTC ISO timestamp to HH:mm in a stable, timezone-agnostic way
+// so the SSR output matches the client hydration output regardless of
+// the server or user's local timezone.
+function formatTimeUTC(dateString: string | null): string {
+    if (!dateString) return "--:--";
+    const d = new Date(dateString);
+    const hh = String(d.getUTCHours()).padStart(2, "0");
+    const mm = String(d.getUTCMinutes()).padStart(2, "0");
+    return `${hh}:${mm}`;
+}
+
 export function ContinuousInfo({
     excludeArticleIds = [],
     initialArticles,
     initialVideos
 }: ContinuousInfoProps) {
+    const [mounted, setMounted] = useState(false);
+    useEffect(() => { setMounted(true); }, []);
+
     const { articles, isLoading: articlesLoading } = useArticles({
         initialParams: {
             page_size: 15,
@@ -115,8 +128,7 @@ export function ContinuousInfo({
                         className="space-y-5 relative border-l border-border/50 ml-2 pl-6 pb-2"
                     >
                         {mixedContent.map((item, index) => {
-                            const date = item.data.published_at ? new Date(item.data.published_at) : null;
-                            const time = date ? format(date, "HH:mm") : "--:--";
+                            const time = formatTimeUTC(item.data.published_at);
 
                             if (item.type === 'article') {
                                 const article = item.data;

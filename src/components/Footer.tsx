@@ -1,8 +1,14 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin, MoveRight } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function Footer() {
+  const [year, setYear] = useState<number | null>(null);
+  useEffect(() => { setYear(new Date().getFullYear()); }, []);
+
   return (
     <footer className="w-full border-t bg-background pt-24 pb-12">
       <div className="container mx-auto px-4">
@@ -73,7 +79,7 @@ export function Footer() {
         
         <div className="mt-24 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            © {new Date().getFullYear()} GÉNIES D'AFRIQUE MEDIA. TOUS DROITS RÉSERVÉS.
+            © {year ?? ''} GÉNIES D'AFRIQUE MEDIA. TOUS DROITS RÉSERVÉS.
           </p>
           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
             <Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions Légales</Link>

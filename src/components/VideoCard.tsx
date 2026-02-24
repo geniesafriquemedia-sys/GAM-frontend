@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Play, Clock, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
+import { useState } from "react";
 import type { VideoSummary } from "@/types";
 import { getVideoThumbnailUrl, getVideoTypeLabel } from "@/types";
 
@@ -34,6 +35,12 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
 
   const thumbnail = getVideoThumbnailUrl(video);
   const typeLabel = getVideoTypeLabel(video_type);
+  
+  const [isHovered, setIsHovered] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+  
+  // Extraire l'ID YouTube de la vidéo
+  const youtubeId = (video as { youtube_video_id?: string }).youtube_video_id;
 
   return (
     <motion.div

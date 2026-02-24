@@ -1,7 +1,8 @@
 "use client";
 
 import { motion, useInView } from "framer-motion";
-import { useRef, ReactNode } from "react";
+import { useRef, ReactNode, useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
 
 interface AnimatedTextProps {
@@ -24,7 +25,15 @@ export function AnimatedText({
   once = true,
 }: AnimatedTextProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once, margin: "-50px" });
+  const pathname = usePathname();
+  const [key, setKey] = useState(0);
+  
+  // Réinitialiser l'animation à chaque changement de page
+  useEffect(() => {
+    setKey(prev => prev + 1);
+  }, [pathname]);
+  
+  const isInView = useInView(ref, { once: false, margin: "-50px" });
 
   const variants = {
     "fade-up": {
@@ -57,6 +66,7 @@ export function AnimatedText({
 
   return (
     <motion.div
+      key={key}
       ref={ref}
       initial={currentVariant.initial}
       animate={isInView ? currentVariant.animate : currentVariant.initial}
@@ -88,15 +98,23 @@ export function AnimatedWord({
   staggerDelay = 0.05,
 }: AnimatedWordProps) {
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
+  const pathname = usePathname();
+  const [key, setKey] = useState(0);
+  
+  // Réinitialiser l'animation à chaque changement de page
+  useEffect(() => {
+    setKey(prev => prev + 1);
+  }, [pathname]);
+  
+  const isInView = useInView(ref, { once: false, margin: "-50px" });
   
   const words = text.split(" ");
 
   return (
-    <Component ref={ref} className={cn("overflow-hidden", className)}>
+    <Component ref={ref} className={cn("overflow-hidden", className)} key={key}>
       {words.map((word, idx) => (
         <motion.span
-          key={`${word}-${idx}`}
+          key={`${word}-${idx}-${key}`}
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
           transition={{

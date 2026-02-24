@@ -452,7 +452,7 @@ export function ArticleDetail({ initialArticle, slug }: ArticleDetailProps) {
             <div className="lg:col-span-3 space-y-10">
               {/* Table of Contents */}
               {tocItems.length > 0 && (
-                <div className="sticky top-28 z-40">
+                <div>
                   <TableOfContents items={tocItems} />
                 </div>
               )}

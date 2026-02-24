@@ -5,12 +5,17 @@ import { ArticleCard } from "@/components/ArticleCard";
 import { Newsletter } from "@/components/Newsletter";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { ArrowRight, Play, TrendingUp } from "lucide-react";
+import { ArrowRight, Play, TrendingUp, Flame } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getVideoThumbnailUrl } from "@/types";
 import { ContinuousInfo } from "@/components/ContinuousInfo";
-import type { Category } from "@/types";
+import { Advertisement } from "@/components/Advertisement";
+import { BreakingNewsTicker } from "@/components/BreakingNewsTicker";
+import { RubriqueSection } from "@/components/RubriqueSection";
+import type { Category, ArticleSummary } from "@/types";
+import type { CategoryWithArticles } from "@/components/RubriqueSection";
+import { getMediaUrl } from "@/lib/api/config";
 
 export const dynamic = "force-dynamic";
 export const revalidate = 300;
@@ -23,13 +28,17 @@ export const metadata: Metadata = {
 
 async function getHomeData() {
   try {
+    // ── Phase 1 : fetches parallèles ──────────────────────────────────────────
     const [
       featuredRes,
       latestRes,
       videosRes,
       continuousArticles,
       continuousVideos,
-      categories,
+      allCategories,
+      trendingRes,
+      homepageTopAds,
+      homepageMidAds,
     ] = await Promise.all([
       api.articles.getAllServer({
         is_featured: true,
@@ -41,9 +50,32 @@ async function getHomeData() {
       api.articles.getAllServer({ page_size: 15, ordering: "-published_at" }),
       api.videos.getAllServer({ page_size: 4, ordering: "-published_at" }),
       api.categories.getAllServer(),
+      api.articles.getAllServer({ is_trending: true, page_size: 8, ordering: "-published_at" }),
+      api.advertising.getActiveAdsServer("HOMEPAGE_TOP"),
+      api.advertising.getActiveAdsServer("HOMEPAGE_MID"),
     ]);
 
-    // Compléter le hero avec les derniers articles si moins de 3 featured
+    // ── Catégories featured (pour RubriqueSection) ────────────────────────────
+    const activeCategories = allCategories.filter((c: Category) => c.is_active);
+    const featuredCategories = activeCategories
+      .filter((c: Category) => c.is_featured && c.articles_count > 0)
+      .slice(0, 6);
+
+    // ── Phase 2 : articles par catégorie featured ─────────────────────────────
+    const categoryArticlesResults = await Promise.all(
+      featuredCategories.map((cat: Category) =>
+        api.articles
+          .getAllServer({ category_slug: cat.slug, page_size: 4, ordering: "-published_at" })
+          .then((res) => ({ category: cat, articles: res.results }))
+          .catch(() => ({ category: cat, articles: [] }))
+      )
+    );
+
+    const categoriesWithArticles: CategoryWithArticles[] = categoryArticlesResults.filter(
+      (c) => c.articles.length > 0
+    );
+
+    // ── Hero + flux articles ──────────────────────────────────────────────────
     let heroArticles = featuredRes.results.slice(0, 3);
     if (heroArticles.length < 3) {
       const heroIds = new Set(heroArticles.map((a) => a.id));
@@ -64,7 +96,11 @@ async function getHomeData() {
       videos: videosRes.results,
       continuousArticles,
       continuousVideos,
-      categories: categories.filter((c: Category) => c.is_active),
+      categories: activeCategories,
+      categoriesWithArticles,
+      trendingArticles: trendingRes.results,
+      homepageTopAds,
+      homepageMidAds,
     };
   } catch (error) {
     console.error("Error fetching home data:", error);
@@ -72,14 +108,13 @@ async function getHomeData() {
       featuredArticles: [],
       latestArticles: [],
       videos: [],
-      continuousArticles: {
-        count: 0,
-        next: null,
-        previous: null,
-        results: [],
-      },
+      continuousArticles: { count: 0, next: null, previous: null, results: [] },
       continuousVideos: { count: 0, next: null, previous: null, results: [] },
       categories: [],
+      categoriesWithArticles: [],
+      trendingArticles: [],
+      homepageTopAds: [],
+      homepageMidAds: [],
     };
   }
 }
@@ -105,16 +140,22 @@ export default async function Home() {
     continuousArticles,
     continuousVideos,
     categories,
+    categoriesWithArticles,
+    trendingArticles,
+    homepageTopAds,
+    homepageMidAds,
   } = await getHomeData();
 
-  // All article ids to exclude from the continuous sidebar
   const excludeIds = [
     ...featuredArticles.map((a) => a.id),
     ...latestArticles.map((a) => a.id),
   ];
 
   return (
-    <div className="flex flex-col gap-32 pb-32">
+    <div className="flex flex-col pb-32">
+      {/* ── Breaking News Ticker ── */}
+      <BreakingNewsTicker initialArticles={continuousArticles} />
+
       {/* ── Main content + sidebar ── */}
       <section className="container mx-auto px-4 mt-6">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
@@ -122,6 +163,16 @@ export default async function Home() {
           <div className="lg:col-span-8 space-y-16">
             {/* Hero carousel */}
             <Hero articles={featuredArticles} />
+
+            {/* Pub HOMEPAGE_TOP – Leaderboard */}
+            {homepageTopAds.length > 0 && (
+              <div className="flex justify-center py-2">
+                <Advertisement
+                  position="HOMEPAGE_TOP"
+                  initialAds={homepageTopAds}
+                />
+              </div>
+            )}
 
             {/* Latest articles header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-8 border-t border-border/50">
@@ -154,7 +205,6 @@ export default async function Home() {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-8 gap-y-12">
                 {latestArticles.map((article, index) => (
                   <div key={article.id} className="relative">
-                    {/* Trending badge overlay */}
                     {article.is_trending && (
                       <div className="absolute -top-3 left-4 z-10">
                         <Badge className="bg-primary text-primary-foreground rounded-full px-3 py-0.5 text-[9px] font-black uppercase tracking-[0.15em] border-none flex items-center gap-1 shadow-lg">
@@ -169,13 +219,84 @@ export default async function Home() {
               </div>
             ) : (
               <div className="text-center py-20">
-                <p className="text-muted-foreground">
-                  Aucun article disponible.
-                </p>
+                <p className="text-muted-foreground">Aucun article disponible.</p>
               </div>
             )}
 
-            {/* ── Categories Section ── */}
+            {/* ── Rubriques par catégorie ── */}
+            {categoriesWithArticles.length > 0 && (
+              <div className="pt-8 border-t border-border/50">
+                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+                  <div className="space-y-4">
+                    <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
+                      <div className="p-2 bg-primary/10 rounded-lg">
+                        <ArrowRight className="h-4 w-4" />
+                      </div>
+                      <span>Nos Rubriques</span>
+                    </div>
+                    <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9]">
+                      L&apos;Afrique sous{" "}
+                      <span className="text-primary italic">tous les angles</span>.
+                    </h2>
+                  </div>
+                </div>
+                <RubriqueSection
+                  categoriesWithArticles={categoriesWithArticles}
+                  midAds={homepageMidAds}
+                />
+              </div>
+            )}
+
+            {/* ── Tendances ── */}
+            {trendingArticles.length > 0 && (
+              <div className="pt-8 border-t border-border/50 space-y-8">
+                <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
+                  <div className="p-2 bg-primary/10 rounded-lg">
+                    <Flame className="h-4 w-4" />
+                  </div>
+                  <span>Tendances</span>
+                </div>
+                <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 scrollbar-hide">
+                  {trendingArticles.map((article) => {
+                    const imageUrl = article.image_url ? getMediaUrl(article.image_url) : null;
+                    return (
+                      <Link
+                        key={article.id}
+                        href={`/articles/${article.slug}`}
+                        className="group flex-none w-64 snap-start rounded-2xl border border-border overflow-hidden bg-card hover:-translate-y-1 transition-transform duration-300"
+                      >
+                        <div className="relative aspect-[4/3] bg-muted">
+                          {imageUrl && (
+                            <Image
+                              src={imageUrl}
+                              alt={article.title}
+                              fill
+                              sizes="256px"
+                              className="object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          )}
+                        </div>
+                        <div className="p-4">
+                          {article.category && (
+                            <span
+                              className="text-[9px] font-black uppercase tracking-[0.2em]"
+                              style={{ color: article.category.color || "hsl(var(--primary))" }}
+                            >
+                              {article.category.name}
+                            </span>
+                          )}
+                          <h3 className="text-sm font-bold leading-snug line-clamp-2 mt-1 group-hover:text-primary transition-colors">
+                            {article.title}
+                          </h3>
+                        </div>
+                      </Link>
+                    );
+                  })}
+                </div>
+              </div>
+            )}
+
+            {/* ── Categories explorer ── */}
             {categories.length > 0 && (
               <div className="space-y-8 pt-8 border-t border-border/50">
                 <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
@@ -228,16 +349,14 @@ export default async function Home() {
                           if (category.color) {
                             (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
                               category.color;
-                            (e.currentTarget as HTMLAnchorElement).style.color =
-                              textColor;
+                            (e.currentTarget as HTMLAnchorElement).style.color = textColor;
                           }
                         }}
                         onMouseLeave={(e) => {
                           if (category.color) {
                             (e.currentTarget as HTMLAnchorElement).style.backgroundColor =
                               `${category.color}18`;
-                            (e.currentTarget as HTMLAnchorElement).style.color =
-                              category.color;
+                            (e.currentTarget as HTMLAnchorElement).style.color = category.color;
                           }
                         }}
                       >
@@ -245,9 +364,7 @@ export default async function Home() {
                           {category.name}
                         </span>
                         {category.articles_count > 0 && (
-                          <span
-                            className="text-[9px] font-black opacity-60 tabular-nums"
-                          >
+                          <span className="text-[9px] font-black opacity-60 tabular-nums">
                             {category.articles_count}
                           </span>
                         )}
@@ -273,7 +390,7 @@ export default async function Home() {
       </section>
 
       {/* ── Web TV Section ── */}
-      <section className="relative bg-primary/5 py-32 text-foreground overflow-hidden">
+      <section className="relative bg-primary/5 py-32 text-foreground overflow-hidden mt-32">
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-5 space-y-10">

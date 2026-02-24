@@ -137,6 +137,15 @@ export type {
   PlatformKPI,
 } from './kpi';
 
+// =============================================================================
+// ADVERTISING
+// =============================================================================
+export type {
+  AdPosition,
+  AdType,
+  Advertisement,
+} from './advertising';
+
 export {
   formatKPINumber,
   formatKPIWithPlus,

@@ -22,14 +22,18 @@ import { SocialShare } from "@/components/SocialShare";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleBody } from "@/components/ArticleBody";
 import { AuthorAvatar } from "@/components/AuthorAvatar";
+import { Advertisement } from "@/components/Advertisement";
 import { useArticle } from "@/hooks";
 import { getMediaUrl } from "@/lib/api/config";
 import type { ArticleWithRelated, ArticleSummary, ArticleBlock } from "@/types";
 import { formatReadingTime } from "@/types";
+import type { Advertisement as Ad } from "@/types/advertising";
 
 interface ArticleDetailProps {
   initialArticle: ArticleWithRelated;
   slug: string;
+  sidebarAds?: Ad[];
+  inBody1Ads?: Ad[];
 }
 
 // Helper pour obtenir l'URL d'image d'un article
@@ -195,7 +199,7 @@ function TableOfContents({ items }: { items: TocItem[] }) {
 // ─────────────────────────────────────────────
 // Main Component
 // ─────────────────────────────────────────────
-export function ArticleDetail({ initialArticle, slug }: ArticleDetailProps) {
+export function ArticleDetail({ initialArticle, slug, sidebarAds, inBody1Ads }: ArticleDetailProps) {
   const { data: article } = useArticle({
     slug,
     initialData: initialArticle,
@@ -413,6 +417,16 @@ export function ArticleDetail({ initialArticle, slug }: ArticleDetailProps) {
                 </p>
               )}
 
+              {/* Pub in-article */}
+              {(inBody1Ads?.length ?? 0) > 0 && (
+                <div className="my-12 flex justify-center">
+                  <Advertisement
+                    position="ARTICLE_IN_BODY_1"
+                    initialAds={inBody1Ads}
+                  />
+                </div>
+              )}
+
               {/* ── Share section ── */}
               <motion.div
                 className="mt-24 p-14 bg-zinc-950 rounded-[4rem] text-white relative overflow-hidden shadow-2xl shadow-primary/20"
@@ -456,6 +470,14 @@ export function ArticleDetail({ initialArticle, slug }: ArticleDetailProps) {
                   <TableOfContents items={tocItems} />
                 </div>
               )}
+
+              {/* Pub sidebar 300x250 – sticky */}
+              <div className="sticky top-32">
+                <Advertisement
+                  position="ARTICLE_SIDEBAR"
+                  initialAds={sidebarAds}
+                />
+              </div>
 
               {/* Author widget */}
               {author && (

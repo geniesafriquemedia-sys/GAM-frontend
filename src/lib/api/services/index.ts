@@ -35,3 +35,6 @@ export type {
   ContactValidationResult,
   NewsletterValidationResult,
 } from './engagement.service';
+
+// Advertising
+export { advertisingService } from './advertising.service';

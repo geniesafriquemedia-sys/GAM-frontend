@@ -4,6 +4,7 @@ import { api } from "@/lib/api";
 import { ArticleDetail } from "@/components/ArticleDetail";
 import { getMediaUrl } from "@/lib/api/config";
 import type { ArticleWithRelated, ArticleSummary } from "@/types";
+import type { Advertisement } from "@/types/advertising";
 
 // Revalidate toutes les 60 secondes
 export const revalidate = 60;
@@ -76,5 +77,18 @@ export default async function ArticlePage({ params }: PageProps) {
     notFound();
   }
 
-  return <ArticleDetail initialArticle={article} slug={slug} />;
+  // Fetch pubs article en SSR (fire-and-forget, ne bloque pas si erreur)
+  const [sidebarAds, inBody1Ads] = await Promise.all([
+    api.advertising.getActiveAdsServer("ARTICLE_SIDEBAR"),
+    api.advertising.getActiveAdsServer("ARTICLE_IN_BODY_1"),
+  ]);
+
+  return (
+    <ArticleDetail
+      initialArticle={article}
+      slug={slug}
+      sidebarAds={sidebarAds}
+      inBody1Ads={inBody1Ads}
+    />
+  );
 }

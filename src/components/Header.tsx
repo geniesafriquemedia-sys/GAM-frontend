@@ -360,6 +360,7 @@ export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0); // 0 = top, 1 = shrunk
+  const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const pathname = usePathname();
 
   // Live stream detection
@@ -468,6 +469,82 @@ export function Header() {
                 </Link>
               );
             })}
+
+            {/* Mega-menu Rubriques */}
+            <div
+              className="relative"
+              onMouseEnter={() => setMegaMenuOpen(true)}
+              onMouseLeave={() => setMegaMenuOpen(false)}
+            >
+              <button
+                className={cn(
+                  "relative py-1.5 transition-colors group flex items-center gap-1",
+                  megaMenuOpen ? "text-primary" : "text-muted-foreground hover:text-primary"
+                )}
+              >
+                Rubriques
+                <span
+                  className={cn(
+                    "absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 rounded-full",
+                    megaMenuOpen ? "w-full" : "w-0 group-hover:w-full"
+                  )}
+                />
+              </button>
+
+              <AnimatePresence>
+                {megaMenuOpen && !categoriesLoading && categories.length > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.18, ease: "easeOut" }}
+                    className="absolute top-full left-0 mt-3 w-72 bg-background/98 backdrop-blur-xl border border-border rounded-2xl shadow-2xl shadow-primary/10 overflow-hidden z-50 p-3"
+                  >
+                    <div className="grid grid-cols-1 gap-1">
+                      {categories.slice(0, 8).map((cat) => {
+                        const Icon = getCategoryIcon(cat.icon || "globe");
+                        return (
+                          <Link
+                            key={cat.id}
+                            href={`/categories/${cat.slug}`}
+                            onClick={() => setMegaMenuOpen(false)}
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted/60 transition-colors group/item"
+                          >
+                            <div
+                              className="flex-none w-8 h-8 rounded-lg flex items-center justify-center"
+                              style={{ backgroundColor: cat.color ? `${cat.color}20` : "hsl(var(--primary)/0.1)" }}
+                            >
+                              <Icon
+                                className="h-4 w-4"
+                                style={{ color: cat.color || "hsl(var(--primary))" }}
+                              />
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <span className="text-xs font-bold block">{cat.name}</span>
+                              {cat.articles_count > 0 && (
+                                <span className="text-[10px] text-muted-foreground">
+                                  {cat.articles_count} article{cat.articles_count > 1 ? "s" : ""}
+                                </span>
+                              )}
+                            </div>
+                            <ArrowRight className="h-3 w-3 opacity-0 group-hover/item:opacity-100 transition-opacity text-muted-foreground" />
+                          </Link>
+                        );
+                      })}
+                    </div>
+                    <div className="mt-2 pt-2 border-t border-border">
+                      <Link
+                        href="/categories"
+                        onClick={() => setMegaMenuOpen(false)}
+                        className="flex items-center justify-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/5 rounded-xl transition-colors"
+                      >
+                        Toutes les catégories <ArrowRight className="h-3 w-3" />
+                      </Link>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </nav>
         </div>
 

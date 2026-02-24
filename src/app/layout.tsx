@@ -1,9 +1,11 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { LayoutWrapper } from "@/components/LayoutWrapper";
 import { Toaster } from "sonner";
 import Script from "next/script";
+import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { PWARegister } from "@/components/PWARegister";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -11,6 +13,18 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gam.africa';
+
+// Configuration du viewport pour la PWA
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  userScalable: true,
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#1a1a1a' },
+  ],
+};
 
 // Métadonnées globales avec OpenGraph (US-09, US-11)
 export const metadata: Metadata = {
@@ -57,6 +71,29 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
+  manifest: '/manifest.json',
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'default',
+    title: 'GAM',
+  },
+  applicationName: 'GAM - Génies D\'Afrique Media',
+  formatDetection: {
+    telephone: false,
+  },
+  icons: {
+    icon: [
+      { url: '/icons/icon-72x72.png', sizes: '72x72', type: 'image/png' },
+      { url: '/icons/icon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/icons/icon-128x128.png', sizes: '128x128', type: 'image/png' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+      { url: '/icons/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/icons/icon-152x152.png', sizes: '152x152', type: 'image/png' },
+      { url: '/icons/icon-192x192.png', sizes: '192x192', type: 'image/png' },
+    ],
+  },
 };
 
 export default function RootLayout({
@@ -66,6 +103,24 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="scroll-smooth">
+      <head>
+        {/* PWA Meta Tags */}
+        <meta name="application-name" content="GAM" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="GAM" />
+        <meta name="mobile-web-app-capable" content="yes" />
+        <meta name="format-detection" content="telephone=no" />
+        
+        {/* Apple Touch Icons */}
+        <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/icons/icon-152x152.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/icons/icon-192x192.png" />
+        <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
+        
+        {/* Splash Screens pour iOS */}
+        <link rel="apple-touch-startup-image" href="/images/geneis.png" />
+      </head>
       <body
         className={`${spaceGrotesk.variable} font-sans antialiased bg-background text-foreground`}
       >
@@ -75,9 +130,11 @@ export default function RootLayout({
           strategy="afterInteractive"
           data-orchids-project-id="79e8ea26-6a0e-44db-a3d8-0caba34fa0c5"
         />
+        <PWARegister />
         <LayoutWrapper>
           {children}
         </LayoutWrapper>
+        <PWAInstallPrompt />
         <Toaster position="top-center" richColors />
       </body>
     </html>

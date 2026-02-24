@@ -380,7 +380,7 @@ export function ArticleDetail({ initialArticle, slug }: ArticleDetailProps) {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 max-w-7xl mx-auto">
             {/* Side Actions */}
             <div className="hidden lg:block lg:col-span-1">
-              <div className="sticky top-32 flex flex-col gap-6">
+              <div className="sticky top-32 z-30 flex flex-col gap-6">
                 <Button
                   size="icon"
                   variant="outline"
@@ -452,7 +452,7 @@ export function ArticleDetail({ initialArticle, slug }: ArticleDetailProps) {
             <div className="lg:col-span-3 space-y-10">
               {/* Table of Contents */}
               {tocItems.length > 0 && (
-                <div className="sticky top-28">
+                <div className="sticky top-28 z-40">
                   <TableOfContents items={tocItems} />
                 </div>
               )}

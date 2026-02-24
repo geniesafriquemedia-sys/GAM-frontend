@@ -13,7 +13,7 @@ const securityHeaders = [
       "font-src 'self' data: https://fonts.gstatic.com",
       "connect-src 'self' https://api.geniesdafriquemedia.com https://*.supabase.co https://www.google-analytics.com",
       "media-src 'self' https://www.youtube.com https://youtube.com",
-      "frame-src 'self' https://www.youtube.com https://youtube.com",
+      "frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com",
       "worker-src 'self' blob:",
       "object-src 'none'",
       "base-uri 'self'",

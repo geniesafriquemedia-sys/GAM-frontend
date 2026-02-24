@@ -129,4 +129,3 @@ export function Advertisement({ position, className, initialAds }: Advertisement
   );
 }
 
-export default Advertisement;

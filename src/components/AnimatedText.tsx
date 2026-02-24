@@ -27,13 +27,26 @@ export function AnimatedText({
   const ref = useRef(null);
   const pathname = usePathname();
   const [key, setKey] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  
+  // Éviter les erreurs d'hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Réinitialiser l'animation à chaque changement de page
   useEffect(() => {
-    setKey(prev => prev + 1);
-  }, [pathname]);
+    if (mounted) {
+      setKey(prev => prev + 1);
+    }
+  }, [pathname, mounted]);
   
   const isInView = useInView(ref, { once: false, margin: "-50px" });
+  
+  // Rendu initial sans animation pour éviter hydration mismatch
+  if (!mounted) {
+    return <Component className={className}>{children}</Component>;
+  }
 
   const variants = {
     "fade-up": {
@@ -100,15 +113,28 @@ export function AnimatedWord({
   const ref = useRef(null);
   const pathname = usePathname();
   const [key, setKey] = useState(0);
+  const [mounted, setMounted] = useState(false);
+  
+  // Éviter les erreurs d'hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   
   // Réinitialiser l'animation à chaque changement de page
   useEffect(() => {
-    setKey(prev => prev + 1);
-  }, [pathname]);
+    if (mounted) {
+      setKey(prev => prev + 1);
+    }
+  }, [pathname, mounted]);
   
   const isInView = useInView(ref, { once: false, margin: "-50px" });
   
   const words = text.split(" ");
+  
+  // Rendu initial sans animation pour éviter hydration mismatch
+  if (!mounted) {
+    return <Component className={className}>{text}</Component>;
+  }
 
   return (
     <Component ref={ref} className={cn("overflow-hidden", className)} key={key}>

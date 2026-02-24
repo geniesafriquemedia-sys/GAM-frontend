@@ -53,14 +53,37 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
       <Link
         href={`/web-tv/${slug}`}
         className="relative aspect-video overflow-hidden rounded-[2rem] bg-muted shadow-xl transition-shadow duration-300 hover:shadow-2xl block"
+        onMouseEnter={() => {
+          setIsHovered(true);
+          // Délai avant d'afficher la preview (1 seconde)
+          setTimeout(() => {
+            if (youtubeId) setShowPreview(true);
+          }, 1000);
+        }}
+        onMouseLeave={() => {
+          setIsHovered(false);
+          setShowPreview(false);
+        }}
       >
+        {/* Image thumbnail */}
         <Image
           src={thumbnail}
           alt={title}
           fill
-          className="object-cover opacity-80 transition-all duration-500 group-hover:opacity-100 group-hover:scale-105"
+          className={`object-cover opacity-80 transition-all duration-500 group-hover:opacity-100 group-hover:scale-105 ${showPreview ? 'opacity-0' : ''}`}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
+        
+        {/* Video Preview (YouTube iframe) */}
+        {showPreview && youtubeId && (
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0`}
+            className="absolute inset-0 w-full h-full"
+            allow="autoplay; encrypted-media"
+            allowFullScreen
+            title={`Preview: ${title}`}
+          />
+        )}
 
         {/* Dark gradient overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

@@ -78,7 +78,12 @@ export function PageWithSidebar({ children, showTopAd = true }: PageWithSidebarP
               </div>
 
               {/* Sidebar Ad */}
-              <Advertisement type="sidebar" />
+              <div className="w-[300px] h-[250px] bg-muted/50 border-2 border-dashed border-muted-foreground/20 rounded-xl flex items-center justify-center">
+                <div className="text-center">
+                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Publicité Sidebar</p>
+                  <p className="text-[10px] text-muted-foreground/60">300 x 250</p>
+                </div>
+              </div>
             </div>
           </aside>
         </div>

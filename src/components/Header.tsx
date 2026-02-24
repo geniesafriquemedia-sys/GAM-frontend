@@ -410,8 +410,8 @@ export function Header() {
 
   // Interpolated header height: 8rem → 5rem
   const headerHeight = `${8 - scrollProgress * 3}rem`;
-  // Logo size: h-28 → h-16
-  const logoHeight = `${7 - scrollProgress * 3}rem`;
+  // Logo size: h-32 → h-20 (plus grand)
+  const logoHeight = `${8 - scrollProgress * 3}rem`;
 
   return (
     <header

@@ -45,7 +45,81 @@ export function Footer() {
             </div>
           </div>
           
-Tool call argument 'replace' pruned from message history.
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
+            {/* Navigation Principale */}
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Navigation</h3>
+              <ul className="space-y-4 font-bold">
+                <li>
+                  <Link href="/" className="hover:text-primary transition-colors flex items-center group">
+                    Accueil 
+                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/actualites" className="hover:text-primary transition-colors flex items-center group">
+                    Actualités
+                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/web-tv" className="hover:text-primary transition-colors flex items-center group">
+                    Web TV
+                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/direct" className="hover:text-primary transition-colors flex items-center group">
+                    Direct
+                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/search" className="hover:text-primary transition-colors flex items-center group">
+                    Recherche
+                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            {/* Rubriques */}
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Rubriques</h3>
+              <ul className="space-y-4 font-bold">
+                <li><Link href="/categories/economie-business" className="hover:text-primary transition-colors">Économie & Business</Link></li>
+                <li><Link href="/categories/politique-societe" className="hover:text-primary transition-colors">Politique & Société</Link></li>
+                <li><Link href="/categories/innovation-tech" className="hover:text-primary transition-colors">Innovation & Tech</Link></li>
+                <li><Link href="/categories/culture-arts" className="hover:text-primary transition-colors">Culture & Arts</Link></li>
+                <li><Link href="/categories/sport" className="hover:text-primary transition-colors">Sport</Link></li>
+                <li><Link href="/categories" className="hover:text-primary transition-colors">Toutes les catégories</Link></li>
+              </ul>
+            </div>
+
+            {/* À Propos */}
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">À Propos</h3>
+              <ul className="space-y-4 font-bold">
+                <li><Link href="/about" className="hover:text-primary transition-colors">Qui sommes-nous</Link></li>
+                <li><Link href="/about#mission" className="hover:text-primary transition-colors">Notre mission</Link></li>
+                <li><Link href="/about#team" className="hover:text-primary transition-colors">L'équipe</Link></li>
+                <li><Link href="/partenariats" className="hover:text-primary transition-colors">Partenaires</Link></li>
+                <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
+              </ul>
+            </div>
+
+            {/* Contact & Légal */}
+            <div>
+              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Contact & Légal</h3>
+              <ul className="space-y-4 font-bold">
+                <li><Link href="/contact" className="hover:text-primary transition-colors">Nous contacter</Link></li>
+                <li><Link href="/partenariats" className="hover:text-primary transition-colors">Devenir partenaire</Link></li>
+                <li><Link href="/partenariats#advertise" className="hover:text-primary transition-colors">Annoncer</Link></li>
+                <li><Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions légales</Link></li>
+                <li><Link href="/confidentialite" className="hover:text-primary transition-colors">Confidentialité</Link></li>
+              </ul>
+            </div>
+          </div>
         </div>
         
         <div className="mt-24 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6">

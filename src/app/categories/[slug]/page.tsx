@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { api } from "@/lib/api";
+import { Advertisement } from "@/components/Advertisement";
 import { getMediaUrl } from "@/lib/api/config";
 import type { Category, ArticleSummary } from "@/types";
 
@@ -71,6 +72,11 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
           </div>
         </div>
       </header>
+
+      {/* Category Ad */}
+      <div className="flex justify-center">
+        <Advertisement position="CATEGORIES_TOP" className="w-full max-w-[728px]" />
+      </div>
 
       {/* Articles Grid */}
       <section className="space-y-16">

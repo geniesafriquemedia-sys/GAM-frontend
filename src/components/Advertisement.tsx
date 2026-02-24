@@ -5,6 +5,7 @@ import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { api } from "@/lib/api";
+import { getMediaUrl } from "@/lib/api/config";
 import type { Advertisement as Ad, AdPosition, AdType } from "@/types/advertising";
 
 // ── Dimensions par type ───────────────────────────────────────────────────────
@@ -114,7 +115,7 @@ export function Advertisement({ position, className, initialAds }: Advertisement
           aria-label={currentAd.alt_text || "Publicité"}
         >
           <Image
-            src={currentAd.image_url}
+            src={getMediaUrl(currentAd.image_url || currentAd.image || "/images/logo.png")}
             alt={currentAd.alt_text || "Publicité"}
             fill={currentAd.ad_type !== "IN_ARTICLE" && currentAd.ad_type !== "NATIVE"}
             width={currentAd.ad_type === "IN_ARTICLE" || currentAd.ad_type === "NATIVE" ? dims.width : undefined}

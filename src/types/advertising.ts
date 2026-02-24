@@ -23,7 +23,7 @@ export type AdType =
 export interface Advertisement {
   id: number;
   image_url?: string;
-  image?: string;
+  image?: string | { url?: string } | null;
   external_url: string;
   alt_text: string;
   ad_type: AdType;

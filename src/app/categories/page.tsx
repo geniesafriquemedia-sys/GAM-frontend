@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Folder, ArrowRight, Globe, Briefcase, Cpu, Leaf, Calculator, HeartPulse, Palette, Film, Music, Gamepad2, Trophy, MoreHorizontal } from "lucide-react";
 import Link from "next/link";
 import { api } from "@/lib/api";
+import { Advertisement } from "@/components/Advertisement";
 import type { Category } from "@/types";
 
 export const revalidate = 600; // 10 minutes
@@ -59,6 +60,11 @@ export default async function CategoriesPage() {
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 blur-[120px] rounded-full pointer-events-none -translate-y-1/2 translate-x-1/2" />
                 <div className="absolute bottom-0 left-0 w-[300px] h-[300px] bg-blue-500/10 blur-[100px] rounded-full pointer-events-none translate-y-1/2 -translate-x-1/2" />
             </header>
+
+            {/* Top Categories Ad */}
+            <div className="flex justify-center">
+                <Advertisement position="CATEGORIES_TOP" className="w-full max-w-[728px]" />
+            </div>
 
             {/* Categories Grid */}
             <section>

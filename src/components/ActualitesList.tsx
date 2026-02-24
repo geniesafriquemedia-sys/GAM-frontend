@@ -8,6 +8,7 @@ import { useArticles } from "@/hooks";
 import { Category, PaginatedResponse, ArticleSummary } from "@/types";
 import { AnimatedWord, AnimatedText, StaggerContainer, itemVariants } from "@/components/AnimatedText";
 import { motion } from "framer-motion";
+import { PageWithSidebar } from "@/components/layouts/PageWithSidebar";
 
 interface ActualitesListProps {
     initialArticles: PaginatedResponse<ArticleSummary>;

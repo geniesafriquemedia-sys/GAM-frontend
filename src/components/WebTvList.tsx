@@ -11,6 +11,7 @@ import { VideoCard } from "@/components/VideoCard";
 import { useVideos } from "@/hooks";
 import type { VideoType, VideoSummary, PaginatedResponse } from "@/types";
 import { getVideoThumbnailUrl, getVideoTypeLabel } from "@/types";
+import { PageWithSidebar } from "@/components/layouts/PageWithSidebar";
 
 type VideoTypeFilter = "all" | VideoType;
 
@@ -59,7 +60,8 @@ export function WebTvList({ initialVideos, featuredVideo }: WebTvListProps) {
   };
 
   return (
-    <div className="bg-background text-foreground min-h-screen pb-24">
+    <PageWithSidebar showTopAd={true}>
+      <div className="space-y-12">
 
       {/* ── Hero / Featured Video ─────────────────────────────────── */}
       {featuredVideo && (
@@ -380,6 +382,7 @@ export function WebTvList({ initialVideos, featuredVideo }: WebTvListProps) {
           <div className="pointer-events-none absolute top-0 right-0 h-full w-1/3 bg-primary/5 blur-[100px] -z-0" />
         </div>
       </section>
-    </div>
+      </div>
+    </PageWithSidebar>
   );
 }

@@ -56,8 +56,8 @@ export function ActualitesList({ initialArticles, initialCategories }: Actualite
     };
 
     return (
-        <div className="min-h-screen">
-            <div className="container mx-auto px-4 py-16 space-y-16">
+        <PageWithSidebar showTopAd={true}>
+            <div className="space-y-16">
                 <header className="max-w-3xl space-y-6">
                 <AnimatedText variant="fade-right" delay={0.1}>
                     <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
@@ -168,6 +168,6 @@ export function ActualitesList({ initialArticles, initialCategories }: Actualite
                 </div>
             )}
             </div>
-        </div>
+        </PageWithSidebar>
     );
 }

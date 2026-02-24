@@ -17,7 +17,7 @@ const securityHeaders = [
       "worker-src 'self' blob:",
       "object-src 'none'",
       "base-uri 'self'",
-      "form-action 'self'",
+      "form-action 'self' https://api.geniesdafriquemedia.com https://api.geniesdafriquemedia.com/ https://geniesdafriquemedia.com", 
       "frame-ancestors 'none'",
       "upgrade-insecure-requests"
     ].join('; ')

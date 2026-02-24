@@ -14,7 +14,7 @@ export function Footer() {
                 alt="Génies d'Afrique Media"
                 width={600}
                 height={200}
-                className="h-48 w-auto object-contain"
+                className="h-24 sm:h-32 md:h-40 lg:h-48 w-auto object-contain"
               />
             </Link>
             <p className="text-xl font-medium text-muted-foreground leading-relaxed max-w-md">
@@ -39,7 +39,7 @@ export function Footer() {
             </div>
           </div>
           
-          <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-12">
+          <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
             <div>
               <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Navigation</h3>
               <ul className="space-y-4 font-bold">

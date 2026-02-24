@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { HelpCircle, Zap, Globe, Smartphone, Tv, Users } from "lucide-react";
+import { AnimatedWord, AnimatedText } from "@/components/AnimatedText";
 
 // FAQ Data selon la vision GAM
 const faqCategories = [

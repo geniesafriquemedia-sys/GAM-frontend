@@ -26,35 +26,62 @@ export function PWAInstallPrompt() {
       );
     };
 
-    setIsStandalone(isInStandaloneMode());
+    const standalone = isInStandaloneMode();
+    setIsStandalone(standalone);
 
     // Détecter le type d'appareil
     const detectDeviceType = () => {
+      const userAgent = navigator.userAgent.toLowerCase();
       const width = window.innerWidth;
-      if (width < 768) return 'mobile';
-      if (width < 1024) return 'tablet';
+      
+      // Détection plus précise
+      if (/mobile|android|iphone|ipod|blackberry|windows phone/i.test(userAgent)) {
+        return 'mobile';
+      }
+      if (/tablet|ipad/i.test(userAgent) || (width >= 768 && width < 1024)) {
+        return 'tablet';
+      }
       return 'desktop';
     };
 
     setDeviceType(detectDeviceType());
 
-    // Écouter l'événement beforeinstallprompt
+    // Vérifier si déjà refusé récemment
+    const hasDeclined = localStorage.getItem('pwa-install-declined');
+    const declinedTime = hasDeclined ? parseInt(hasDeclined) : 0;
+    const daysSinceDeclined = (Date.now() - declinedTime) / (1000 * 60 * 60 * 24);
+    const shouldShow = !hasDeclined || daysSinceDeclined > 7;
+
+    // Écouter l'événement beforeinstallprompt (Chrome/Edge Android/Desktop)
     const handleBeforeInstallPrompt = (e: Event) => {
+      console.log('PWA: beforeinstallprompt event fired');
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       
-      // Vérifier si l'utilisateur a déjà refusé l'installation
-      const hasDeclined = localStorage.getItem('pwa-install-declined');
-      const declinedTime = hasDeclined ? parseInt(hasDeclined) : 0;
-      const daysSinceDeclined = (Date.now() - declinedTime) / (1000 * 60 * 60 * 24);
-      
-      // Afficher le prompt si l'utilisateur n'a pas refusé récemment (7 jours)
-      if (!hasDeclined || daysSinceDeclined > 7) {
-        setTimeout(() => setShowPrompt(true), 3000); // Afficher après 3 secondes
+      if (shouldShow && !standalone) {
+        setTimeout(() => {
+          console.log('PWA: Showing install prompt');
+          setShowPrompt(true);
+        }, 3000);
       }
     };
 
+    // Pour iOS Safari et autres navigateurs qui ne supportent pas beforeinstallprompt
+    const isIOS = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    
+    if ((isIOS || isSafari) && !standalone && shouldShow) {
+      // Afficher un prompt personnalisé pour iOS
+      setTimeout(() => {
+        console.log('PWA: Showing iOS-style prompt');
+        setShowPrompt(true);
+      }, 3000);
+    }
+
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    // Log pour debug
+    console.log('PWA: Init', { standalone, isIOS, isSafari, shouldShow });
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -62,24 +89,34 @@ export function PWAInstallPrompt() {
   }, []);
 
   const handleInstallClick = async () => {
-    if (!deferredPrompt) return;
-
-    // Afficher le prompt d'installation natif
-    await deferredPrompt.prompt();
-
-    // Attendre le choix de l'utilisateur
-    const { outcome } = await deferredPrompt.userChoice;
-
-    if (outcome === 'accepted') {
-      console.log('PWA installée avec succès');
-    } else {
-      console.log('Installation PWA refusée');
-      localStorage.setItem('pwa-install-declined', Date.now().toString());
+    if (!deferredPrompt) {
+      // Pour iOS ou navigateurs sans support beforeinstallprompt
+      console.log('PWA: No deferred prompt, showing manual instructions');
+      setShowPrompt(false);
+      // Vous pouvez afficher des instructions manuelles ici
+      return;
     }
 
-    // Réinitialiser le prompt
-    setDeferredPrompt(null);
-    setShowPrompt(false);
+    try {
+      // Afficher le prompt d'installation natif
+      await deferredPrompt.prompt();
+
+      // Attendre le choix de l'utilisateur
+      const { outcome } = await deferredPrompt.userChoice;
+
+      if (outcome === 'accepted') {
+        console.log('PWA installée avec succès');
+      } else {
+        console.log('Installation PWA refusée');
+        localStorage.setItem('pwa-install-declined', Date.now().toString());
+      }
+
+      // Réinitialiser le prompt
+      setDeferredPrompt(null);
+      setShowPrompt(false);
+    } catch (error) {
+      console.error('PWA: Error during installation', error);
+    }
   };
 
   const handleDismiss = () => {
@@ -87,10 +124,14 @@ export function PWAInstallPrompt() {
     localStorage.setItem('pwa-install-declined', Date.now().toString());
   };
 
-  // Ne rien afficher si déjà installé ou pas de prompt disponible
-  if (isStandalone || !showPrompt || !deferredPrompt) {
+  // Ne rien afficher si déjà installé
+  if (isStandalone || !showPrompt) {
     return null;
   }
+  
+  // Vérifier si c'est iOS Safari (pas de support beforeinstallprompt)
+  const isIOS = typeof window !== 'undefined' && /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+  const isInSafari = typeof window !== 'undefined' && /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 
   const getDeviceIcon = () => {
     switch (deviceType) {
@@ -104,6 +145,11 @@ export function PWAInstallPrompt() {
   };
 
   const getDeviceMessage = () => {
+    // Message spécial pour iOS
+    if (isIOS && isInSafari) {
+      return 'Appuyez sur le bouton Partager puis "Sur l\'écran d\'accueil" pour installer GAM !';
+    }
+    
     switch (deviceType) {
       case 'mobile':
         return 'Installez GAM sur votre téléphone pour un accès rapide et une expérience optimale !';

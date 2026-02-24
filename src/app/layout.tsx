@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 import Script from "next/script";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { PWARegister } from "@/components/PWARegister";
+import { PWASplashScreen } from "@/components/PWASplashScreen";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -119,7 +120,14 @@ export default function RootLayout({
         <link rel="apple-touch-icon" sizes="192x192" href="/icons/icon-192x192.png" />
         
         {/* Splash Screens pour iOS */}
-        <link rel="apple-touch-startup-image" href="/images/geneis.png" />
+        <link rel="apple-touch-startup-image" href="/splash/splash-iphone-xs-max.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3)" />
+        <link rel="apple-touch-startup-image" href="/splash/splash-iphone-x.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3)" />
+        <link rel="apple-touch-startup-image" href="/splash/splash-iphone-xr.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2)" />
+        <link rel="apple-touch-startup-image" href="/splash/splash-iphone-8-plus.png" media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3)" />
+        <link rel="apple-touch-startup-image" href="/splash/splash-iphone-8.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2)" />
+        <link rel="apple-touch-startup-image" href="/splash/splash-ipad-pro-12.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2)" />
+        <link rel="apple-touch-startup-image" href="/splash/splash-ipad-pro-11.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2)" />
+        <link rel="apple-touch-startup-image" href="/splash/splash-ipad-air.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2)" />
       </head>
       <body
         className={`${spaceGrotesk.variable} font-sans antialiased bg-background text-foreground`}
@@ -131,6 +139,7 @@ export default function RootLayout({
           data-orchids-project-id="79e8ea26-6a0e-44db-a3d8-0caba34fa0c5"
         />
         <PWARegister />
+        <PWASplashScreen />
         <LayoutWrapper>
           {children}
         </LayoutWrapper>

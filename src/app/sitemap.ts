@@ -6,7 +6,7 @@
 import { MetadataRoute } from 'next';
 import { API_BASE_URL } from '@/lib/api/config';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gam.africa';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://geniesdafriquemedia.com';
 
 interface ArticleSlug {
   slug: string;
@@ -119,6 +119,30 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: new Date(),
       changeFrequency: 'always',
       priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/categories`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.7,
+    },
+    {
+      url: `${SITE_URL}/about`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${SITE_URL}/faq`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.6,
+    },
+    {
+      url: `${SITE_URL}/contact`,
+      lastModified: new Date(),
+      changeFrequency: 'monthly',
+      priority: 0.5,
     },
     {
       url: `${SITE_URL}/search`,

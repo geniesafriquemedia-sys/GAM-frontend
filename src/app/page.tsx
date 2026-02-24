@@ -13,6 +13,7 @@ import { ContinuousInfo } from "@/components/ContinuousInfo";
 import { Advertisement } from "@/components/Advertisement";
 import { BreakingNewsTicker } from "@/components/BreakingNewsTicker";
 import { RubriqueSection } from "@/components/RubriqueSection";
+import { AdvertisingShowcase } from "@/components/AdvertisingShowcase";
 import type { Category, ArticleSummary } from "@/types";
 import type { CategoryWithArticles } from "@/components/RubriqueSection";
 import { getMediaUrl } from "@/lib/api/config";
@@ -389,8 +390,13 @@ export default async function Home() {
         </div>
       </section>
 
+      {/* ── Advertising Showcase ── */}
+      <AdvertisingShowcase
+        initialAds={[...homepageTopAds, ...homepageMidAds]}
+      />
+
       {/* ── Web TV Section ── */}
-      <section className="relative bg-primary/5 py-32 text-foreground overflow-hidden mt-32">
+      <section className="relative bg-primary/5 py-32 text-foreground overflow-hidden">
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-5 space-y-10">

@@ -15,7 +15,6 @@ import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVideos, useTrendingTags, useCategories } from "@/hooks";
 import type { Category } from "@/types";
-import { InstallButton } from "@/components/InstallButton";
 
 // ─── Icon mapping ─────────────────────────────────────────────────────────────
 
@@ -471,9 +470,6 @@ export function Header() {
 
         {/* Right actions */}
         <div className="flex items-center gap-2 lg:gap-3">
-          {/* Install PWA button */}
-          <InstallButton />
-          
           {/* Search toggle */}
           <Button
             variant="ghost"

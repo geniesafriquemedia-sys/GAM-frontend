@@ -3,7 +3,13 @@
     "allow": [
       "Bash(cd:*)",
       "Bash(head:*)",
-      "Bash(cd D:/GAM-full && docker-compose -f docker-compose.prod.yml up -d --build 2>&1)"
+      "Bash(cd D:/GAM-full && docker-compose -f docker-compose.prod.yml up -d --build 2>&1)",
+      "Bash(wc:*)",
+      "Bash(find D:\\\\GAM-full\\\\GAM-frontend\\\\src\\\\components:*)",
+      "Bash(grep:*)",
+      "Bash(python:*)",
+      "Bash(tail:*)",
+      "Bash(git:*)"
     ]
   }
 }

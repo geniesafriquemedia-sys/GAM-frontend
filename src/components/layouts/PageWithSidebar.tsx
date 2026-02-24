@@ -38,7 +38,7 @@ export function PageWithSidebar({ children, showTopAd = true }: PageWithSidebarP
               {/* Trending Widget */}
               <div className="rounded-2xl border bg-card p-6 space-y-6">
                 <h3 className="text-sm font-black uppercase tracking-widest text-primary">
-                  🔥 Tendances
+                  Tendances
                 </h3>
                 <div className="space-y-4">
                   {[1, 2, 3, 4, 5].map((num) => (

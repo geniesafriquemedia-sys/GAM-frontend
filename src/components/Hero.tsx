@@ -10,6 +10,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import type { ArticleSummary } from "@/types";
 import { formatReadingTime } from "@/types";
 import { getMediaUrl } from "@/lib/api/config";
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 
 interface HeroProps {
   articles: ArticleSummary[];
@@ -163,16 +164,33 @@ export function Hero({ articles }: HeroProps) {
               )}
             </div>
 
-            {/* CTA */}
-            <Button
-              asChild
-              size="lg"
-              className="rounded-lg px-5 h-10 text-xs font-black bg-primary hover:bg-primary/90 transition-colors"
-            >
-              <Link href={`/articles/${article.slug}`}>
-                Lire l&apos;histoire <ArrowRight className="h-3.5 w-3.5 ml-1" />
-              </Link>
-            </Button>
+            {/* Author + CTA row */}
+            <div className="flex items-center gap-4 flex-wrap">
+              {/* Author */}
+              {article.author && (
+                <div className="flex items-center gap-2">
+                  <AuthorAvatar
+                    photo={article.author.photo}
+                    name={article.author.name}
+                    size="sm"
+                    className="border border-white/20 bg-white/10"
+                  />
+                  <span className="text-[10px] font-black uppercase tracking-[0.15em] text-background/60">
+                    {article.author.name}
+                  </span>
+                </div>
+              )}
+
+              <Button
+                asChild
+                size="lg"
+                className="rounded-lg px-5 h-10 text-xs font-black bg-primary hover:bg-primary/90 transition-colors"
+              >
+                <Link href={`/articles/${article.slug}`}>
+                  Lire l&apos;histoire <ArrowRight className="h-3.5 w-3.5 ml-1" />
+                </Link>
+              </Button>
+            </div>
           </div>
         </motion.div>
       </AnimatePresence>

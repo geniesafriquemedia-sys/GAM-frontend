@@ -2,12 +2,13 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Clock, ArrowUpRight, ImageIcon, Flame, User } from "lucide-react";
+import { Clock, ArrowUpRight, ImageIcon, Flame } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
 import type { ArticleSummary } from "@/types";
 import { formatReadingTime } from "@/types";
 import { getMediaUrl } from "@/lib/api/config";
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 
 interface ArticleCardProps {
   article: ArticleSummary;
@@ -171,19 +172,7 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
         {/* Author row */}
         {author?.name && (
           <div className="flex items-center gap-2 pt-1">
-            <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center overflow-hidden flex-shrink-0">
-              {author.photo ? (
-                <Image
-                  src={getMediaUrl(author.photo)}
-                  alt={author.name}
-                  width={20}
-                  height={20}
-                  className="object-cover w-full h-full"
-                />
-              ) : (
-                <User className="h-3 w-3 text-primary/60" />
-              )}
-            </div>
+            <AuthorAvatar photo={author.photo} name={author.name} size="xs" />
             <span className="text-[10px] font-black uppercase tracking-[0.15em] text-muted-foreground/70">
               {author.name}
             </span>

@@ -21,6 +21,7 @@ import {
 import { SocialShare } from "@/components/SocialShare";
 import { ArticleCard } from "@/components/ArticleCard";
 import { ArticleBody } from "@/components/ArticleBody";
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 import { useArticle } from "@/hooks";
 import { getMediaUrl } from "@/lib/api/config";
 import type { ArticleWithRelated, ArticleSummary, ArticleBlock } from "@/types";
@@ -312,18 +313,14 @@ export function ArticleDetail({ initialArticle, slug }: ArticleDetailProps) {
                     href={`/auteurs/${author.slug}`}
                     className="flex items-center gap-6 group"
                   >
-                    <div className="h-20 w-20 rounded-3xl bg-primary flex items-center justify-center overflow-hidden text-white text-3xl font-black shadow-xl shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform">
-                      {author.photo ? (
-                        <Image
-                          src={author.photo}
-                          alt={author.name}
-                          width={80}
-                          height={80}
-                          className="object-cover w-full h-full"
-                        />
-                      ) : (
-                        author.name.charAt(0)
-                      )}
+                    <div className="shadow-xl shadow-primary/20 rotate-3 group-hover:rotate-0 transition-transform">
+                      <AuthorAvatar
+                        photo={author.photo}
+                        name={author.name}
+                        size="lg"
+                        variant="rounded"
+                        className="bg-primary/20"
+                      />
                     </div>
                     <div>
                       <p className="text-[10px] font-black uppercase tracking-widest text-primary mb-1">

@@ -1,12 +1,12 @@
 import { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { User, Mail, Globe, Twitter, Linkedin, FileText, ArrowLeft } from "lucide-react";
+import { Mail, Globe, Twitter, Linkedin, FileText, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArticleCard } from "@/components/ArticleCard";
 import { api } from "@/lib/api";
+import { AuthorAvatar } from "@/components/AuthorAvatar";
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -66,21 +66,12 @@ export default async function AuthorPage({ params }: PageProps) {
           <div className="flex flex-col md:flex-row items-start gap-8 md:gap-12">
             {/* Author Photo */}
             <div className="relative">
-              <div className="h-32 w-32 md:h-40 md:w-40 rounded-full overflow-hidden bg-muted border-4 border-background shadow-2xl">
-                {author.photo ? (
-                  <Image
-                    src={author.photo}
-                    alt={author.name}
-                    width={160}
-                    height={160}
-                    className="object-cover w-full h-full"
-                  />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-primary/10">
-                    <User className="h-16 w-16 text-primary/50" />
-                  </div>
-                )}
-              </div>
+              <AuthorAvatar
+                photo={author.photo}
+                name={author.name}
+                size="xl"
+                className="border-4 border-background shadow-2xl"
+              />
               {author.is_active && (
                 <div className="absolute -bottom-2 left-1/2 -translate-x-1/2">
                   <Badge className="bg-green-500 text-white border-none px-3 py-1 text-[10px] font-bold uppercase tracking-wider">

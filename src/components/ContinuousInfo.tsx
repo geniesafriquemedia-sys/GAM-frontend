@@ -154,6 +154,7 @@ export function ContinuousInfo({
                                                                 src={getMediaUrl(article.image_url)}
                                                                 alt={article.title}
                                                                 fill
+                                                                sizes="96px"
                                                                 className="object-cover group-hover:scale-105 transition-transform duration-300"
                                                             />
                                                         ) : (
@@ -202,6 +203,7 @@ export function ContinuousInfo({
                                                             src={getVideoThumbnailUrl(video)}
                                                             alt={video.title}
                                                             fill
+                                                            sizes="96px"
                                                             className="object-cover group-hover:scale-105 transition-transform duration-300"
                                                         />
                                                     </div>

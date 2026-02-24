@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
-import { Mail, ArrowRight, Sparkles, Send, Loader2, CheckCircle2, AlertCircle, Twitter, Facebook, Youtube, Instagram } from "lucide-react";
+import { Mail, ArrowRight, Send, Loader2, CheckCircle2, AlertCircle, Twitter, Facebook, Youtube, Instagram } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { newsletterService, isValidEmail } from "@/lib/api/services/engagement.service";
 import Link from "next/link";
@@ -201,7 +201,7 @@ export function Newsletter() {
             <div className="space-y-10">
               <div className="space-y-6">
                 <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
-                  <Sparkles className="h-4 w-4 fill-primary" />
+                  <Mail className="h-4 w-4" />
                   <span>Communauté Exclusive</span>
                 </div>
                 <h2 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.85]">

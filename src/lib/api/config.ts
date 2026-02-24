@@ -8,12 +8,12 @@
 // BASE URLs
 // =============================================================================
 
-// Server-side: appel direct à l'API
-// Client-side: passe par le proxy Next.js /api/proxy pour éviter les CORS en dev
-const isServer = typeof window === 'undefined';
-export const API_BASE_URL = isServer
-  ? (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api/v1')
-  : '/api/v1';
+// Appel direct au backend (production) — pas de proxy intermédiaire
+// NEXT_PUBLIC_API_URL est accessible côté client et serveur
+export const API_BASE_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  process.env.API_URL ||
+  'http://localhost:8000/api/v1';
 export const MEDIA_BASE_URL = process.env.NEXT_PUBLIC_MEDIA_URL || 'http://localhost:8000';
 
 // =============================================================================

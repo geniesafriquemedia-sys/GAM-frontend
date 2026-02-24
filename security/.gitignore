@@ -1,0 +1,9 @@
+reports/
+*.log
+.env*
+!.env.example
+secrets/
+*.pem
+*.key
+*.crt
+node_modules/

@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(cd:*)"
+      "Bash(cd:*)",
+      "Bash(head:*)",
+      "Bash(cd D:/GAM-full && docker-compose -f docker-compose.prod.yml up -d --build 2>&1)"
     ]
   }
 }

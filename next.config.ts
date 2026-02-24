@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 import path from "node:path";
+import { securityHeaders } from "./security/security-headers.config";
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
@@ -44,6 +45,15 @@ const nextConfig: NextConfig = {
   },
   eslint: {
     ignoreDuringBuilds: true,
+  },
+  // Security headers
+  async headers() {
+    return [
+      {
+        source: '/:path*',
+        headers: securityHeaders,
+      },
+    ];
   },
   // Proxy API pour éviter les erreurs CORS en développement local
   // Uniquement en dev (NODE_ENV=development) pour éviter les boucles en production

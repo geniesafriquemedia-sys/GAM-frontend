@@ -411,10 +411,10 @@ export function Header() {
     return ICON_MAP[iconName.toLowerCase()] || Globe;
   }, []);
 
-  // Interpolated header height: 8rem → 5rem
-  const headerHeight = `${8 - scrollProgress * 3}rem`;
-  // Logo size: h-32 → h-20 (plus grand)
-  const logoHeight = `${8 - scrollProgress * 3}rem`;
+  // Interpolated header height: 10rem → 6rem (encore plus grand)
+  const headerHeight = `${10 - scrollProgress * 4}rem`;
+  // Logo size: h-40 → h-24 (beaucoup plus grand)
+  const logoHeight = `${10 - scrollProgress * 4}rem`;
 
   return (
     <header
@@ -436,7 +436,7 @@ export function Header() {
               width={400}
               height={133}
               style={{ height: logoHeight, width: "auto" }}
-              className="object-contain transition-all duration-300 max-h-16 sm:max-h-20 md:max-h-24 lg:max-h-28"
+              className="object-contain transition-all duration-300 max-h-20 sm:max-h-24 md:max-h-32 lg:max-h-40"
               priority
             />
           </Link>

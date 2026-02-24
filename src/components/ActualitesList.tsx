@@ -59,24 +59,16 @@ export function ActualitesList({ initialArticles, initialCategories }: Actualite
         <PageWithSidebar showTopAd={true}>
             <div className="space-y-16">
                 <header className="max-w-3xl space-y-6">
-                <AnimatedText variant="fade-right" delay={0.1}>
                     <div className="flex items-center gap-2 text-primary font-black uppercase tracking-[0.2em] text-xs">
                         <TrendingUp className="h-4 w-4" />
                         <span>Le Flux</span>
                     </div>
-                </AnimatedText>
-                <AnimatedWord
-                    text="Toute l'actualité de GAM."
-                    as="h1"
-                    className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9]"
-                    delay={0.2}
-                    staggerDelay={0.08}
-                />
-                <AnimatedText variant="fade-up" delay={0.5}>
+                    <h1 className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.9]">
+                        Toute l'actualité de <span className="text-primary">GAM</span>.
+                    </h1>
                     <p className="text-xl text-muted-foreground font-medium leading-relaxed">
                         Décryptage, analyses et reportages exclusifs sur les transformations du continent africain.
                     </p>
-                </AnimatedText>
             </header>
 
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-8 border-y py-8">

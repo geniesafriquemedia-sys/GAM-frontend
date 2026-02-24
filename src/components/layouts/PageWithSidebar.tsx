@@ -1,7 +1,6 @@
 "use client";
 
 import { ReactNode } from "react";
-import { Advertisement } from "@/components/Advertisement";
 
 interface PageWithSidebarProps {
   children: ReactNode;
@@ -14,8 +13,13 @@ export function PageWithSidebar({ children, showTopAd = true }: PageWithSidebarP
       {/* Top Ad Banner */}
       {showTopAd && (
         <div className="bg-muted/30 py-4">
-          <div className="container mx-auto px-4">
-            <Advertisement type="banner" className="mx-auto" />
+          <div className="container mx-auto px-4 flex justify-center">
+            <div className="w-full max-w-[728px] h-[90px] bg-muted/50 border-2 border-dashed border-muted-foreground/20 rounded-xl flex items-center justify-center">
+              <div className="text-center">
+                <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Publicité Banner</p>
+                <p className="text-[10px] text-muted-foreground/60">728 x 90</p>
+              </div>
+            </div>
           </div>
         </div>
       )}

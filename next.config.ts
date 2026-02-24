@@ -1,6 +1,52 @@
 import type { NextConfig } from "next";
 import path from "node:path";
-import { securityHeaders } from "./security/security-headers.config";
+
+// Security headers inline to avoid import issues in production
+const securityHeaders = [
+  {
+    key: 'Content-Security-Policy',
+    value: [
+      "default-src 'self'",
+      "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com",
+      "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
+      "img-src 'self' data: blob: https: http:",
+      "font-src 'self' data: https://fonts.gstatic.com",
+      "connect-src 'self' https://api.geniesdafriquemedia.com https://*.supabase.co https://www.google-analytics.com",
+      "media-src 'self' https://www.youtube.com https://youtube.com",
+      "frame-src 'self' https://www.youtube.com https://youtube.com",
+      "worker-src 'self' blob:",
+      "object-src 'none'",
+      "base-uri 'self'",
+      "form-action 'self'",
+      "frame-ancestors 'none'",
+      "upgrade-insecure-requests"
+    ].join('; ')
+  },
+  {
+    key: 'X-Frame-Options',
+    value: 'DENY'
+  },
+  {
+    key: 'X-Content-Type-Options',
+    value: 'nosniff'
+  },
+  {
+    key: 'X-XSS-Protection',
+    value: '1; mode=block'
+  },
+  {
+    key: 'Referrer-Policy',
+    value: 'strict-origin-when-cross-origin'
+  },
+  {
+    key: 'Permissions-Policy',
+    value: 'camera=(), microphone=(), geolocation=(self), interest-cohort=()'
+  },
+  {
+    key: 'Strict-Transport-Security',
+    value: 'max-age=63072000; includeSubDomains; preload'
+  },
+];
 
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(__dirname, '../../'),

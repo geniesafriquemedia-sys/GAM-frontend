@@ -4,8 +4,9 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Search, Menu, X, Play, Globe, Cpu, Palette, Users, Flame,
-  Facebook, Twitter, Instagram, Linkedin, ArrowRight,
+  Facebook, Twitter, Instagram, Linkedin, ArrowRight, ChevronDown,
   Briefcase, BookOpen, Film, Music, Camera, Heart, Star, Zap, TrendingUp,
+  Radio,
 } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -18,37 +19,83 @@ import type { Category } from "@/types";
 
 // ─── Icon mapping ─────────────────────────────────────────────────────────────
 
-const ICON_MAP: Record<string, any> = {
-  globe: Globe,
-  briefcase: Briefcase,
-  cpu: Cpu,
-  book: BookOpen,
-  film: Film,
-  music: Music,
-  camera: Camera,
-  heart: Heart,
-  star: Star,
-  zap: Zap,
-  users: Users,
-  trending: TrendingUp,
-  culture: Palette,
-  societe: Users,
-  economie: Globe,
-  sport: Flame,
-  tech: Cpu,
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string; style?: React.CSSProperties }>> = {
+  globe: Globe, briefcase: Briefcase, cpu: Cpu, book: BookOpen,
+  film: Film, music: Music, camera: Camera, heart: Heart,
+  star: Star, zap: Zap, users: Users, trending: TrendingUp,
+  culture: Palette, societe: Users, economie: Globe, sport: Flame, tech: Cpu,
 };
 
-// ─── Nav links ────────────────────────────────────────────────────────────────
+// ─── Nav structure ────────────────────────────────────────────────────────────
 
-const NAV_LINKS = [
+type NavLink = { type: "link"; name: string; href: string };
+type NavMega = { type: "megamenu"; name: string };
+type NavItem = NavLink | NavMega;
+
+const NAV_ITEMS: NavItem[] = [
+  { type: "link", name: "Accueil", href: "/" },
+  { type: "link", name: "Actualités", href: "/actualites" },
+  { type: "megamenu", name: "Rubriques" },
+  { type: "link", name: "Web TV", href: "/web-tv" },
+  { type: "link", name: "À Propos", href: "/about" },
+  { type: "link", name: "Contact", href: "/contact" },
+];
+
+// Links seuls pour le mobile (Rubriques → /categories)
+const MOBILE_NAV_LINKS = [
   { name: "Accueil", href: "/" },
   { name: "Actualités", href: "/actualites" },
+  { name: "Rubriques", href: "/categories" },
   { name: "Web TV", href: "/web-tv" },
   { name: "À Propos", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
 
-// ─── Inline search bar ────────────────────────────────────────────────────────
+// ─── Top bar (date + social) ──────────────────────────────────────────────────
+
+function TopBar() {
+  const [dateStr, setDateStr] = useState<string>("");
+
+  useEffect(() => {
+    setDateStr(
+      new Date().toLocaleDateString("fr-FR", {
+        weekday: "long", day: "numeric", month: "long", year: "numeric",
+      })
+    );
+  }, []);
+
+  return (
+    <div className="hidden lg:flex items-center justify-between px-8 py-1.5 border-b border-primary/8 bg-muted/30 text-[10px] font-semibold uppercase tracking-[0.18em] text-muted-foreground">
+      <span className="capitalize">{dateStr}</span>
+      <div className="flex items-center gap-4">
+        {[
+          { Icon: Facebook, href: "https://facebook.com/geniesdafriquemedia", label: "Facebook" },
+          { Icon: Twitter, href: "https://x.com/geniesdafriquemedia", label: "X / Twitter" },
+          { Icon: Instagram, href: "https://instagram.com/geniesdafriquemedia", label: "Instagram" },
+          { Icon: Linkedin, href: "#", label: "LinkedIn" },
+        ].map(({ Icon, href, label }) => (
+          <Link
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={label}
+            className="hover:text-primary transition-colors"
+          >
+            <Icon className="h-3.5 w-3.5" />
+          </Link>
+        ))}
+        <span className="w-px h-3 bg-border mx-1" />
+        <Link href="/search" className="hover:text-primary transition-colors flex items-center gap-1">
+          <Search className="h-3.5 w-3.5" />
+          <span>Recherche</span>
+        </Link>
+      </div>
+    </div>
+  );
+}
+
+// ─── Desktop Search Overlay ───────────────────────────────────────────────────
 
 interface HeaderSearchProps {
   isOpen: boolean;
@@ -63,11 +110,8 @@ function HeaderSearch({ isOpen, onClose, trendingTags, tagsLoading }: HeaderSear
   const [value, setValue] = useState("");
 
   useEffect(() => {
-    if (isOpen) {
-      setTimeout(() => inputRef.current?.focus(), 80);
-    } else {
-      setValue("");
-    }
+    if (isOpen) setTimeout(() => inputRef.current?.focus(), 80);
+    else setValue("");
   }, [isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -85,51 +129,43 @@ function HeaderSearch({ isOpen, onClose, trendingTags, tagsLoading }: HeaderSear
 
   return (
     <>
-      {/* Desktop Search Overlay */}
+      {/* Desktop */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            key="search-overlay-desktop"
-            initial={{ opacity: 0, y: -12 }}
+            key="search-desktop"
+            initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.22, ease: "easeOut" }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.2, ease: "easeOut" }}
             className="absolute top-full left-0 w-full bg-background/98 backdrop-blur-3xl border-b border-primary/10 shadow-2xl z-40 hidden md:block"
           >
-            <div className="container mx-auto max-w-4xl px-4 py-12">
-              <form onSubmit={handleSubmit} className="space-y-8">
-                <div className="relative group flex items-center gap-4">
-                  <Search className="h-8 w-8 text-primary flex-shrink-0 transition-transform group-focus-within:scale-110" />
+            <div className="container mx-auto max-w-4xl px-4 py-10">
+              <form onSubmit={handleSubmit} className="space-y-7">
+                <div className="flex items-center gap-4 group">
+                  <Search className="h-7 w-7 text-primary flex-shrink-0 transition-transform group-focus-within:scale-110" />
                   <input
                     ref={inputRef}
                     type="search"
                     value={value}
                     onChange={(e) => setValue(e.target.value)}
-                    placeholder="Rechercher un sujet, un article, une vidéo..."
-                    className="flex-1 bg-transparent border-b-4 border-primary/20 pb-3 text-4xl font-black tracking-tighter focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/30"
+                    placeholder="Rechercher un article, une vidéo, une rubrique…"
+                    className="flex-1 bg-transparent border-b-2 border-primary/20 pb-3 text-3xl font-black tracking-tight focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/30"
                   />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon"
-                    onClick={onClose}
-                    className="rounded-full flex-shrink-0"
-                  >
-                    <X className="h-6 w-6" />
-                  </Button>
+                  <button type="button" onClick={onClose} className="rounded-full p-2 hover:bg-muted transition-colors">
+                    <X className="h-5 w-5" />
+                  </button>
                 </div>
-
-                {/* Trending tags */}
-                <div className="flex flex-wrap items-center gap-3 pl-12">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                    {tagsLoading ? "Chargement..." : "Tendances :"}
+                <div className="flex flex-wrap items-center gap-2 pl-11">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mr-1">
+                    {tagsLoading ? "…" : "Tendances :"}
                   </span>
                   {trendingTags.map((tag) => (
                     <button
                       key={tag}
                       type="button"
                       onClick={() => handleTagClick(tag)}
-                      className="px-4 py-2 rounded-full bg-muted hover:bg-primary hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
+                      className="px-3 py-1.5 rounded-full bg-muted hover:bg-primary hover:text-white text-[10px] font-black uppercase tracking-widest transition-all"
                     >
                       {tag}
                     </button>
@@ -141,30 +177,27 @@ function HeaderSearch({ isOpen, onClose, trendingTags, tagsLoading }: HeaderSear
         )}
       </AnimatePresence>
 
-      {/* Mobile Search Sheet */}
+      {/* Mobile */}
       <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent side="top" className="md:hidden h-[90vh] overflow-y-auto">
+        <SheetContent side="top" className="md:hidden h-[85vh] overflow-y-auto">
           <SheetHeader className="mb-6">
             <SheetTitle className="text-2xl font-black">Recherche</SheetTitle>
           </SheetHeader>
-          
           <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="relative group flex items-center gap-3">
-              <Search className="h-6 w-6 text-primary flex-shrink-0" />
+            <div className="flex items-center gap-3 group">
+              <Search className="h-5 w-5 text-primary flex-shrink-0" />
               <input
                 type="search"
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
-                placeholder="Rechercher..."
+                placeholder="Rechercher…"
                 autoFocus
-                className="flex-1 bg-transparent border-b-2 border-primary/20 pb-2 text-xl font-bold tracking-tight focus:outline-none focus:border-primary transition-all placeholder:text-muted-foreground/40"
+                className="flex-1 bg-transparent border-b-2 border-primary/20 pb-2 text-xl font-bold focus:outline-none focus:border-primary transition-colors placeholder:text-muted-foreground/40"
               />
             </div>
-
-            {/* Trending tags mobile */}
             <div className="space-y-3">
               <span className="text-xs font-black uppercase tracking-widest text-muted-foreground">
-                {tagsLoading ? "Chargement..." : "Tendances"}
+                {tagsLoading ? "…" : "Tendances"}
               </span>
               <div className="flex flex-wrap gap-2">
                 {trendingTags.map((tag) => (
@@ -186,116 +219,112 @@ function HeaderSearch({ isOpen, onClose, trendingTags, tagsLoading }: HeaderSear
   );
 }
 
-// ─── Mobile menu with slide animation ────────────────────────────────────────
+// ─── Mobile Nav ───────────────────────────────────────────────────────────────
 
 interface MobileNavProps {
-  navLinks: typeof NAV_LINKS;
   pathname: string;
   categories: Category[];
   categoriesLoading: boolean;
-  getCategoryIcon: (name: string) => any;
+  getCategoryIcon: (name: string) => React.ComponentType<{ className?: string }>;
 }
 
-function MobileNav({ navLinks, pathname, categories, categoriesLoading, getCategoryIcon }: MobileNavProps) {
+function MobileNav({ pathname, categories, categoriesLoading, getCategoryIcon }: MobileNavProps) {
   const [year, setYear] = useState<number | null>(null);
   useEffect(() => { setYear(new Date().getFullYear()); }, []);
 
   return (
     <SheetContent
       side="right"
-      className="w-full sm:max-w-md p-0 bg-background overflow-hidden border-l border-primary/10 [&>button]:hidden"
+      className="w-full sm:max-w-sm p-0 bg-background overflow-hidden border-l border-primary/10 [&>button]:hidden"
     >
       <motion.div
-        className="flex flex-col h-full relative"
-        initial={{ x: 40, opacity: 0 }}
+        className="flex flex-col h-full"
+        initial={{ x: 32, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
+        transition={{ duration: 0.28, ease: "easeOut" }}
       >
-        {/* African pattern overlay */}
-        <div
-          className="absolute inset-0 opacity-[0.03] pointer-events-none"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6zM36 4V0h-2v4h-4v2h4v4h2V6h4V4h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          }}
-        />
-
         {/* Header */}
-        <div className="p-6 pb-4 flex items-center justify-between border-b border-primary/5 bg-muted/20 relative z-10">
+        <div className="px-6 py-5 flex items-center justify-between border-b border-border/50">
           <Image
             src="/images/logo.png"
             alt="Génies d'Afrique Media"
-            width={280}
-            height={93}
-            className="h-16 w-auto object-contain"
+            width={240}
+            height={80}
+            className="h-12 w-auto object-contain"
           />
           <SheetClose asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-full h-10 w-10 hover:bg-background transition-colors"
-            >
+            <button className="rounded-full p-2 hover:bg-muted transition-colors">
               <X className="h-5 w-5" />
-            </Button>
+            </button>
           </SheetClose>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-8 py-10 space-y-12">
-          {/* Main nav links */}
-          <nav className="flex flex-col gap-1">
-            {navLinks.map((link, i) => (
-              <SheetClose asChild key={link.href}>
-                <motion.div
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.05 + i * 0.06, duration: 0.3 }}
-                >
-                  <Link
-                    href={link.href}
-                    className={cn(
-                      "text-3xl font-black tracking-tight transition-all flex items-center justify-between group py-3 border-b border-primary/5",
-                      pathname === link.href
-                        ? "text-primary"
-                        : "text-foreground hover:text-primary hover:translate-x-2"
-                    )}
+        <div className="flex-1 overflow-y-auto">
+          {/* Primary nav */}
+          <nav className="px-4 py-4">
+            {MOBILE_NAV_LINKS.map((link, i) => {
+              const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
+              return (
+                <SheetClose asChild key={link.href}>
+                  <motion.div
+                    initial={{ opacity: 0, x: 16 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.04 + i * 0.05, duration: 0.25 }}
                   >
-                    <span>{link.name}</span>
-                    <ArrowRight
+                    <Link
+                      href={link.href}
                       className={cn(
-                        "h-6 w-6 opacity-0 -translate-x-4 transition-all group-hover:opacity-100 group-hover:translate-x-0 text-primary",
-                        pathname === link.href && "opacity-100 translate-x-0"
+                        "flex items-center justify-between py-4 px-3 rounded-xl text-base font-bold tracking-tight transition-all",
+                        isActive
+                          ? "text-primary bg-primary/8"
+                          : "text-foreground hover:text-primary hover:bg-muted/60"
                       )}
-                    />
-                  </Link>
-                </motion.div>
-              </SheetClose>
-            ))}
+                    >
+                      <span>{link.name}</span>
+                      {isActive && <span className="h-1.5 w-1.5 rounded-full bg-primary" />}
+                    </Link>
+                  </motion.div>
+                </SheetClose>
+              );
+            })}
           </nav>
 
-          {/* Categories */}
-          <div className="space-y-5">
-            <h4 className="text-[10px] font-black uppercase tracking-[0.4em] text-muted-foreground border-b border-primary/10 pb-2">
+          {/* Divider */}
+          <div className="mx-6 border-t border-border/50" />
+
+          {/* Categories grid */}
+          <div className="px-6 py-5 space-y-4">
+            <h4 className="text-[10px] font-black uppercase tracking-[0.35em] text-muted-foreground">
               Catégories
             </h4>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-2">
               {categoriesLoading
-                ? Array.from({ length: 4 }).map((_, i) => (
-                    <div key={i} className="h-14 rounded-2xl bg-muted/30 animate-pulse" />
+                ? Array.from({ length: 6 }).map((_, i) => (
+                    <div key={i} className="h-12 rounded-xl bg-muted/30 animate-pulse" />
                   ))
-                : categories.map((cat, i) => {
+                : categories.slice(0, 8).map((cat, i) => {
                     const Icon = getCategoryIcon(cat.icon || "globe");
                     return (
                       <SheetClose asChild key={cat.id}>
                         <motion.div
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ delay: 0.3 + i * 0.04 }}
+                          initial={{ opacity: 0, scale: 0.95 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: 0.25 + i * 0.04 }}
                         >
                           <Link
                             href={`/categories/${cat.slug}`}
-                            className="flex items-center gap-3 p-4 rounded-2xl bg-muted/30 hover:bg-primary hover:text-white transition-all duration-300 group"
+                            className="flex items-center gap-2.5 px-3 py-3 rounded-xl hover:bg-primary/8 transition-colors group"
                           >
-                            <Icon className="h-4 w-4 text-primary group-hover:text-white" />
-                            <span className="text-xs font-bold uppercase tracking-wider">{cat.name}</span>
+                            <div
+                              className="flex-none w-7 h-7 rounded-lg flex items-center justify-center"
+                              style={{ backgroundColor: cat.color ? `${cat.color}18` : "hsl(var(--primary)/0.1)" }}
+                            >
+                              <Icon
+                                className="h-3.5 w-3.5"
+                                style={{ color: cat.color || "hsl(var(--primary))" }}
+                              />
+                            </div>
+                            <span className="text-xs font-bold truncate">{cat.name}</span>
                           </Link>
                         </motion.div>
                       </SheetClose>
@@ -305,29 +334,23 @@ function MobileNav({ navLinks, pathname, categories, categoriesLoading, getCateg
           </div>
 
           {/* Newsletter CTA */}
-          <div className="relative overflow-hidden rounded-3xl bg-secondary/20 p-6 border border-secondary/30">
-            <div className="relative z-10 space-y-4">
-              <h4 className="text-lg font-black tracking-tight leading-tight">
-                Restez connecté à l'essentiel.
-              </h4>
-              <p className="text-xs font-medium text-muted-foreground leading-relaxed">
-                Rejoignez notre newsletter pour recevoir les meilleures pépites africaines.
-              </p>
-              <SheetClose asChild>
-                <Link
-                  href="/#newsletter"
-                  className="flex w-full items-center justify-center rounded-xl bg-foreground text-background font-bold text-xs uppercase tracking-widest py-3 hover:bg-primary transition-colors"
-                >
-                  S'abonner
-                </Link>
-              </SheetClose>
-            </div>
+          <div className="mx-6 mb-4 p-5 rounded-2xl bg-primary/8 border border-primary/15">
+            <p className="text-sm font-black tracking-tight mb-1">Restez informé.</p>
+            <p className="text-xs text-muted-foreground mb-3">Newsletter GAM — les meilleures pépites africaines.</p>
+            <SheetClose asChild>
+              <Link
+                href="/#newsletter"
+                className="flex items-center justify-center w-full py-2.5 rounded-xl bg-primary text-white text-xs font-black uppercase tracking-widest hover:bg-primary/90 transition-colors"
+              >
+                S'abonner
+              </Link>
+            </SheetClose>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="p-8 mt-auto border-t border-primary/5 bg-muted/10 space-y-6">
-          <div className="flex justify-center gap-4">
+        {/* Footer socials */}
+        <div className="px-6 py-5 border-t border-border/50 flex items-center justify-between">
+          <div className="flex gap-3">
             {[
               { Icon: Facebook, href: "https://facebook.com/geniesdafriquemedia" },
               { Icon: Twitter, href: "https://x.com/geniesdafriquemedia" },
@@ -339,18 +362,86 @@ function MobileNav({ navLinks, pathname, categories, categoriesLoading, getCateg
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="h-10 w-10 flex items-center justify-center rounded-full border border-primary/10 hover:bg-primary hover:text-white transition-all hover:scale-110 active:scale-90"
+                className="h-9 w-9 flex items-center justify-center rounded-full border border-border hover:bg-primary hover:text-white hover:border-primary transition-all"
               >
                 <Icon className="h-4 w-4" />
               </Link>
             ))}
           </div>
-          <p className="text-[10px] font-bold text-center text-muted-foreground uppercase tracking-[0.2em]">
-            &copy; {year ?? ''} GÉNIES D'AFRIQUE MEDIA. TOUS DROITS RÉSERVÉS.
+          <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
+            © {year ?? ""} GAM
           </p>
         </div>
       </motion.div>
     </SheetContent>
+  );
+}
+
+// ─── Mega-menu dropdown ───────────────────────────────────────────────────────
+
+interface MegaMenuProps {
+  categories: Category[];
+  onClose: () => void;
+  getCategoryIcon: (name: string) => React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+}
+
+function MegaMenu({ categories, onClose, getCategoryIcon }: MegaMenuProps) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -6, scale: 0.98 }}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      exit={{ opacity: 0, y: -6, scale: 0.98 }}
+      transition={{ duration: 0.16, ease: "easeOut" }}
+      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[480px] bg-background border border-border rounded-2xl shadow-2xl shadow-black/10 z-50 overflow-hidden"
+    >
+      {/* Header */}
+      <div className="px-5 py-3 border-b border-border/60 flex items-center justify-between">
+        <span className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground">
+          Nos rubriques
+        </span>
+        <Link
+          href="/categories"
+          onClick={onClose}
+          className="text-[10px] font-black uppercase tracking-widest text-primary flex items-center gap-1 hover:gap-2 transition-all"
+        >
+          Tout voir <ArrowRight className="h-3 w-3" />
+        </Link>
+      </div>
+
+      {/* Categories grid */}
+      <div className="p-3 grid grid-cols-2 gap-1">
+        {categories.slice(0, 8).map((cat) => {
+          const Icon = getCategoryIcon(cat.icon || "globe");
+          return (
+            <Link
+              key={cat.id}
+              href={`/categories/${cat.slug}`}
+              onClick={onClose}
+              className="flex items-center gap-3 px-3 py-3 rounded-xl hover:bg-muted/60 transition-colors group/item"
+            >
+              <div
+                className="flex-none w-9 h-9 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: cat.color ? `${cat.color}18` : "hsl(var(--primary)/0.1)" }}
+              >
+                <Icon
+                  className="h-4 w-4"
+                  style={{ color: cat.color || "hsl(var(--primary))" }}
+                />
+              </div>
+              <div className="flex-1 min-w-0">
+                <span className="text-sm font-bold block truncate">{cat.name}</span>
+                {cat.articles_count > 0 && (
+                  <span className="text-[10px] text-muted-foreground">
+                    {cat.articles_count} article{cat.articles_count > 1 ? "s" : ""}
+                  </span>
+                )}
+              </div>
+              <ArrowRight className="h-3 w-3 opacity-0 group-hover/item:opacity-40 transition-opacity flex-none" />
+            </Link>
+          );
+        })}
+      </div>
+    </motion.div>
   );
 }
 
@@ -359,272 +450,229 @@ function MobileNav({ navLinks, pathname, categories, categoriesLoading, getCateg
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [scrollProgress, setScrollProgress] = useState(0); // 0 = top, 1 = shrunk
+  const [scrollProgress, setScrollProgress] = useState(0);
   const [megaMenuOpen, setMegaMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Live stream detection
+  // Live stream
   const { videos: liveVideos, isLoading: liveLoading } = useVideos({
     initialParams: { is_live: true, page_size: 1 },
   });
   const hasLiveVideo = liveVideos && liveVideos.length > 0;
-  const showLiveStyle = liveLoading || hasLiveVideo;
+  const isLive = hasLiveVideo;
 
-  // Trending tags
+  // Trending tags (search overlay)
   const { data: trendingTags, isLoading: tagsLoading } = useTrendingTags(5);
   const defaultTags = ["Actualités", "Technologie", "Culture", "Économie", "Sport"];
   const displayTags = trendingTags && trendingTags.length > 0 ? trendingTags : defaultTags;
 
-  // Categories
+  // Categories (mega-menu)
   const { data: categoriesData, isLoading: categoriesLoading } = useCategories({ enabled: true });
-  const categories = categoriesData || [];
+  const categories = (categoriesData || []).filter((c: Category) => c.is_active);
 
-  // Close search on route change
+  // Route changes → close everything
   useEffect(() => {
     setIsSearchOpen(false);
+    setMegaMenuOpen(false);
   }, [pathname]);
 
-  // Sticky scroll behavior
+  // Scroll shrink
   useEffect(() => {
     const SHRINK_START = 20;
     const SHRINK_END = 80;
-
-    const handleScroll = () => {
+    const onScroll = () => {
       const y = window.scrollY;
       setScrolled(y > SHRINK_START);
-      const progress = Math.min(Math.max((y - SHRINK_START) / (SHRINK_END - SHRINK_START), 0), 1);
-      setScrollProgress(progress);
+      setScrollProgress(Math.min(Math.max((y - SHRINK_START) / (SHRINK_END - SHRINK_START), 0), 1));
     };
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // Close search on Escape
+  // Escape key
   useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setIsSearchOpen(false);
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setIsSearchOpen(false); setMegaMenuOpen(false); }
     };
-    document.addEventListener("keydown", handleKey);
-    return () => document.removeEventListener("keydown", handleKey);
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
   }, []);
 
   const getCategoryIcon = useCallback((iconName: string) => {
     return ICON_MAP[iconName.toLowerCase()] || Globe;
   }, []);
 
-  // Interpolated header height: 10rem → 6rem (encore plus grand)
-  const headerHeight = `${10 - scrollProgress * 4}rem`;
-  // Logo size: h-40 → h-24 (beaucoup plus grand)
-  const logoHeight = `${10 - scrollProgress * 4}rem`;
+  // Logo interpolation: 9rem → 5.5rem
+  const logoHeight = `${9 - scrollProgress * 3.5}rem`;
 
   return (
     <header
-      style={{ height: headerHeight }}
       className={cn(
         "sticky top-0 z-50 w-full transition-all duration-300",
         scrolled
-          ? "bg-background/95 backdrop-blur-xl border-b border-primary/5 shadow-lg shadow-primary/5"
-          : "bg-transparent"
+          ? "bg-background/96 backdrop-blur-2xl shadow-sm shadow-black/5 border-b border-border/60"
+          : "bg-background/80 backdrop-blur-md"
       )}
     >
-      <div className="container mx-auto flex h-full items-center justify-between px-4 lg:px-8">
-        {/* Logo + Desktop Nav */}
-        <div className="flex items-center gap-10">
-          <Link href="/" className="group flex items-center flex-shrink-0">
-            <Image
-              src="/images/logo.png"
-              alt="Génies d'Afrique Media"
-              width={400}
-              height={133}
-              style={{ height: logoHeight, width: "auto" }}
-              className="object-contain transition-all duration-300 max-h-20 sm:max-h-24 md:max-h-32 lg:max-h-40"
-              priority
-            />
-          </Link>
+      {/* Top bar — date + socials (desktop only, visible quand pas encore scrollé) */}
+      <AnimatePresence>
+        {!scrolled && (
+          <motion.div
+            initial={{ height: 0, opacity: 0 }}
+            animate={{ height: "auto", opacity: 1 }}
+            exit={{ height: 0, opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <TopBar />
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-          <nav className="hidden lg:flex items-center gap-8 text-xs font-black uppercase tracking-widest">
-            {NAV_LINKS.map((link) => {
-              const isActive = pathname === link.href;
+      {/* Main nav bar */}
+      <div className="container mx-auto flex items-center justify-between px-4 lg:px-8 gap-6"
+           style={{ height: `${9 - scrollProgress * 3.5}rem` }}>
+
+        {/* ── Logo ── */}
+        <Link href="/" className="flex-shrink-0">
+          <Image
+            src="/images/logo.png"
+            alt="Génies d'Afrique Media"
+            width={400}
+            height={133}
+            style={{ height: logoHeight, width: "auto" }}
+            className="object-contain transition-all duration-300 max-h-20 sm:max-h-24 md:max-h-28 lg:max-h-36"
+            priority
+          />
+        </Link>
+
+        {/* ── Desktop Nav ── */}
+        <nav className="hidden lg:flex items-center gap-1 flex-1 justify-center">
+          {NAV_ITEMS.map((item) => {
+            if (item.type === "megamenu") {
               return (
-                <Link
-                  key={link.href}
-                  href={link.href}
-                  className={cn(
-                    "relative py-1.5 transition-colors group",
-                    isActive ? "text-primary" : "text-muted-foreground hover:text-primary"
-                  )}
+                <div
+                  key="rubriques"
+                  className="relative"
+                  onMouseEnter={() => setMegaMenuOpen(true)}
+                  onMouseLeave={() => setMegaMenuOpen(false)}
                 >
-                  {link.name}
-                  {/* Animated underline */}
-                  <span
+                  <button
                     className={cn(
-                      "absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 rounded-full",
-                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                      "flex items-center gap-1 px-3 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all",
+                      megaMenuOpen
+                        ? "text-primary bg-primary/8"
+                        : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                     )}
-                  />
-                  {/* Active dot */}
-                  {isActive && (
-                    <span className="absolute -bottom-1.5 left-1/2 -translate-x-1/2 h-1 w-1 rounded-full bg-primary" />
-                  )}
-                </Link>
-              );
-            })}
+                  >
+                    {item.name}
+                    <ChevronDown
+                      className={cn(
+                        "h-3 w-3 transition-transform duration-200",
+                        megaMenuOpen && "rotate-180"
+                      )}
+                    />
+                  </button>
 
-            {/* Mega-menu Rubriques */}
-            <div
-              className="relative"
-              onMouseEnter={() => setMegaMenuOpen(true)}
-              onMouseLeave={() => setMegaMenuOpen(false)}
-            >
-              <button
+                  <AnimatePresence>
+                    {megaMenuOpen && !categoriesLoading && categories.length > 0 && (
+                      <MegaMenu
+                        categories={categories}
+                        onClose={() => setMegaMenuOpen(false)}
+                        getCategoryIcon={getCategoryIcon}
+                      />
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            }
+
+            // Regular link
+            const isActive = item.href === "/"
+              ? pathname === "/"
+              : pathname.startsWith(item.href);
+
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
                 className={cn(
-                  "relative py-1.5 transition-colors group flex items-center gap-1",
-                  megaMenuOpen ? "text-primary" : "text-muted-foreground hover:text-primary"
+                  "px-3 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all",
+                  isActive
+                    ? "text-primary bg-primary/8"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                 )}
               >
-                Rubriques
-                <span
-                  className={cn(
-                    "absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-300 rounded-full",
-                    megaMenuOpen ? "w-full" : "w-0 group-hover:w-full"
-                  )}
-                />
-              </button>
+                {item.name}
+              </Link>
+            );
+          })}
+        </nav>
 
-              <AnimatePresence>
-                {megaMenuOpen && !categoriesLoading && categories.length > 0 && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -8 }}
-                    transition={{ duration: 0.18, ease: "easeOut" }}
-                    className="absolute top-full left-0 mt-3 w-72 bg-background/98 backdrop-blur-xl border border-border rounded-2xl shadow-2xl shadow-primary/10 overflow-hidden z-50 p-3"
-                  >
-                    <div className="grid grid-cols-1 gap-1">
-                      {categories.slice(0, 8).map((cat) => {
-                        const Icon = getCategoryIcon(cat.icon || "globe");
-                        return (
-                          <Link
-                            key={cat.id}
-                            href={`/categories/${cat.slug}`}
-                            onClick={() => setMegaMenuOpen(false)}
-                            className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-muted/60 transition-colors group/item"
-                          >
-                            <div
-                              className="flex-none w-8 h-8 rounded-lg flex items-center justify-center"
-                              style={{ backgroundColor: cat.color ? `${cat.color}20` : "hsl(var(--primary)/0.1)" }}
-                            >
-                              <Icon
-                                className="h-4 w-4"
-                                style={{ color: cat.color || "hsl(var(--primary))" }}
-                              />
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <span className="text-xs font-bold block">{cat.name}</span>
-                              {cat.articles_count > 0 && (
-                                <span className="text-[10px] text-muted-foreground">
-                                  {cat.articles_count} article{cat.articles_count > 1 ? "s" : ""}
-                                </span>
-                              )}
-                            </div>
-                            <ArrowRight className="h-3 w-3 opacity-0 group-hover/item:opacity-100 transition-opacity text-muted-foreground" />
-                          </Link>
-                        );
-                      })}
-                    </div>
-                    <div className="mt-2 pt-2 border-t border-border">
-                      <Link
-                        href="/categories"
-                        onClick={() => setMegaMenuOpen(false)}
-                        className="flex items-center justify-center gap-2 px-3 py-2 text-[10px] font-black uppercase tracking-widest text-primary hover:bg-primary/5 rounded-xl transition-colors"
-                      >
-                        Toutes les catégories <ArrowRight className="h-3 w-3" />
-                      </Link>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </nav>
-        </div>
+        {/* ── Right actions ── */}
+        <div className="flex items-center gap-2 flex-shrink-0">
 
-        {/* Right actions */}
-        <div className="flex items-center gap-2 lg:gap-3">
-          {/* Search toggle */}
-          <Button
-            variant="ghost"
-            size="icon"
+          {/* Search */}
+          <button
             aria-label="Rechercher"
-            className={cn(
-              "flex rounded-full transition-all",
-              isSearchOpen
-                ? "bg-primary text-white hover:bg-primary/90"
-                : "hover:bg-primary/10 hover:text-primary"
-            )}
             onClick={() => setIsSearchOpen((v) => !v)}
+            className={cn(
+              "hidden md:flex h-9 w-9 items-center justify-center rounded-full transition-all",
+              isSearchOpen
+                ? "bg-primary text-white"
+                : "hover:bg-muted text-muted-foreground hover:text-foreground"
+            )}
           >
             <AnimatePresence mode="wait" initial={false}>
               {isSearchOpen ? (
-                <motion.span
-                  key="close"
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <X className="h-5 w-5" />
+                <motion.span key="x" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.12 }}>
+                  <X className="h-4 w-4" />
                 </motion.span>
               ) : (
-                <motion.span
-                  key="search"
-                  initial={{ rotate: 90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: -90, opacity: 0 }}
-                  transition={{ duration: 0.15 }}
-                >
-                  <Search className="h-5 w-5" />
+                <motion.span key="s" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.12 }}>
+                  <Search className="h-4 w-4" />
                 </motion.span>
               )}
             </AnimatePresence>
-          </Button>
+          </button>
 
-          {/* Live / Direct button */}
-          <Button
-            asChild
-            size="sm"
+          {/* En Direct */}
+          <Link
+            href="/direct"
             className={cn(
-              "flex rounded-full px-3 sm:px-6 lg:px-8 font-black text-[10px] sm:text-xs uppercase tracking-widest shadow-xl transition-all hover:-translate-y-0.5 active:translate-y-0",
-              showLiveStyle
-                ? "bg-red-500 hover:bg-red-600 shadow-red-500/30"
-                : "bg-primary hover:bg-primary/90 shadow-primary/20"
+              "hidden sm:flex items-center gap-2 px-5 py-2 rounded-full text-[11px] font-black uppercase tracking-widest transition-all hover:-translate-y-px active:translate-y-0 shadow-lg",
+              isLive
+                ? "bg-red-500 text-white shadow-red-500/25 hover:bg-red-600"
+                : "bg-primary text-white shadow-primary/25 hover:bg-primary/90"
             )}
           >
-            <Link href="/direct" className="flex items-center gap-1 sm:gap-2">
-              {showLiveStyle && (
-                <span className="relative flex h-1.5 w-1.5 sm:h-2 sm:w-2">
+            {isLive ? (
+              <>
+                <span className="relative flex h-2 w-2">
                   <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75" />
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 sm:h-2 sm:w-2 bg-white" />
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white" />
                 </span>
-              )}
-              <span className="hidden xs:inline">{showLiveStyle ? "En Direct" : "Voir Direct"}</span>
-              <span className="xs:hidden">📡</span>
-            </Link>
-          </Button>
+                En Direct
+              </>
+            ) : (
+              <>
+                <Radio className="h-3.5 w-3.5" />
+                Direct
+              </>
+            )}
+          </Link>
 
-          {/* Mobile menu */}
+          {/* Mobile menu trigger */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button
-                variant="ghost"
-                size="icon"
+              <button
                 aria-label="Menu"
-                className="rounded-full hover:bg-secondary/50 transition-all group"
+                className="flex h-9 w-9 items-center justify-center rounded-full hover:bg-muted transition-colors lg:hidden"
               >
-                <Menu className="h-6 w-6 group-hover:scale-110 transition-transform" />
-              </Button>
+                <Menu className="h-5 w-5" />
+              </button>
             </SheetTrigger>
             <MobileNav
-              navLinks={NAV_LINKS}
               pathname={pathname}
               categories={categories}
               categoriesLoading={categoriesLoading}
@@ -634,7 +682,7 @@ export function Header() {
         </div>
       </div>
 
-      {/* Desktop search overlay (slides down from header) */}
+      {/* Search overlay */}
       <HeaderSearch
         isOpen={isSearchOpen}
         onClose={() => setIsSearchOpen(false)}

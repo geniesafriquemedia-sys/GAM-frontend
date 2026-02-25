@@ -2,23 +2,17 @@
 # GAM Frontend - Docker Ignore
 # =============================================================================
 
-# Dependencies
+# Dependencies (reinstalled in deps stage)
 node_modules
 .pnp
 .pnp.js
 
-# Testing
-coverage
-.nyc_output
-
-# Next.js
+# Next.js build output (rebuilt in builder stage)
 .next
 out
-
-# Production
 build
 
-# Debug
+# Debug logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
@@ -29,40 +23,59 @@ yarn-error.log*
 .env.*
 !.env.example
 
-# IDE
+# IDE / OS
 .vscode
 .idea
 *.swp
 *.swo
 *~
+.DS_Store
+Thumbs.db
 
 # Git
 .git
 .gitignore
+.gitattributes
 
-# Misc
-.DS_Store
-Thumbs.db
-*.bak
-
-# Docker
+# Docker files (not needed inside the image)
 Dockerfile*
 docker-compose*
 .docker
+.dockerignore
 
 # CI/CD
 .github
 .gitlab-ci.yml
 .travis.yml
 
+# Documentation and non-code assets (reduce build context size)
+docs/
+backend/
+images/
+security/
+scripts/
+*.md
+*.bak
+
 # Storybook
 .storybook
 storybook-static
 
-# Testing
+# Tests
 __tests__
+coverage
+.nyc_output
 *.test.js
 *.test.ts
 *.spec.js
 *.spec.ts
 jest.config.*
+
+# Misc analysis / tunnel config
+tunnel/
+FORBES_LAYOUT_ANALYSIS.md
+LAYOUT_IMPLEMENTATION_GUIDE.md
+OPTIMIZATION_GUIDE.md
+SECURITY.md
+SEO_CHECKLIST.md
+tsconfig.tsbuildinfo

@@ -61,7 +61,10 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
-  outputFileTracingRoot: path.resolve(__dirname, '../../'),
+  // Standalone output: only traces the files actually needed → much smaller Docker image
+  output: 'standalone',
+  // Trace from the project root only (not the monorepo root) to avoid scanning GAM-backend
+  outputFileTracingRoot: path.resolve(__dirname),
   images: {
     loader: 'custom',
     loaderFile: './src/lib/image-loader.ts',
@@ -98,7 +101,7 @@ const nextConfig: NextConfig = {
     unoptimized: false,
     minimumCacheTTL: 3600, // 1 heure de cache
     dangerouslyAllowSVG: true,
-    contentDispositionType: 'attachment',
+    contentDispositionType: 'inline',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   typescript: {

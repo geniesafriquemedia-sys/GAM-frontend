@@ -125,7 +125,7 @@ export function ActualitesList({ initialArticles, initialCategories }: Actualite
                 <div className="text-center py-20">
                     <p className="text-muted-foreground font-medium text-lg">
                         Aucun article trouvé
-                        {selectedCategory && " dans cette catégorie"}.
+                        {selectedCategory && " dans cette rubrique"}.
                     </p>
                 </div>
             )}

@@ -56,7 +56,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
             className="rounded-full border-none px-6 py-2 text-[10px] font-black uppercase tracking-[0.2em]"
             style={{ backgroundColor: `${categoryColor}20`, color: categoryColor }}
           >
-            Catégorie
+            Rubrique
           </Badge>
           <h1
             className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9]"
@@ -65,7 +65,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
             {category.name}.
           </h1>
           <p className="text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed">
-            {category.description || `Découvrez tous les articles de la catégorie ${category.name}.`}
+            {category.description || `Découvrez tous les articles de la rubrique ${category.name}.`}
           </p>
           <div className="flex items-center gap-4 text-sm text-muted-foreground">
             <span className="font-bold">{category.articles_count} article{category.articles_count > 1 ? 's' : ''}</span>
@@ -96,7 +96,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         ) : (
           <div className="text-center py-20">
             <p className="text-muted-foreground text-lg">
-              Aucun article dans cette catégorie pour le moment.
+              Aucun article dans cette rubrique pour le moment.
             </p>
             <Button asChild variant="outline" className="mt-6 rounded-full">
               <Link href="/actualites">Voir tous les articles</Link>
@@ -152,7 +152,7 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
         <Button asChild variant="outline" className="rounded-full h-14 px-10 font-black uppercase tracking-widest text-[10px]">
           <Link href="/categories">
             <ArrowRight className="mr-2 h-4 w-4 rotate-180" />
-            Toutes les catégories
+            Toutes les rubriques
           </Link>
         </Button>
       </div>

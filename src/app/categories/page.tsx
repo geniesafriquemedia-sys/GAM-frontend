@@ -49,10 +49,10 @@ export default async function CategoriesPage() {
                         Explorer
                     </Badge>
                     <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.9]">
-                        Toutes les <br />Catégories.
+                        Toutes les <br />Rubriques.
                     </h1>
                     <p className="text-xl md:text-2xl text-zinc-400 font-medium leading-relaxed">
-                        Naviguez à travers nos thématiques pour trouver les contenus qui vous passionnent.
+                        Naviguez à travers nos rubriques pour trouver les contenus qui vous passionnent.
                     </p>
                 </div>
 
@@ -102,7 +102,7 @@ export default async function CategoriesPage() {
                                             {category.name}
                                         </h3>
                                         <p className="text-muted-foreground line-clamp-2 text-sm leading-relaxed">
-                                            {category.description || "Découvrez les articles de cette catégorie."}
+                                            {category.description || "Découvrez les articles de cette rubrique."}
                                         </p>
                                     </div>
 
@@ -124,8 +124,8 @@ export default async function CategoriesPage() {
                 ) : (
                     <div className="text-center py-20 bg-muted/30 rounded-[3rem]">
                         <Folder className="h-16 w-16 mx-auto text-muted-foreground mb-6" />
-                        <h2 className="text-2xl font-bold mb-2">Aucune catégorie trouvée</h2>
-                        <p className="text-muted-foreground">Les catégories ne sont pas encore disponibles.</p>
+                        <h2 className="text-2xl font-bold mb-2">Aucune rubrique trouvée</h2>
+                        <p className="text-muted-foreground">Les rubriques ne sont pas encore disponibles.</p>
                     </div>
                 )}
             </section>

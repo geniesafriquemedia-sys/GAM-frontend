@@ -328,7 +328,7 @@ function MobileNav({ pathname, categories, categoriesLoading, getCategoryIcon }:
           {/* Categories */}
           <div className="px-5 py-4 space-y-3">
             <h4 className="text-[10px] font-black uppercase tracking-[0.35em] text-muted-foreground px-1">
-              Catégories
+              Rubriques
             </h4>
             <div className="grid grid-cols-2 gap-1.5">
               {categoriesLoading

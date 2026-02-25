@@ -844,7 +844,7 @@ function SearchContent() {
     { value: "all", label: "Tout", icon: <SearchIcon className="h-4 w-4" />, count: totalCount },
     { value: "articles", label: "Articles", icon: <FileText className="h-4 w-4" />, count: allResults?.articles.length },
     { value: "videos", label: "Vidéos", icon: <Play className="h-4 w-4" />, count: allResults?.videos.length },
-    { value: "categories", label: "Catégories", icon: <Folder className="h-4 w-4" />, count: allResults?.categories.length },
+    { value: "categories", label: "Rubriques", icon: <Folder className="h-4 w-4" />, count: allResults?.categories.length },
     { value: "authors", label: "Auteurs", icon: <User className="h-4 w-4" />, count: allResults?.authors.length },
   ];
 
@@ -1022,7 +1022,7 @@ function SearchContent() {
               <section>
                 <h2 className="text-2xl font-black tracking-tight mb-8 flex items-center gap-3">
                   <Folder className="h-6 w-6 text-primary" />
-                  Catégories{" "}
+                  Rubriques{" "}
                   <span className="text-base font-medium text-muted-foreground">
                     ({results.categories.length})
                   </span>

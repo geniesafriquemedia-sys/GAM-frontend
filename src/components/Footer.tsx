@@ -92,7 +92,7 @@ export function Footer() {
                 <li><Link href="/categories/innovation-tech" className="hover:text-primary transition-colors">Innovation & Tech</Link></li>
                 <li><Link href="/categories/culture-arts" className="hover:text-primary transition-colors">Culture & Arts</Link></li>
                 <li><Link href="/categories/sport" className="hover:text-primary transition-colors">Sport</Link></li>
-                <li><Link href="/categories" className="hover:text-primary transition-colors">Toutes les catégories</Link></li>
+                <li><Link href="/categories" className="hover:text-primary transition-colors">Toutes les rubriques</Link></li>
               </ul>
             </div>
 

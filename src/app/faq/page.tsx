@@ -54,7 +54,7 @@ const faqCategories = [
       },
       {
         q: "Puis-je recevoir des notifications ?",
-        a: "Les notifications push sont en cours de déploiement. Vous pourrez bientôt recevoir des alertes pour les breaking news, nouveaux articles de vos catégories favorites et vidéos exclusives."
+        a: "Les notifications push sont en cours de déploiement. Vous pourrez bientôt recevoir des alertes pour les breaking news, nouveaux articles de vos rubriques favorites et vidéos exclusives."
       }
     ]
   },
@@ -69,7 +69,7 @@ const faqCategories = [
       },
       {
         q: "Comment accéder à la Web TV de GAM ?",
-        a: "Notre Web TV est accessible directement depuis le menu principal du site. Vous y trouverez toutes nos productions vidéo organisées par catégories : interviews de personnalités, reportages terrain, documentaires culturels et émissions thématiques."
+        a: "Notre Web TV est accessible directement depuis le menu principal du site. Vous y trouverez toutes nos productions vidéo organisées par rubriques : interviews de personnalités, reportages terrain, documentaires culturels et émissions thématiques."
       },
       {
         q: "Puis-je proposer un sujet ou une personnalité à interviewer ?",
@@ -77,7 +77,7 @@ const faqCategories = [
       },
       {
         q: "Comment suivre mes sujets préférés ?",
-        a: "Vous pouvez explorer nos différentes catégories (Innovation, Culture, Éducation, Entrepreneuriat...) et utiliser notre fonction de recherche pour trouver des contenus spécifiques. Bientôt, vous pourrez créer un compte pour personnaliser votre expérience."
+        a: "Vous pouvez explorer nos différentes rubriques (Innovation, Culture, Éducation, Entrepreneuriat...) et utiliser notre fonction de recherche pour trouver des contenus spécifiques. Bientôt, vous pourrez créer un compte pour personnaliser votre expérience."
       }
     ]
   },

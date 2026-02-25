@@ -28,7 +28,7 @@ export const advertisingService = {
       ENDPOINTS.ACTIVE,
       {
         params: position ? { position } : undefined,
-        next: { revalidate: 300 },
+        cache: 'no-store',
       },
       []
     );

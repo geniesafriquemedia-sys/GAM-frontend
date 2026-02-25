@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import { usePathname } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -31,17 +32,17 @@ interface AdvertisementProps {
 // ── Composant ─────────────────────────────────────────────────────────────────
 
 export function Advertisement({ position, className, initialAds }: AdvertisementProps) {
+  const pathname = usePathname();
   const [ads, setAds] = useState<Ad[]>(initialAds ?? []);
   const [currentAd, setCurrentAd] = useState<Ad | null>(null);
   const [isVisible, setIsVisible] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const trackedImpressionRef = useRef<Set<number>>(new Set());
 
-  // Chargement côté client si pas d'initialAds
+  // Re-fetcher à chaque changement de page pour une rotation fraîche
   useEffect(() => {
-    if (initialAds && initialAds.length > 0) return;
     api.advertising.getActiveAds(position).then(setAds).catch(() => setAds([]));
-  }, [position]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [position, pathname]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Sélection aléatoire d'une pub dans la liste
   useEffect(() => {

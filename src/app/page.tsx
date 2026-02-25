@@ -125,14 +125,9 @@ export default async function Home() {
             <Hero articles={featuredArticles} />
 
             {/* Pub HOMEPAGE_TOP – Leaderboard */}
-            {homepageTopAds.length > 0 && (
-              <div className="flex justify-center py-2">
-                <Advertisement
-                  position="HOMEPAGE_TOP"
-                  initialAds={homepageTopAds}
-                />
-              </div>
-            )}
+            <div className="flex justify-center py-2">
+              <Advertisement position="HOMEPAGE_TOP" />
+            </div>
 
             {/* Latest articles header */}
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 pt-8 border-t border-border/50">

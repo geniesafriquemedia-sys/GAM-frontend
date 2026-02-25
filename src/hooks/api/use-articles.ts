@@ -139,7 +139,7 @@ export function useFeaturedArticles(limit = 3, options: UseFetchOptions = {}) {
     [limit]
   );
 
-  return useFetch<ArticleSummary[]>(fetchFeatured, [limit], options);
+  return useFetch<ArticleSummary[]>(fetchFeatured, [limit], options as UseFetchOptions<ArticleSummary[]>);
 }
 
 // =============================================================================
@@ -161,7 +161,7 @@ export function useArticlesByCategory(
   return useFetch<PaginatedResponse<ArticleSummary>>(
     fetchArticles,
     [categorySlug, page, page_size, author, author_slug, is_featured, is_trending, tags, search, ordering],
-    { enabled: !!categorySlug, ...options }
+    { enabled: !!categorySlug, ...options } as UseFetchOptions<PaginatedResponse<ArticleSummary>>
   );
 }
 
@@ -184,7 +184,7 @@ export function useArticlesByAuthor(
   return useFetch<PaginatedResponse<ArticleSummary>>(
     fetchArticles,
     [authorSlug, page, page_size, category, category_slug, is_featured, is_trending, tags, search, ordering],
-    { enabled: !!authorSlug, ...options }
+    { enabled: !!authorSlug, ...options } as UseFetchOptions<PaginatedResponse<ArticleSummary>>
   );
 }
 
@@ -198,5 +198,5 @@ export function useTrendingArticles(limit = 5, options: UseFetchOptions = {}) {
     [limit]
   );
 
-  return useFetch<ArticleSummary[]>(fetchTrending, [limit], options);
+  return useFetch<ArticleSummary[]>(fetchTrending, [limit], options as UseFetchOptions<ArticleSummary[]>);
 }

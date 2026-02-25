@@ -1,12 +1,14 @@
 // Utilitaires pour la gestion de la PWA
 
+import { logger } from './logger';
+
 export function registerServiceWorker() {
   if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
     window.addEventListener('load', () => {
       navigator.serviceWorker
         .register('/sw.js')
         .then((registration) => {
-          console.log('✅ Service Worker enregistré avec succès:', registration.scope);
+          logger.info('✅ Service Worker enregistré avec succès:', registration.scope);
           
           // Vérifier les mises à jour du Service Worker
           registration.addEventListener('updatefound', () => {
@@ -14,7 +16,7 @@ export function registerServiceWorker() {
             if (newWorker) {
               newWorker.addEventListener('statechange', () => {
                 if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
-                  console.log('🔄 Nouvelle version du Service Worker disponible');
+                  logger.info('🔄 Nouvelle version du Service Worker disponible');
                   // Vous pouvez afficher une notification ici pour recharger
                 }
               });
@@ -22,7 +24,7 @@ export function registerServiceWorker() {
           });
         })
         .catch((error) => {
-          console.error('❌ Erreur lors de l\'enregistrement du Service Worker:', error);
+          logger.error('❌ Erreur lors de l\'enregistrement du Service Worker:', error);
         });
     });
   }
@@ -35,7 +37,7 @@ export function unregisterServiceWorker() {
         registration.unregister();
       })
       .catch((error) => {
-        console.error('Erreur lors de la désinscription du Service Worker:', error);
+        logger.error('Erreur lors de la désinscription du Service Worker:', error);
       });
   }
 }
@@ -46,7 +48,7 @@ export function isAppInstalled(): boolean {
   
   return (
     window.matchMedia('(display-mode: standalone)').matches ||
-    (window.navigator as any).standalone === true ||
+    (window.navigator as Navigator & { standalone?: boolean }).standalone === true ||
     document.referrer.includes('android-app://')
   );
 }

@@ -19,7 +19,7 @@ export function InstallButton() {
     const checkStandalone = () => {
       return (
         window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as any).standalone ||
+        (window.navigator as Navigator & { standalone?: boolean }).standalone ||
         document.referrer.includes('android-app://')
       );
     };
@@ -65,13 +65,13 @@ export function InstallButton() {
       const { outcome } = await deferredPrompt.userChoice;
       
       if (outcome === 'accepted') {
-        console.log('App installée');
+        // App installée avec succès
       }
       
       setDeferredPrompt(null);
       setIsInstallable(false);
     } catch (error) {
-      console.error('Erreur installation:', error);
+      // Erreur installation PWA
     }
   };
 

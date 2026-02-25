@@ -130,7 +130,7 @@ export function useVideo(options: UseVideoOptions) {
   return useFetch<VideoWithRelated>(fetchVideo, [slug], {
     enabled: !!slug,
     ...fetchOptions,
-  });
+  } as UseFetchOptions<VideoWithRelated>);
 }
 
 // =============================================================================
@@ -143,7 +143,7 @@ export function useFeaturedVideos(limit = 4, options: UseFetchOptions = {}) {
     [limit]
   );
 
-  return useFetch<VideoSummary[]>(fetchFeatured, [limit], options);
+  return useFetch<VideoSummary[]>(fetchFeatured, [limit], options as UseFetchOptions<VideoSummary[]>);
 }
 
 // =============================================================================
@@ -165,7 +165,7 @@ export function useVideosByType(
   return useFetch<PaginatedResponse<VideoSummary>>(
     fetchVideos,
     [videoType, page, page_size, category, is_featured, is_live, tags, search, ordering],
-    { enabled: !!videoType, ...options }
+    { enabled: !!videoType, ...options } as UseFetchOptions<PaginatedResponse<VideoSummary>>
   );
 }
 
@@ -188,6 +188,6 @@ export function useVideosByCategory(
   return useFetch<PaginatedResponse<VideoSummary>>(
     fetchVideos,
     [categorySlug, page, page_size, video_type, is_featured, is_live, tags, search, ordering],
-    { enabled: !!categorySlug, ...options }
+    { enabled: !!categorySlug, ...options } as UseFetchOptions<PaginatedResponse<VideoSummary>>
   );
 }

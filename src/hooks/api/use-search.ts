@@ -295,5 +295,5 @@ export function useTrendingTags(limit = 10, options: UseFetchOptions = {}) {
     [limit]
   );
 
-  return useFetch<string[]>(fetchTags, [limit], options);
+  return useFetch<string[]>(fetchTags, [limit], options as UseFetchOptions<string[]>);
 }

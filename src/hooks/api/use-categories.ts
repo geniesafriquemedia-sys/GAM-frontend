@@ -18,7 +18,7 @@ export function useCategories(options: UseFetchOptions = {}) {
     []
   );
 
-  return useFetch<Category[]>(fetchCategories, [], options);
+  return useFetch<Category[]>(fetchCategories, [], options as UseFetchOptions<Category[]>);
 }
 
 // =============================================================================
@@ -31,7 +31,7 @@ export function useFeaturedCategories(options: UseFetchOptions = {}) {
     []
   );
 
-  return useFetch<Category[]>(fetchCategories, [], options);
+  return useFetch<Category[]>(fetchCategories, [], options as UseFetchOptions<Category[]>);
 }
 
 // =============================================================================
@@ -53,5 +53,5 @@ export function useCategory(options: UseCategoryOptions) {
   return useFetch<Category>(fetchCategory, [slug], {
     enabled: !!slug,
     ...fetchOptions,
-  });
+  } as UseFetchOptions<Category>);
 }

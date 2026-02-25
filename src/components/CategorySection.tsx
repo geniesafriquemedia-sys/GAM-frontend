@@ -156,9 +156,9 @@ export function CategorySection({ category, articles }: CategorySectionProps) {
         <div className="flex items-center gap-3">
           <div
             className="p-2 rounded-lg"
-            style={{ backgroundColor: `${accentColor}20` }}
+            style={{ backgroundColor: `${accentColor}20`, color: accentColor }}
           >
-            <Icon className="h-4 w-4" style={{ color: accentColor }} />
+            <Icon className="h-4 w-4" />
           </div>
           <h2 className="text-lg font-black uppercase tracking-[0.15em] text-sm">
             {category.name}

@@ -10,7 +10,7 @@ import type { Category } from "@/types";
 export const revalidate = 600; // 10 minutes
 
 // Icon mapping (duplicate from Header.tsx/Category types for now for stability)
-const ICON_MAP: Record<string, any> = {
+const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
     globe: Globe,
     briefcase: Briefcase,
     cpu: Cpu,
@@ -35,7 +35,7 @@ export default async function CategoriesPage() {
     try {
         categories = await api.categories.getAllActive();
     } catch (error) {
-        console.error("Failed to fetch categories:", error);
+        // Erreur lors du chargement des catégories
     }
 
     return (

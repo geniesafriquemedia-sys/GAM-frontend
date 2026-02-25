@@ -242,7 +242,10 @@ export async function safeFetch<T>(
   try {
     return await baseFetch<T>(endpoint, options);
   } catch (error) {
-    console.error(`API Error [${endpoint}]:`, error);
+    // Logger désactivé en production - voir src/lib/logger.ts
+    if (process.env.NODE_ENV === 'development') {
+      console.error(`API Error [${endpoint}]:`, error);
+    }
     return fallback ?? null;
   }
 }

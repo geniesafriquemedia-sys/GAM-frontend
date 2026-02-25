@@ -48,6 +48,8 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: index * 0.06, ease: "easeOut" }}
       className="group relative flex flex-col gap-4"
+      role="article"
+      aria-labelledby={`video-title-${slug}`}
     >
       {/* Thumbnail */}
       <Link
@@ -94,8 +96,10 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
             whileHover={{ scale: 1.15 }}
             transition={{ type: "spring", stiffness: 300, damping: 20 }}
             className="h-14 w-14 flex items-center justify-center rounded-full bg-background/20 backdrop-blur-md border border-white/30 shadow-lg transition-colors duration-300 group-hover:bg-primary group-hover:border-primary"
+            role="button"
+            aria-label={`Lire la vidéo: ${title}`}
           >
-            <Play className="h-6 w-6 fill-foreground group-hover:fill-white text-foreground group-hover:text-white translate-x-0.5 transition-colors duration-300" />
+            <Play className="h-6 w-6 fill-foreground group-hover:fill-white text-foreground group-hover:text-white translate-x-0.5 transition-colors duration-300" aria-hidden="true" />
           </motion.div>
         </div>
 
@@ -143,7 +147,7 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
         </div>
 
         <Link href={`/web-tv/${slug}`} className="block">
-          <h3 className="text-xl font-black leading-tight tracking-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors duration-200">
+          <h3 id={`video-title-${slug}`} className="text-xl font-black leading-tight tracking-tight line-clamp-2 text-foreground group-hover:text-primary transition-colors duration-200">
             {title}
           </h3>
         </Link>

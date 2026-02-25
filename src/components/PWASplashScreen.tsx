@@ -13,7 +13,7 @@ export function PWASplashScreen() {
     const checkStandalone = () => {
       return (
         window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as any).standalone ||
+        (window.navigator as Navigator & { standalone?: boolean }).standalone ||
         document.referrer.includes('android-app://')
       );
     };

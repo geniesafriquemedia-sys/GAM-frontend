@@ -18,7 +18,7 @@ export default async function AboutPage() {
   try {
     kpis = await api.kpi.getPlatformKPIServer();
   } catch (error) {
-    console.error('Failed to fetch KPIs:', error);
+    // Erreur lors du chargement des KPIs
   }
 
   // Stats with real data from database (no simulated values)

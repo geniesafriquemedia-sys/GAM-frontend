@@ -72,6 +72,7 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1, ease: [0.16, 1, 0.3, 1] }}
+      aria-labelledby={`article-title-${slug}`}
     >
       {/* Image wrapper */}
       <Link
@@ -159,7 +160,7 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
 
         {/* Title */}
         <Link href={`/articles/${slug}`} className="block">
-          <h3 className="text-xl sm:text-2xl font-black leading-[1.1] tracking-tighter transition-colors group-hover:text-primary">
+          <h3 id={`article-title-${slug}`} className="text-xl sm:text-2xl font-black leading-[1.1] tracking-tighter transition-colors group-hover:text-primary">
             {title}
           </h3>
         </Link>
@@ -184,9 +185,10 @@ export function ArticleCard({ article, index = 0 }: ArticleCardProps) {
           <Link
             href={`/articles/${slug}`}
             className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.2em] text-primary group/link"
+            aria-label={`Lire l'article: ${title}`}
           >
             Lire l'article
-            <div className="w-8 h-px bg-primary transition-all duration-300 group-hover/link:w-12" />
+            <div className="w-8 h-px bg-primary transition-all duration-300 group-hover/link:w-12" aria-hidden="true" />
           </Link>
         </div>
       </div>

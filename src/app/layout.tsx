@@ -4,9 +4,9 @@ import "./globals.css";
 import { LayoutWrapper } from "@/components/LayoutWrapper";
 import { Toaster } from "sonner";
 import Script from "next/script";
-import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 import { PWARegister } from "@/components/PWARegister";
 import { PWASplashScreen } from "@/components/PWASplashScreen";
+import { PWAInstallPrompt } from "@/components/lazy";
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],

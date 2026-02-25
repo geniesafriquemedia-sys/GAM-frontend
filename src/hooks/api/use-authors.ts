@@ -18,7 +18,7 @@ export function useAuthors(options: UseFetchOptions = {}) {
     []
   );
 
-  return useFetch<Author[]>(fetchAuthors, [], options);
+  return useFetch<Author[]>(fetchAuthors, [], options as UseFetchOptions<Author[]>);
 }
 
 // =============================================================================
@@ -40,5 +40,5 @@ export function useAuthor(options: UseAuthorOptions) {
   return useFetch<Author>(fetchAuthor, [slug], {
     enabled: !!slug,
     ...fetchOptions,
-  });
+  } as UseFetchOptions<Author>);
 }

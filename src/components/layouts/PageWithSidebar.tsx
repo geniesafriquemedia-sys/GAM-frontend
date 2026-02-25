@@ -57,7 +57,7 @@ export function PageWithSidebar({ children, showTopAd = true }: PageWithSidebarP
                           </p>
                           <div className="flex items-center gap-1 text-xs text-muted-foreground mt-1">
                             <Eye className="h-3 w-3" />
-                            <span>{article.views_count?.toLocaleString() || 0} vues</span>
+                            <span>{(article as any).views_count?.toLocaleString() || 0} vues</span>
                           </div>
                         </div>
                       </Link>

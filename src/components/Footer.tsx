@@ -10,7 +10,7 @@ export function Footer() {
   useEffect(() => { setYear(new Date().getFullYear()); }, []);
 
   return (
-    <footer className="w-full border-t bg-background pt-24 pb-12">
+    <footer className="w-full border-t bg-background pt-24 pb-12" role="contentinfo">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           <div className="lg:col-span-5 space-y-8 flex flex-col items-center text-center lg:items-start lg:text-left">
@@ -26,7 +26,7 @@ export function Footer() {
             <p className="text-xl font-medium text-muted-foreground leading-relaxed max-w-md">
               Redéfinir la narration africaine à travers l'innovation, la culture et l'impact.
             </p>
-            <div className="flex gap-4">
+            <div className="flex gap-4" role="list" aria-label="Réseaux sociaux">
               {[
                 { icon: Facebook, label: "Facebook" },
                 { icon: Twitter, label: "Twitter" },
@@ -38,8 +38,9 @@ export function Footer() {
                   key={social.label} 
                   href="#" 
                   className="h-12 w-12 flex items-center justify-center rounded-full border border-primary/10 hover:bg-primary hover:text-primary-foreground transition-all group"
+                  aria-label={`Suivez-nous sur ${social.label}`}
                 >
-                  <social.icon className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  <social.icon className="h-5 w-5 transition-transform group-hover:scale-110" aria-hidden="true" />
                 </Link>
               ))}
             </div>
@@ -47,7 +48,7 @@ export function Footer() {
           
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
             {/* Navigation Principale */}
-            <div>
+            <nav aria-label="Navigation footer">
               <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Navigation</h3>
               <ul className="space-y-4 font-bold">
                 <li>
@@ -81,10 +82,10 @@ export function Footer() {
                   </Link>
                 </li>
               </ul>
-            </div>
+            </nav>
 
             {/* Rubriques */}
-            <div>
+            <nav aria-label="Rubriques">
               <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Rubriques</h3>
               <ul className="space-y-4 font-bold">
                 <li><Link href="/categories/economie-business" className="hover:text-primary transition-colors">Économie & Business</Link></li>
@@ -94,10 +95,10 @@ export function Footer() {
                 <li><Link href="/categories/sport" className="hover:text-primary transition-colors">Sport</Link></li>
                 <li><Link href="/categories" className="hover:text-primary transition-colors">Toutes les rubriques</Link></li>
               </ul>
-            </div>
+            </nav>
 
             {/* À Propos */}
-            <div>
+            <nav aria-label="À propos">
               <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">À Propos</h3>
               <ul className="space-y-4 font-bold">
                 <li><Link href="/about" className="hover:text-primary transition-colors">Qui sommes-nous</Link></li>
@@ -106,10 +107,10 @@ export function Footer() {
                 <li><Link href="/partenariats" className="hover:text-primary transition-colors">Partenaires</Link></li>
                 <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
               </ul>
-            </div>
+            </nav>
 
             {/* Contact & Légal */}
-            <div>
+            <nav aria-label="Contact et mentions légales">
               <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Contact & Légal</h3>
               <ul className="space-y-4 font-bold">
                 <li><Link href="/contact" className="hover:text-primary transition-colors">Nous contacter</Link></li>
@@ -118,7 +119,7 @@ export function Footer() {
                 <li><Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions légales</Link></li>
                 <li><Link href="/confidentialite" className="hover:text-primary transition-colors">Confidentialité</Link></li>
               </ul>
-            </div>
+            </nav>
           </div>
         </div>
         

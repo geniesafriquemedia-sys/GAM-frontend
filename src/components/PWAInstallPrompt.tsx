@@ -21,7 +21,7 @@ export function PWAInstallPrompt() {
     const isInStandaloneMode = () => {
       return (
         window.matchMedia('(display-mode: standalone)').matches ||
-        (window.navigator as any).standalone ||
+        (window.navigator as Navigator & { standalone?: boolean }).standalone ||
         document.referrer.includes('android-app://')
       );
     };
@@ -54,13 +54,13 @@ export function PWAInstallPrompt() {
 
     // Écouter l'événement beforeinstallprompt (Chrome/Edge Android/Desktop)
     const handleBeforeInstallPrompt = (e: Event) => {
-      console.log('PWA: beforeinstallprompt event fired');
+      // PWA: beforeinstallprompt event fired
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
       
       if (shouldShow && !standalone) {
         setTimeout(() => {
-          console.log('PWA: Showing install prompt');
+          // PWA: Showing install prompt
           setShowPrompt(true);
         }, 3000);
       }
@@ -73,7 +73,7 @@ export function PWAInstallPrompt() {
     if ((isIOS || isSafari) && !standalone && shouldShow) {
       // Afficher un prompt personnalisé pour iOS
       setTimeout(() => {
-        console.log('PWA: Showing iOS-style prompt');
+        // PWA: Showing iOS-style prompt
         setShowPrompt(true);
       }, 3000);
     }
@@ -81,7 +81,7 @@ export function PWAInstallPrompt() {
     window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
 
     // Log pour debug
-    console.log('PWA: Init', { standalone, isIOS, isSafari, shouldShow });
+    // PWA: Init check
 
     return () => {
       window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
@@ -91,7 +91,7 @@ export function PWAInstallPrompt() {
   const handleInstallClick = async () => {
     if (!deferredPrompt) {
       // Pour iOS ou navigateurs sans support beforeinstallprompt
-      console.log('PWA: No deferred prompt, showing manual instructions');
+      // PWA: No deferred prompt, showing manual instructions
       setShowPrompt(false);
       // Vous pouvez afficher des instructions manuelles ici
       return;
@@ -105,9 +105,9 @@ export function PWAInstallPrompt() {
       const { outcome } = await deferredPrompt.userChoice;
 
       if (outcome === 'accepted') {
-        console.log('PWA installée avec succès');
+        // PWA installée avec succès
       } else {
-        console.log('Installation PWA refusée');
+        // Installation PWA refusée
         localStorage.setItem('pwa-install-declined', Date.now().toString());
       }
 
@@ -115,7 +115,7 @@ export function PWAInstallPrompt() {
       setDeferredPrompt(null);
       setShowPrompt(false);
     } catch (error) {
-      console.error('PWA: Error during installation', error);
+      // Erreur lors de l'installation PWA
     }
   };
 

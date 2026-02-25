@@ -5,6 +5,7 @@
     "scripts": {
         "dev": "next dev --port 3001",
         "build": "next build",
+        "build:analyze": "ANALYZE=true next build",
         "start": "next start",
         "lint": "eslint"
     },
@@ -63,6 +64,7 @@
     "devDependencies": {
         "@babel/parser": "^7.28.5",
         "@eslint/eslintrc": "^3.3.3",
+        "@next/bundle-analyzer": "^16.1.6",
         "@tailwindcss/postcss": "^4",
         "@types/node": "^20",
         "@types/react": "^19",

@@ -1,5 +1,11 @@
 import type { NextConfig } from "next";
 import path from "node:path";
+import { imageLoader } from './src/lib/image-loader';
+
+// Bundle analyzer
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.ANALYZE === 'true',
+});
 
 // Security headers inline to avoid import issues in production
 const securityHeaders = [
@@ -51,6 +57,8 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   outputFileTracingRoot: path.resolve(__dirname, '../../'),
   images: {
+    loader: 'custom',
+    loaderFile: './src/lib/image-loader.ts',
     remotePatterns: [
       {
         protocol: 'https',
@@ -80,16 +88,18 @@ const nextConfig: NextConfig = {
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     formats: ['image/avif', 'image/webp'],
-    // Désactiver l'optimisation pour Supabase (cause 400 errors)
-    unoptimized: true,
-    minimumCacheTTL: 60,
+    // Optimisation activée avec loader custom pour Supabase/Cloudinary
+    unoptimized: false,
+    minimumCacheTTL: 3600, // 1 heure de cache
     dangerouslyAllowSVG: true,
+    contentDispositionType: 'attachment',
+    contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
+    ignoreDuringBuilds: false,
   },
   // Security headers
   async headers() {
@@ -116,4 +126,4 @@ const nextConfig: NextConfig = {
   },
 } as NextConfig;
 
-export default nextConfig;
+export default withBundleAnalyzer(nextConfig);

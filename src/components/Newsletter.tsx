@@ -153,8 +153,9 @@ export function Newsletter() {
       setConfetti(true);
       setEmail("");
       setTimeout(() => setConfetti(false), 100); // reset so re-trigger works
-    } catch (error: any) {
-      if (error?.message?.includes("déjà inscrit") || error?.status === 409) {
+    } catch (error) {
+      const err = error as { message?: string; status?: number };
+      if (err?.message?.includes("déjà inscrit") || err?.status === 409) {
         setStatus("duplicate");
       } else {
         setStatus("error");

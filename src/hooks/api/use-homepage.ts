@@ -30,7 +30,7 @@ export function useHomepage(options: UseFetchOptions = {}): UseHomepageResult {
   const { data, isLoading, error, refetch } = useFetch<HomepageResponse>(
     fetchHomepage,
     [],
-    options
+    options as UseFetchOptions<HomepageResponse>
   );
 
   const hero = useMemo(() => {

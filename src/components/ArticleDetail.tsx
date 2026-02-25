@@ -37,7 +37,7 @@ interface ArticleDetailProps {
 }
 
 // Helper pour obtenir l'URL d'image d'un article
-function getImageUrl(article: any): string | null {
+function getImageUrl(article: { image_url?: string | null; featured_image?: string | null }): string | null {
   const rawUrl = article.image_url || null;
   return rawUrl ? getMediaUrl(rawUrl) : null;
 }

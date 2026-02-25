@@ -17,7 +17,7 @@ export interface UseFetchState<T> {
   isSuccess: boolean;
 }
 
-export interface UseFetchOptions<T = any> {
+export interface UseFetchOptions<T = unknown> {
   enabled?: boolean;
   refetchOnMount?: boolean;
   initialData?: T | null;

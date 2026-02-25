@@ -12,7 +12,7 @@ const RATE_LIMIT_WINDOW = 60 * 1000; // 1 minute
 const MAX_REQUESTS = 100; // Max requests par fenêtre
 
 export function middleware(request: NextRequest) {
-  const ip = request.ip || request.headers.get('x-forwarded-for') || 'unknown';
+  const ip = request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown';
   
   // 1. Bloquer les IPs blacklistées
   if (BLOCKED_IPS.includes(ip)) {

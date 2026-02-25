@@ -78,7 +78,7 @@ async function getHomeData() {
       homepageMidAds,
     };
   } catch (error) {
-    console.error("Error fetching home data:", error);
+    // Erreur lors du chargement des données
     return {
       featuredArticles: [],
       latestArticles: [],

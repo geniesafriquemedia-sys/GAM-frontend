@@ -12,11 +12,7 @@ import { getVideoThumbnailUrl } from "@/types";
 import { ContinuousInfo } from "@/components/ContinuousInfo";
 import { Advertisement } from "@/components/Advertisement";
 import { BreakingNewsTicker } from "@/components/BreakingNewsTicker";
-import { RubriqueSection } from "@/components/RubriqueSection";
 import { AdvertisingShowcase } from "@/components/AdvertisingShowcase";
-import { CategoryBadge } from "@/components/CategoryBadge";
-import type { Category, ArticleSummary } from "@/types";
-import type { CategoryWithArticles } from "@/components/RubriqueSection";
 import { getMediaUrl } from "@/lib/api/config";
 
 export const dynamic = "force-dynamic";
@@ -37,7 +33,6 @@ async function getHomeData() {
       videosRes,
       continuousArticles,
       continuousVideos,
-      allCategories,
       trendingRes,
       homepageTopAds,
       homepageMidAds,
@@ -51,31 +46,10 @@ async function getHomeData() {
       api.videos.getAllServer({ page_size: 2, ordering: "-published_at" }),
       api.articles.getAllServer({ page_size: 15, ordering: "-published_at" }),
       api.videos.getAllServer({ page_size: 4, ordering: "-published_at" }),
-      api.categories.getAllServer(),
       api.articles.getAllServer({ is_trending: true, page_size: 8, ordering: "-published_at" }),
       api.advertising.getActiveAdsServer("HOMEPAGE_TOP"),
       api.advertising.getActiveAdsServer("HOMEPAGE_MID"),
     ]);
-
-    // ── Catégories featured (pour RubriqueSection) ────────────────────────────
-    const activeCategories = allCategories;
-    const featuredCategories = activeCategories
-      .filter((c: Category) => c.is_featured && c.articles_count > 0)
-      .slice(0, 6);
-
-    // ── Phase 2 : articles par catégorie featured ─────────────────────────────
-    const categoryArticlesResults = await Promise.all(
-      featuredCategories.map((cat: Category) =>
-        api.articles
-          .getAllServer({ category_slug: cat.slug, page_size: 4, ordering: "-published_at" })
-          .then((res) => ({ category: cat, articles: res.results }))
-          .catch(() => ({ category: cat, articles: [] }))
-      )
-    );
-
-    const categoriesWithArticles: CategoryWithArticles[] = categoryArticlesResults.filter(
-      (c) => c.articles.length > 0
-    );
 
     // ── Hero + flux articles ──────────────────────────────────────────────────
     let heroArticles = featuredRes.results.slice(0, 3);
@@ -98,8 +72,6 @@ async function getHomeData() {
       videos: videosRes.results,
       continuousArticles,
       continuousVideos,
-      categories: activeCategories,
-      categoriesWithArticles,
       trendingArticles: trendingRes.results,
       homepageTopAds,
       homepageMidAds,
@@ -112,8 +84,6 @@ async function getHomeData() {
       videos: [],
       continuousArticles: { count: 0, next: null, previous: null, results: [] },
       continuousVideos: { count: 0, next: null, previous: null, results: [] },
-      categories: [],
-      categoriesWithArticles: [],
       trendingArticles: [],
       homepageTopAds: [],
       homepageMidAds: [],
@@ -130,8 +100,6 @@ export default async function Home() {
     videos,
     continuousArticles,
     continuousVideos,
-    categories,
-    categoriesWithArticles,
     trendingArticles,
     homepageTopAds,
     homepageMidAds,
@@ -214,29 +182,6 @@ export default async function Home() {
               </div>
             )}
 
-            {/* ── Rubriques par catégorie ── */}
-            {categoriesWithArticles.length > 0 && (
-              <div className="pt-8 border-t border-border/50">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <ArrowRight className="h-4 w-4" />
-                      </div>
-                      <span>Nos Rubriques</span>
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9]">
-                      L&apos;Afrique sous{" "}
-                      <span className="text-primary italic">tous les angles</span>.
-                    </h2>
-                  </div>
-                </div>
-                <RubriqueSection
-                  categoriesWithArticles={categoriesWithArticles}
-                  midAds={homepageMidAds}
-                />
-              </div>
-            )}
 
             {/* ── Tendances ── */}
             {trendingArticles.length > 0 && (
@@ -287,41 +232,6 @@ export default async function Home() {
               </div>
             )}
 
-            {/* ── Categories explorer ── */}
-            {categories.length > 0 && (
-              <div className="space-y-8 pt-8 border-t border-border/50">
-                <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3 text-primary font-black uppercase tracking-[0.3em] text-[10px]">
-                      <div className="p-2 bg-primary/10 rounded-lg">
-                        <ArrowRight className="h-4 w-4" />
-                      </div>
-                      <span>Explorer</span>
-                    </div>
-                    <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[0.9]">
-                      Toutes les{" "}
-                      <span className="text-primary italic">thématiques</span>.
-                    </h2>
-                  </div>
-                  <Button
-                    variant="outline"
-                    asChild
-                    className="rounded-2xl h-12 px-8 font-black border-primary/20 hover:bg-primary/5 hover:border-primary transition-all group text-sm shrink-0"
-                  >
-                    <Link href="/categories">
-                      Toutes les catégories{" "}
-                      <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                    </Link>
-                  </Button>
-                </div>
-
-                <div className="flex flex-wrap gap-3">
-                  {categories.map((category: Category) => (
-                    <CategoryBadge key={category.id} category={category} />
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
 
           {/* Sticky sidebar */}

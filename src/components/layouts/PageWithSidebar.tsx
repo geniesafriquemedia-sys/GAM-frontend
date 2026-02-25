@@ -4,6 +4,7 @@ import { ReactNode } from "react";
 import { useArticles } from "@/hooks";
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import { Advertisement } from "@/components/Advertisement";
 
 interface PageWithSidebarProps {
   children: ReactNode;
@@ -12,8 +13,9 @@ interface PageWithSidebarProps {
 
 export function PageWithSidebar({ children, showTopAd = true }: PageWithSidebarProps) {
   // Fetch top 5 trending articles
-  const { data: trendingData } = useArticles({ ordering: '-views_count', page_size: 5 });
-  const trendingArticles = trendingData?.results || [];
+  const { articles: trendingArticles } = useArticles({
+    initialParams: { ordering: '-views_count', page_size: 5 },
+  });
 
   return (
     <div className="min-h-screen">
@@ -21,12 +23,7 @@ export function PageWithSidebar({ children, showTopAd = true }: PageWithSidebarP
       {showTopAd && (
         <div className="bg-muted/30 py-4">
           <div className="container mx-auto px-4 flex justify-center">
-            <div className="w-full max-w-[728px] h-[90px] bg-muted/50 border-2 border-dashed border-muted-foreground/20 rounded-xl flex items-center justify-center">
-              <div className="text-center">
-                <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Publicité Banner</p>
-                <p className="text-[10px] text-muted-foreground/60">728 x 90</p>
-              </div>
-            </div>
+            <Advertisement position="HOMEPAGE_TOP" className="w-full max-w-[728px]" />
           </div>
         </div>
       )}
@@ -90,12 +87,7 @@ export function PageWithSidebar({ children, showTopAd = true }: PageWithSidebarP
               </div>
 
               {/* Sidebar Ad */}
-              <div className="w-[300px] h-[250px] bg-muted/50 border-2 border-dashed border-muted-foreground/20 rounded-xl flex items-center justify-center">
-                <div className="text-center">
-                  <p className="text-xs font-black uppercase tracking-widest text-muted-foreground">Publicité Sidebar</p>
-                  <p className="text-[10px] text-muted-foreground/60">300 x 250</p>
-                </div>
-              </div>
+              <Advertisement position="ARTICLE_SIDEBAR" className="w-[300px] h-[250px]" />
             </div>
           </aside>
         </div>

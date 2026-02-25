@@ -41,7 +41,7 @@ export function Advertisement({ position, className, initialAds }: Advertisement
   useEffect(() => {
     if (initialAds && initialAds.length > 0) return;
     api.advertising.getActiveAds(position).then(setAds).catch(() => setAds([]));
-  }, [position, initialAds]);
+  }, [position]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Sélection aléatoire d'une pub dans la liste
   useEffect(() => {
@@ -87,6 +87,10 @@ export function Advertisement({ position, className, initialAds }: Advertisement
   if (!currentAd) return null;
 
   const dims = AD_DIMENSIONS[currentAd.ad_type];
+  const imageUrl = typeof currentAd.image === "string"
+    ? currentAd.image
+    : currentAd.image?.url || currentAd.image_url || "";
+  const resolvedImage = imageUrl ? getMediaUrl(imageUrl) : "";
 
   return (
     <AnimatePresence>
@@ -103,28 +107,34 @@ export function Advertisement({ position, className, initialAds }: Advertisement
           Publicité
         </span>
 
-        <a
-          href={currentAd.external_url}
-          target="_blank"
-          rel="noopener noreferrer sponsored"
-          onClick={handleClick}
-          className={cn(
-            "block relative overflow-hidden rounded-sm",
-            dims.className
-          )}
-          aria-label={currentAd.alt_text || "Publicité"}
-        >
-          <Image
-            src={getMediaUrl(currentAd.image_url || currentAd.image || "/images/logo.png")}
-            alt={currentAd.alt_text || "Publicité"}
-            fill={currentAd.ad_type !== "IN_ARTICLE" && currentAd.ad_type !== "NATIVE"}
-            width={currentAd.ad_type === "IN_ARTICLE" || currentAd.ad_type === "NATIVE" ? dims.width : undefined}
-            height={currentAd.ad_type === "IN_ARTICLE" || currentAd.ad_type === "NATIVE" ? dims.height : undefined}
-            className="object-cover w-full h-full"
-            sizes={dims.className.includes("max-w-[970px]") ? "970px" : dims.className.includes("max-w-[728px]") ? "728px" : "300px"}
-            priority={false}
-          />
-        </a>
+        {resolvedImage ? (
+          <a
+            href={currentAd.external_url}
+            target="_blank"
+            rel="noopener noreferrer sponsored"
+            onClick={handleClick}
+            className={cn(
+              "block relative overflow-hidden rounded-sm",
+              dims.className
+            )}
+            aria-label={currentAd.alt_text || "Publicité"}
+          >
+            <Image
+              src={resolvedImage}
+              alt={currentAd.alt_text || "Publicité"}
+              fill={currentAd.ad_type !== "IN_ARTICLE" && currentAd.ad_type !== "NATIVE"}
+              width={currentAd.ad_type === "IN_ARTICLE" || currentAd.ad_type === "NATIVE" ? dims.width : undefined}
+              height={currentAd.ad_type === "IN_ARTICLE" || currentAd.ad_type === "NATIVE" ? dims.height : undefined}
+              className="object-cover w-full h-full"
+              sizes={dims.className.includes("max-w-[970px]") ? "970px" : dims.className.includes("max-w-[728px]") ? "728px" : "300px"}
+              priority={false}
+            />
+          </a>
+        ) : (
+          <div className={cn("flex items-center justify-center border border-dashed border-muted-foreground/30 text-[10px] uppercase tracking-widest text-muted-foreground", dims.className)}>
+            Publicité
+          </div>
+        )}
       </motion.div>
     </AnimatePresence>
   );

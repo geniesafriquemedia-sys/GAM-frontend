@@ -68,7 +68,7 @@ ENV HOSTNAME="0.0.0.0"
 
 # Standalone output bundles its own minimal node_modules subset — no need to
 # copy the full node_modules from the builder stage.
-COPY --from=builder /app/public ./public
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 

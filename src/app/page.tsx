@@ -13,7 +13,8 @@ import { ContinuousInfo } from "@/components/ContinuousInfo";
 import { Advertisement } from "@/components/Advertisement";
 import { BreakingNewsTicker } from "@/components/BreakingNewsTicker";
 import { AdvertisingShowcase } from "@/components/AdvertisingShowcase";
-import { getMediaUrl } from "@/lib/api/config";
+import { TendancesCarousel } from "@/components/TendancesCarousel";
+
 
 export const dynamic = "force-dynamic";
 export const revalidate = 300;
@@ -192,43 +193,7 @@ export default async function Home() {
                   </div>
                   <span>Tendances</span>
                 </div>
-                <div className="flex gap-4 overflow-x-auto pb-4 snap-x snap-mandatory -mx-4 px-4 scrollbar-hide">
-                  {trendingArticles.map((article) => {
-                    const imageUrl = article.image_url ? getMediaUrl(article.image_url) : null;
-                    return (
-                      <Link
-                        key={article.id}
-                        href={`/articles/${article.slug}`}
-                        className="group flex-none w-64 snap-start rounded-2xl border border-border overflow-hidden bg-card hover:-translate-y-1 transition-transform duration-300"
-                      >
-                        <div className="relative aspect-[4/3] bg-muted">
-                          {imageUrl && (
-                            <Image
-                              src={imageUrl}
-                              alt={article.title}
-                              fill
-                              sizes="256px"
-                              className="object-cover transition-transform duration-500 group-hover:scale-105"
-                            />
-                          )}
-                        </div>
-                        <div className="p-4">
-                          {article.category && (
-                            <span
-                              className="text-[9px] font-black uppercase tracking-[0.2em]"
-                              style={{ color: article.category.color || "hsl(var(--primary))" }}
-                            >
-                              {article.category.name}
-                            </span>
-                          )}
-                          <h3 className="text-sm font-bold leading-snug line-clamp-2 mt-1 group-hover:text-primary transition-colors">
-                            {article.title}
-                          </h3>
-                        </div>
-                      </Link>
-                    );
-                  })}
-                </div>
+                <TendancesCarousel articles={trendingArticles} />
               </div>
             )}
 

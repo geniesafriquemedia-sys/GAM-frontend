@@ -97,6 +97,15 @@ function HeaderSearch({ isOpen, onClose, trendingTags, tagsLoading }: HeaderSear
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 767px)");
+    setIsMobile(mq.matches);
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
 
   useEffect(() => {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 80);
@@ -165,9 +174,9 @@ function HeaderSearch({ isOpen, onClose, trendingTags, tagsLoading }: HeaderSear
         )}
       </AnimatePresence>
 
-      {/* Mobile sheet */}
-      <Sheet open={isOpen} onOpenChange={(open) => !open && onClose()}>
-        <SheetContent side="top" className="md:hidden h-[80vh] overflow-y-auto">
+      {/* Mobile sheet — only opens when actually on mobile to avoid overlay on desktop */}
+      <Sheet open={isOpen && isMobile} onOpenChange={(open) => !open && onClose()}>
+        <SheetContent side="top" className="h-[80vh] overflow-y-auto">
           <SheetHeader className="mb-6">
             <SheetTitle className="text-2xl font-black">Recherche</SheetTitle>
           </SheetHeader>

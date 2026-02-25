@@ -57,7 +57,7 @@ async function getHomeData() {
     ]);
 
     // ── Catégories featured (pour RubriqueSection) ────────────────────────────
-    const activeCategories = allCategories.filter((c: Category) => c.is_active);
+    const activeCategories = allCategories;
     const featuredCategories = activeCategories
       .filter((c: Category) => c.is_featured && c.articles_count > 0)
       .slice(0, 6);

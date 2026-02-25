@@ -421,7 +421,7 @@ export function Header() {
 
   // Categories
   const { data: categoriesData, isLoading: categoriesLoading } = useCategories({ enabled: true });
-  const categories = (categoriesData || []).filter((c: Category) => c.is_active);
+  const categories = categoriesData || [];
 
   // Fermer tout au changement de route
   useEffect(() => {

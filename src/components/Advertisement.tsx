@@ -87,10 +87,7 @@ export function Advertisement({ position, className, initialAds }: Advertisement
   if (!currentAd) return null;
 
   const dims = AD_DIMENSIONS[currentAd.ad_type];
-  const imageUrl = typeof currentAd.image === "string"
-    ? currentAd.image
-    : currentAd.image?.url || currentAd.image_url || "";
-  const resolvedImage = imageUrl ? getMediaUrl(imageUrl) : "";
+  const resolvedImage = currentAd.image_url ? getMediaUrl(currentAd.image_url) : "";
 
   return (
     <AnimatePresence>

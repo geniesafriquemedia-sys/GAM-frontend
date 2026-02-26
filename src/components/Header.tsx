@@ -300,7 +300,7 @@ function MobileNav({ pathname, categories, categoriesLoading, getCategoryIcon }:
         {/* Header */}
         <div className="px-6 py-5 flex items-center justify-between border-b border-border/50">
           <Image src="/images/logo.png" alt="Génies d'Afrique Media"
-                 width={200} height={67} className="h-10 w-auto object-contain" />
+                 width={200} height={67} className="h-14 w-auto object-contain" />
           <SheetClose asChild>
             <button className="p-2 rounded-full hover:bg-muted transition-colors">
               <X className="h-5 w-5" />
@@ -504,7 +504,7 @@ export function Header() {
             height={133}
             className={cn(
               "w-auto object-contain transition-all duration-300",
-              scrolled ? "h-8 lg:h-10" : "h-14 lg:h-20"
+              scrolled ? "h-10 lg:h-10" : "h-16 lg:h-20"
             )}
             priority
           />

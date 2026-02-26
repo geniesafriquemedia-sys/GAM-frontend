@@ -202,7 +202,7 @@ export default function FAQPage() {
 
       {/* FAQ Content */}
       <section className="py-12 sm:py-16 md:py-20">
-        <div className="container max-w-5xl">
+        <div className="container max-w-5xl mx-auto px-4">
           <motion.div
             className="space-y-12 sm:space-y-16 md:space-y-20"
             variants={stagger}

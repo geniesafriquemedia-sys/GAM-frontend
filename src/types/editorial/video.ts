@@ -115,9 +115,15 @@ export function getVideoTypeLabel(type: VideoType): string {
 
 export function getVideoThumbnailUrl(
   video: Video | VideoSummary,
-  fallback = '/images/video-placeholder.jpg'
+  fallback = '/images/logo.png'
 ): string {
-  return video.thumbnail_url || fallback;
+  // Priority 1: precomputed URL from backend (custom upload or YouTube auto)
+  if (video.thumbnail_url) return video.thumbnail_url;
+  // Priority 2: build YouTube thumbnail directly from youtube_id
+  if (video.youtube_id) {
+    return `https://img.youtube.com/vi/${video.youtube_id}/hqdefault.jpg`;
+  }
+  return fallback;
 }
 
 export function getVideoEmbedUrl(video: Video): string {

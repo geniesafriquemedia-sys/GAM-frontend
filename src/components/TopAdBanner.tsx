@@ -56,7 +56,6 @@ export function TopAdBanner() {
               fill
               sizes="(max-width: 768px) 100vw, 970px"
               className="object-contain transition-opacity duration-300 group-hover:opacity-90"
-              priority
             />
           ) : (
             /* Placeholder si pas d'image */

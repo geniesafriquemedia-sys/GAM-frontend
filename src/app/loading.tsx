@@ -13,7 +13,6 @@ export default function Loading() {
             width={400}
             height={133}
             className="h-24 sm:h-32 md:h-40 w-auto object-contain relative z-10 animate-pulse"
-            priority
           />
         </div>
 

@@ -19,15 +19,15 @@ const faqCategories = [
     questions: [
       {
         q: "Qu'est-ce que GAM (Génies d'Afrique Médias) ?",
-        a: "GAM est une plateforme média numérique indépendante lancée par AFRITECK INSTITUT. Notre mission est de révéler les talents africains, promouvoir l'innovation, l'éducation, la culture et informer sur les initiatives positives à travers des articles approfondis, interviews et reportages vidéo."
+        a: "GAM est une plateforme média numérique indépendante dédiée à révéler les talents africains, promouvoir l'innovation, l'éducation, la culture et informer sur les initiatives positives à travers des articles approfondis, interviews et reportages vidéo."
       },
       {
         q: "Qui se cache derrière GAM ?",
-        a: "GAM est une initiative d'AFRITECK INSTITUT, organisation dédiée à la promotion de l'innovation technologique et culturelle en Afrique. Notre équipe est composée de journalistes, créateurs de contenu et experts passionnés par le développement du continent africain."
+        a: "Génies D'Afrique Media est un média indépendant dédié à la promotion de l'innovation technologique et culturelle en Afrique. Notre équipe est composée de journalistes, créateurs de contenu et experts passionnés par le développement du continent africain."
       },
       {
         q: "Comment GAM est-il financé ?",
-        a: "GAM est une plateforme indépendante financée par AFRITECK INSTITUT. Nous assurons notre liberté éditoriale grâce à un modèle basé sur les partenariats stratégiques, la publicité ciblée et le soutien de nos lecteurs."
+        a: "GAM est une plateforme média indépendante. Nous assurons notre liberté éditoriale grâce à un modèle économique basé sur les partenariats stratégiques, la publicité ciblée et le soutien de nos lecteurs."
       },
       {
         q: "Quelle est la ligne éditoriale de GAM ?",

@@ -565,7 +565,7 @@ export function Header() {
           <button aria-label="Rechercher"
                   onClick={() => setIsSearchOpen((v) => !v)}
                   className={cn(
-                    "hidden md:flex h-9 w-9 items-center justify-center rounded-full transition-all",
+                    "flex h-9 w-9 items-center justify-center rounded-full transition-all",
                     isSearchOpen
                       ? "bg-primary text-white"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"

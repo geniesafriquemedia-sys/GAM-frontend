@@ -11,6 +11,7 @@ import { PWAInstallPrompt } from "@/components/lazy";
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-space-grotesk",
+  weight: ["300", "400", "500", "600", "700"],
 });
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://gam.africa';

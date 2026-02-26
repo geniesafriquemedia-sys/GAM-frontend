@@ -10,7 +10,7 @@ import {
 } from "lucide-react";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
 import { useVideos, useTrendingTags, useCategories } from "@/hooks";
@@ -288,6 +288,10 @@ function MobileNav({ pathname, categories, categoriesLoading, getCategoryIcon }:
     <SheetContent side="right"
                   className="w-full sm:max-w-sm p-0 bg-background overflow-hidden
                              border-l border-primary/10 [&>button]:hidden">
+      <SheetHeader className="sr-only">
+        <SheetTitle>Menu de navigation</SheetTitle>
+        <SheetDescription>Menu principal du site GAM</SheetDescription>
+      </SheetHeader>
       <motion.div className="flex flex-col h-full"
                   initial={{ x: 32, opacity: 0 }}
                   animate={{ x: 0, opacity: 1 }}

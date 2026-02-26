@@ -63,6 +63,15 @@ const securityHeaders = [
 const nextConfig: NextConfig = {
   // Standalone output: only traces the files actually needed → much smaller Docker image
   output: 'standalone',
+  experimental: {
+    // Prevent the client-side router from caching RSC payloads across deployments.
+    // static=0: ISR pages (revalidate=N) always re-fetch RSC on navigation,
+    //           avoiding "e[o] is not a function" when chunk hashes change.
+    staleTimes: {
+      dynamic: 0,
+      static: 0,
+    },
+  },
   // Trace from the project root only (not the monorepo root) to avoid scanning GAM-backend
   outputFileTracingRoot: path.resolve(__dirname),
   images: {

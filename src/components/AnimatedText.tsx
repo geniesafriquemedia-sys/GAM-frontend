@@ -1,15 +1,26 @@
 "use client";
 
-import { motion, useInView, type Variants } from "framer-motion";
-import { useRef, ReactNode, useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { motion, type Variants } from "framer-motion";
+import { ReactNode } from "react";
 import { cn } from "@/lib/utils";
+
+// ── Variantes de base ─────────────────────────────────────────────────────────
+
+const VARIANTS = {
+  "fade-up":    { initial: { opacity: 0, y: 30 },              whileInView: { opacity: 1, y: 0 } },
+  "fade-down":  { initial: { opacity: 0, y: -30 },             whileInView: { opacity: 1, y: 0 } },
+  "fade-left":  { initial: { opacity: 0, x: 30 },              whileInView: { opacity: 1, x: 0 } },
+  "fade-right": { initial: { opacity: 0, x: -30 },             whileInView: { opacity: 1, x: 0 } },
+  "scale":      { initial: { opacity: 0, scale: 0.9 },         whileInView: { opacity: 1, scale: 1 } },
+  "blur":       { initial: { opacity: 0, filter: "blur(10px)" }, whileInView: { opacity: 1, filter: "blur(0px)" } },
+} as const;
+
+// ── AnimatedText ──────────────────────────────────────────────────────────────
 
 interface AnimatedTextProps {
   children: ReactNode;
   className?: string;
-  as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span" | "div";
-  variant?: "fade-up" | "fade-down" | "fade-left" | "fade-right" | "scale" | "blur";
+  variant?: keyof typeof VARIANTS;
   delay?: number;
   duration?: number;
   once?: boolean;
@@ -18,76 +29,19 @@ interface AnimatedTextProps {
 export function AnimatedText({
   children,
   className,
-  as: Component = "div",
   variant = "fade-up",
   delay = 0,
   duration = 0.5,
   once = true,
 }: AnimatedTextProps) {
-  const ref = useRef(null);
-  const pathname = usePathname();
-  const [key, setKey] = useState(0);
-  const [mounted, setMounted] = useState(false);
-  
-  // Éviter les erreurs d'hydration
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  
-  // Réinitialiser l'animation à chaque changement de page
-  useEffect(() => {
-    if (mounted) {
-      setKey(prev => prev + 1);
-    }
-  }, [pathname, mounted]);
-  
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
-  
-  // Rendu initial sans animation pour éviter hydration mismatch
-  if (!mounted) {
-    return <Component className={className}>{children}</Component>;
-  }
-
-  const variants = {
-    "fade-up": {
-      initial: { opacity: 0, y: 30 },
-      animate: { opacity: 1, y: 0 },
-    },
-    "fade-down": {
-      initial: { opacity: 0, y: -30 },
-      animate: { opacity: 1, y: 0 },
-    },
-    "fade-left": {
-      initial: { opacity: 0, x: 30 },
-      animate: { opacity: 1, x: 0 },
-    },
-    "fade-right": {
-      initial: { opacity: 0, x: -30 },
-      animate: { opacity: 1, x: 0 },
-    },
-    scale: {
-      initial: { opacity: 0, scale: 0.9 },
-      animate: { opacity: 1, scale: 1 },
-    },
-    blur: {
-      initial: { opacity: 0, filter: "blur(10px)" },
-      animate: { opacity: 1, filter: "blur(0px)" },
-    },
-  };
-
-  const currentVariant = variants[variant];
+  const { initial, whileInView } = VARIANTS[variant];
 
   return (
     <motion.div
-      key={key}
-      ref={ref}
-      initial={currentVariant.initial}
-      animate={isInView ? currentVariant.animate : currentVariant.initial}
-      transition={{
-        duration,
-        delay,
-        ease: [0.16, 1, 0.3, 1],
-      }}
+      initial={initial}
+      whileInView={whileInView}
+      viewport={{ once, margin: "-50px" }}
+      transition={{ duration, delay, ease: [0.16, 1, 0.3, 1] }}
       className={className}
     >
       {children}
@@ -95,12 +49,15 @@ export function AnimatedText({
   );
 }
 
+// ── AnimatedWord ──────────────────────────────────────────────────────────────
+
 interface AnimatedWordProps {
   text: string;
   className?: string;
   as?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "p" | "span";
   delay?: number;
   staggerDelay?: number;
+  once?: boolean;
 }
 
 export function AnimatedWord({
@@ -109,40 +66,18 @@ export function AnimatedWord({
   as: Component = "h1",
   delay = 0,
   staggerDelay = 0.05,
+  once = true,
 }: AnimatedWordProps) {
-  const ref = useRef(null);
-  const pathname = usePathname();
-  const [key, setKey] = useState(0);
-  const [mounted, setMounted] = useState(false);
-  
-  // Éviter les erreurs d'hydration
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-  
-  // Réinitialiser l'animation à chaque changement de page
-  useEffect(() => {
-    if (mounted) {
-      setKey(prev => prev + 1);
-    }
-  }, [pathname, mounted]);
-  
-  const isInView = useInView(ref, { once: false, margin: "-50px" });
-  
   const words = text.split(" ");
-  
-  // Rendu initial sans animation pour éviter hydration mismatch
-  if (!mounted) {
-    return <Component className={className}>{text}</Component>;
-  }
 
   return (
-    <Component ref={ref} className={cn("overflow-hidden", className)} key={key}>
+    <Component className={cn("overflow-hidden", className)}>
       {words.map((word, idx) => (
         <motion.span
-          key={`${word}-${idx}-${key}`}
+          key={`${word}-${idx}`}
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once, margin: "-50px" }}
           transition={{
             duration: 0.5,
             delay: delay + idx * staggerDelay,
@@ -156,6 +91,8 @@ export function AnimatedWord({
     </Component>
   );
 }
+
+// ── AnimatedLetter ────────────────────────────────────────────────────────────
 
 interface AnimatedLetterProps {
   text: string;
@@ -172,18 +109,16 @@ export function AnimatedLetter({
   delay = 0,
   staggerDelay = 0.03,
 }: AnimatedLetterProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-  
   const letters = text.split("");
 
   return (
-    <Component ref={ref} className={cn("overflow-hidden", className)}>
+    <Component className={cn("overflow-hidden", className)}>
       {letters.map((letter, idx) => (
         <motion.span
           key={`${letter}-${idx}`}
           initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-50px" }}
           transition={{
             duration: 0.4,
             delay: delay + idx * staggerDelay,
@@ -198,6 +133,8 @@ export function AnimatedLetter({
   );
 }
 
+// ── AnimatedLine ──────────────────────────────────────────────────────────────
+
 interface AnimatedLineProps {
   children: ReactNode;
   className?: string;
@@ -211,19 +148,13 @@ export function AnimatedLine({
   delay = 0,
   duration = 0.6,
 }: AnimatedLineProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-50px" });
-
   return (
-    <div ref={ref} className="overflow-hidden">
+    <div className="overflow-hidden">
       <motion.div
         initial={{ opacity: 0, y: "100%" }}
-        animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: "100%" }}
-        transition={{
-          duration,
-          delay,
-          ease: [0.16, 1, 0.3, 1],
-        }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "-50px" }}
+        transition={{ duration, delay, ease: [0.16, 1, 0.3, 1] }}
         className={cn(className)}
       >
         {children}
@@ -231,6 +162,8 @@ export function AnimatedLine({
     </div>
   );
 }
+
+// ── StaggerContainer ──────────────────────────────────────────────────────────
 
 interface StaggerContainerProps {
   children: ReactNode;
@@ -245,15 +178,13 @@ export function StaggerContainer({
   staggerDelay = 0.1,
   once = true,
 }: StaggerContainerProps) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once, margin: "-50px" });
-
   return (
     <motion.div
-      ref={ref}
       initial="hidden"
-      animate={isInView ? "visible" : "hidden"}
+      whileInView="visible"
+      viewport={{ once, margin: "-50px" }}
       variants={{
+        hidden: {},
         visible: {
           transition: {
             staggerChildren: staggerDelay,
@@ -267,13 +198,13 @@ export function StaggerContainer({
   );
 }
 
+// ── itemVariants (pour les enfants de StaggerContainer) ───────────────────────
+
 export const itemVariants: Variants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.5,
-    },
+    transition: { duration: 0.5 },
   },
 };

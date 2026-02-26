@@ -24,13 +24,6 @@ export default function MentionsLegalesPage() {
           </section>
 
           <section className="space-y-4">
-            <h2 className="text-3xl font-black tracking-tight">Hébergement</h2>
-            <p className="text-muted-foreground font-medium leading-relaxed">
-              Ce site est hébergé par Vercel Inc., situé au 340 S Lemon Ave #1192 Walnut, CA 91789, USA.
-            </p>
-          </section>
-
-          <section className="space-y-4">
             <h2 className="text-3xl font-black tracking-tight">Propriété intellectuelle</h2>
             <p className="text-muted-foreground font-medium leading-relaxed">
               L'ensemble de ce site relève de la législation camerounaise et internationale sur le droit d'auteur et la propriété intellectuelle. Tous les droits de reproduction sont réservés, y compris pour les documents téléchargeables et les représentations iconographiques et photographiques.

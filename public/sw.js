@@ -1,8 +1,8 @@
 // Service Worker pour GAM PWA
-// VERSION: v4 — fix response.clone() race condition + CSP connect-src
-const CACHE_NAME = 'gam-pwa-v4';
-const RUNTIME_CACHE = 'gam-runtime-v4';
-const IMAGE_CACHE = 'gam-images-v4';
+// VERSION: v5 — SW ne fetche que les images d'origines contrôlées (fin des violations CSP)
+const CACHE_NAME = 'gam-pwa-v5';
+const RUNTIME_CACHE = 'gam-runtime-v5';
+const IMAGE_CACHE = 'gam-images-v5';
 
 // Fichiers à mettre en cache lors de l'installation
 const STATIC_ASSETS = [
@@ -102,14 +102,26 @@ self.addEventListener('fetch', (event) => {
   }
 
   // 4. Images → Cache First, puis Network
+  //    On n'intercepte que les images provenant d'origines qu'on contrôle.
+  //    Les CDN tiers (YouTube, Unsplash, etc.) passent directement par le
+  //    navigateur : pas de fetch() SW → pas de violation connect-src CSP.
   if (request.destination === 'image') {
+    const CACHEABLE_IMAGE_ORIGINS = [
+      self.location.origin,
+      'https://res.cloudinary.com',
+      'https://api.geniesdafriquemedia.com',
+    ];
+    const isCacheable = CACHEABLE_IMAGE_ORIGINS.some((o) => url.href.startsWith(o));
+    if (!isCacheable) return; // laisser le navigateur gérer
+
     event.respondWith(
       caches.open(IMAGE_CACHE).then((cache) =>
         cache.match(request).then((cached) => {
           if (cached) return cached;
           return fetch(request).then((response) => {
             if (request.method === 'GET' && response.status === 200) {
-              cache.put(request, response.clone());
+              const clone = response.clone();
+              cache.put(request, clone);
             }
             return response;
           }).catch(() => cache.match('/images/logo.png'));

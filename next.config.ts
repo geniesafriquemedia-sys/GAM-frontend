@@ -23,7 +23,11 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https: http:",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "connect-src 'self' https://api.geniesdafriquemedia.com https://*.supabase.co https://www.google-analytics.com https://static.cloudflareinsights.com https://img.youtube.com https://res.cloudinary.com https://*.cloudinary.com",
+      // connect-src : toutes les origines que le SW ou le JS client peut fetch().
+      // Règle : n'ajouter que des services réellement utilisés en prod.
+      // Les images tiers (YouTube, Unsplash…) ne sont plus interceptées par le SW
+      // donc elles n'ont PAS besoin d'apparaître ici.
+      "connect-src 'self' https://api.geniesdafriquemedia.com https://res.cloudinary.com https://*.cloudinary.com https://www.google-analytics.com https://www.googletagmanager.com https://cloudflareinsights.com https://*.cloudflareinsights.com",
       "media-src 'self' https://www.youtube.com https://youtube.com",
       "frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com",
       "worker-src 'self' blob:",

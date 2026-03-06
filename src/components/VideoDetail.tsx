@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ArrowLeft, PlayCircle, Info, Eye, Calendar, Tag, Tv2, ToggleLeft, ToggleRight } from "lucide-react";
+import { ArrowLeft, PlayCircle, Info, Eye, Calendar, Tag, Tv2 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { motion } from "framer-motion";
@@ -117,15 +117,29 @@ export function VideoDetail({ initialVideo, slug }: VideoDetailProps) {
             <div className="flex justify-end">
               <button
                 onClick={() => setAutoplay((v) => !v)}
-                className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-foreground transition-colors"
+                className="group flex items-center gap-2.5 py-1.5 px-3 rounded-full border border-border/60 hover:border-border bg-background/60 hover:bg-muted/40 transition-all duration-200"
                 aria-pressed={autoplay}
               >
-                {autoplay ? (
-                  <ToggleRight className="h-5 w-5 text-primary" />
-                ) : (
-                  <ToggleLeft className="h-5 w-5" />
-                )}
-                Lecture automatique {autoplay ? "activée" : "désactivée"}
+                {/* pill switch */}
+                <span
+                  className={`relative flex-shrink-0 w-8 h-4 rounded-full transition-colors duration-300 ${
+                    autoplay ? "bg-primary" : "bg-muted-foreground/30"
+                  }`}
+                >
+                  <span
+                    className={`absolute top-0.5 left-0.5 w-3 h-3 rounded-full bg-white shadow-sm transition-transform duration-300 ${
+                      autoplay ? "translate-x-4" : "translate-x-0"
+                    }`}
+                  />
+                </span>
+                {/* label */}
+                <span
+                  className={`text-[11px] font-medium tracking-wide whitespace-nowrap transition-colors duration-200 ${
+                    autoplay ? "text-foreground" : "text-muted-foreground"
+                  }`}
+                >
+                  Lecture auto
+                </span>
               </button>
             </div>
 

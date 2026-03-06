@@ -4,22 +4,18 @@ import Link from "next/link";
 import Image from "next/image";
 import {
   Search, Menu, X, Globe, Cpu, Palette, Users, Flame,
-  Facebook, ArrowRight, ChevronDown,
+  ArrowRight, ChevronDown,
   Briefcase, BookOpen, Film, Music, Camera, Heart, Star, Zap, TrendingUp,
   Radio,
 } from "lucide-react";
+import { getSocialIcon, SOCIAL_FALLBACK } from "@/components/SocialIcons";
+import { useSocialNetworks } from "@/hooks/api";
+import type { SocialNetwork } from "@/types";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { Sheet, SheetContent, SheetTrigger, SheetClose, SheetHeader, SheetTitle, SheetDescription } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 
-function TikTokIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.02a8.26 8.26 0 0 0 4.83 1.54V7.12a4.85 4.85 0 0 1-1.06-.43z"/>
-    </svg>
-  );
-}
 import { motion, AnimatePresence } from "framer-motion";
 import { useVideos, useTrendingTags, useCategories } from "@/hooks";
 import type { Category } from "@/types";
@@ -60,7 +56,7 @@ const MOBILE_NAV_LINKS = [
 // ─── Top bar ──────────────────────────────────────────────────────────────────
 // Rendu en CSS pur (pas de Framer Motion) pour éviter le conflit de hauteur.
 
-function TopBar() {
+function TopBar({ socials }: { socials: SocialNetwork[] }) {
   const [dateStr, setDateStr] = useState("");
   useEffect(() => {
     setDateStr(
@@ -76,15 +72,15 @@ function TopBar() {
                     text-muted-foreground border-b border-border/40 bg-muted/20">
       <span className="capitalize">{dateStr}</span>
       <div className="flex items-center gap-4">
-        {[
-          { Icon: Facebook,   href: "https://facebook.com/geniesdafriquemedia",   label: "Facebook" },
-          { Icon: TikTokIcon, href: "#",                                           label: "TikTok" },
-        ].map(({ Icon, href, label }) => (
-          <Link key={label} href={href} target="_blank" rel="noopener noreferrer"
-                aria-label={label} className="hover:text-primary transition-colors">
-            <Icon className="h-3.5 w-3.5" />
-          </Link>
-        ))}
+        {socials.map((s) => {
+            const Icon = getSocialIcon(s.network);
+            return (
+              <Link key={s.network} href={s.url} target="_blank" rel="noopener noreferrer"
+                    aria-label={s.display_label} className="hover:text-primary transition-colors">
+                <Icon className="h-3.5 w-3.5" />
+              </Link>
+            );
+          })}
       </div>
     </div>
   );
@@ -284,9 +280,10 @@ interface MobileNavProps {
   categories: Category[];
   categoriesLoading: boolean;
   getCategoryIcon: (name: string) => React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+  socials: SocialNetwork[];
 }
 
-function MobileNav({ pathname, categories, categoriesLoading, getCategoryIcon }: MobileNavProps) {
+function MobileNav({ pathname, categories, categoriesLoading, getCategoryIcon, socials }: MobileNavProps) {
   const [year, setYear] = useState<number | null>(null);
   useEffect(() => { setYear(new Date().getFullYear()); }, []);
 
@@ -396,17 +393,18 @@ function MobileNav({ pathname, categories, categoriesLoading, getCategoryIcon }:
         {/* Footer */}
         <div className="px-5 py-4 border-t border-border/40 flex items-center justify-between">
           <div className="flex gap-2.5">
-            {[
-              { Icon: Facebook,   href: "https://facebook.com/geniesdafriquemedia" },
-              { Icon: TikTokIcon, href: "#" },
-            ].map(({ Icon, href }, i) => (
-              <Link key={i} href={href} target="_blank" rel="noopener noreferrer"
-                    className="h-8 w-8 flex items-center justify-center rounded-full
-                               border border-border hover:bg-primary hover:text-white
-                               hover:border-primary transition-all">
-                <Icon className="h-3.5 w-3.5" />
-              </Link>
-            ))}
+            {socials.map((s) => {
+                const Icon = getSocialIcon(s.network);
+                return (
+                  <Link key={s.network} href={s.url} target="_blank" rel="noopener noreferrer"
+                        className="h-8 w-8 flex items-center justify-center rounded-full
+                                   border border-border hover:bg-primary hover:text-white
+                                   hover:border-primary transition-all"
+                        aria-label={s.display_label}>
+                    <Icon className="h-3.5 w-3.5" />
+                  </Link>
+                );
+              })}
           </div>
           <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-wider">
             © {year ?? ""} GAM
@@ -472,6 +470,9 @@ export function Header() {
     return () => document.removeEventListener("keydown", onKey);
   }, []);
 
+  const { data: apiNetworks } = useSocialNetworks();
+  const socials = (apiNetworks && apiNetworks.length > 0) ? apiNetworks : SOCIAL_FALLBACK;
+
   const getCategoryIcon = useCallback((iconName: string) => {
     return ICON_MAP[iconName.toLowerCase()] || Globe;
   }, []);
@@ -489,7 +490,7 @@ export function Header() {
         "transition-all duration-300 overflow-hidden",
         scrolled ? "max-h-0 opacity-0" : "max-h-10 opacity-100"
       )}>
-        <TopBar />
+        <TopBar socials={socials} />
       </div>
 
       {/* Barre principale — hauteur CSS pure, pas de style inline JS */}
@@ -629,6 +630,7 @@ export function Header() {
               categories={categories}
               categoriesLoading={categoriesLoading}
               getCategoryIcon={getCategoryIcon}
+              socials={socials}
             />
           </Sheet>
         </div>

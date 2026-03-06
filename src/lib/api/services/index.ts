@@ -38,3 +38,6 @@ export type {
 
 // Advertising
 export { advertisingService } from './advertising.service';
+
+// Site Settings
+export { siteService } from './site.service';

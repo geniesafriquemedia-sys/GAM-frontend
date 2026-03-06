@@ -61,6 +61,11 @@ export const ENDPOINTS = {
     TRENDING_TAGS: '/search/trending-tags/',
   },
 
+  // Core / Site Settings
+  CORE: {
+    SOCIAL_NETWORKS: '/core/social-networks/',
+  },
+
   // Engagement
   ENGAGEMENT: {
     NEWSLETTER_SUBSCRIBE: '/engagement/newsletter/subscribe/',

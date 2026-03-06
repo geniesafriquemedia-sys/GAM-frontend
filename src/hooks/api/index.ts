@@ -116,3 +116,8 @@ export {
   useHomepageTrendingTags,
 } from './use-homepage';
 export type { UseHomepageResult } from './use-homepage';
+
+// =============================================================================
+// SITE SETTINGS
+// =============================================================================
+export { useSocialNetworks } from './use-social-networks';

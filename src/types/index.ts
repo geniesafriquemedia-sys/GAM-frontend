@@ -150,3 +150,11 @@ export {
   formatKPINumber,
   formatKPIWithPlus,
 } from './kpi';
+
+// =============================================================================
+// SITE SETTINGS
+// =============================================================================
+export type {
+  SocialNetworkId,
+  SocialNetwork,
+} from './site';

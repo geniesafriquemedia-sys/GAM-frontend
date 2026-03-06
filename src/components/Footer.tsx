@@ -2,20 +2,17 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Youtube, MoveRight } from "lucide-react";
-
-function TikTokIcon({ className }: { className?: string }) {
-  return (
-    <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.02a8.26 8.26 0 0 0 4.83 1.54V7.12a4.85 4.85 0 0 1-1.06-.43z"/>
-    </svg>
-  );
-}
+import { MoveRight } from "lucide-react";
 import { useState, useEffect } from "react";
+import { useSocialNetworks } from "@/hooks/api";
+import { getSocialIcon, SOCIAL_FALLBACK } from "@/components/SocialIcons";
 
 export function Footer() {
   const [year, setYear] = useState<number | null>(null);
   useEffect(() => { setYear(new Date().getFullYear()); }, []);
+
+  const { data: apiNetworks } = useSocialNetworks();
+  const socials = (apiNetworks && apiNetworks.length > 0) ? apiNetworks : SOCIAL_FALLBACK;
 
   return (
     <footer className="w-full border-t bg-background pt-24 pb-12" role="contentinfo">
@@ -23,125 +20,75 @@ export function Footer() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
           <div className="lg:col-span-5 space-y-8 flex flex-col items-center text-center lg:items-start lg:text-left">
             <Link href="/" className="inline-block">
-              <Image
-                src="/images/logo.png"
-                alt="Génies d'Afrique Media"
-                width={600}
-                height={200}
-                className="h-40 sm:h-48 md:h-56 lg:h-64 w-auto object-contain"
-              />
+              <Image src="/images/logo.png" alt="Genies d'Afrique Media" width={600} height={200} className="h-40 sm:h-48 md:h-56 lg:h-64 w-auto object-contain" />
             </Link>
             <p className="text-xl font-medium text-muted-foreground leading-relaxed max-w-md">
-              Redéfinir la narration africaine à travers l'innovation, la culture et l'impact.
+              Redefinir la narration africaine a travers l'innovation, la culture et l'impact.
             </p>
-            <div className="flex gap-4" role="list" aria-label="Réseaux sociaux">
-              {[
-                { icon: Facebook, label: "Facebook", href: "https://facebook.com/geniesdafriquemedia" },
-                { icon: Youtube, label: "YouTube", href: "https://youtube.com/@geniesdafriquemedia" },
-                { icon: TikTokIcon, label: "TikTok", href: "#" },
-              ].map((social) => (
-                <Link
-                  key={social.label}
-                  href={social.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="h-12 w-12 flex items-center justify-center rounded-full border border-primary/10 hover:bg-primary hover:text-primary-foreground transition-all group"
-                  aria-label={`Suivez-nous sur ${social.label}`}
-                >
-                  <social.icon className="h-5 w-5 transition-transform group-hover:scale-110" aria-hidden="true" />
-                </Link>
-              ))}
+            <div className="flex gap-4 flex-wrap" role="list" aria-label="Reseaux sociaux">
+              {socials.map((social) => {
+                const Icon = getSocialIcon(social.network);
+                return (
+                  <Link key={social.network} href={social.url} target="_blank" rel="noopener noreferrer"
+                        className="h-12 w-12 flex items-center justify-center rounded-full border border-primary/10 hover:bg-primary hover:text-primary-foreground transition-all group"
+                        aria-label={`Suivez-nous sur ${social.display_label}`}>
+                    <Icon className="h-5 w-5 transition-transform group-hover:scale-110" />
+                  </Link>
+                );
+              })}
             </div>
           </div>
-          
+
           <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-10 lg:gap-12">
-            {/* Navigation Principale */}
             <nav aria-label="Navigation footer">
               <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Navigation</h3>
               <ul className="space-y-4 font-bold">
-                <li>
-                  <Link href="/" className="hover:text-primary transition-colors flex items-center group">
-                    Accueil 
-                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/actualites" className="hover:text-primary transition-colors flex items-center group">
-                    Actualités
-                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/web-tv" className="hover:text-primary transition-colors flex items-center group">
-                    Web TV
-                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/direct" className="hover:text-primary transition-colors flex items-center group">
-                    Direct
-                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/search" className="hover:text-primary transition-colors flex items-center group">
-                    Recherche
-                    <MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                  </Link>
-                </li>
+                {[{href:"/",name:"Accueil"},{href:"/actualites",name:"Actualites"},{href:"/web-tv",name:"Web TV"},{href:"/direct",name:"Direct"},{href:"/search",name:"Recherche"}].map(l => (
+                  <li key={l.href}><Link href={l.href} className="hover:text-primary transition-colors flex items-center group">{l.name}<MoveRight className="ml-2 h-4 w-4 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" /></Link></li>
+                ))}
               </ul>
             </nav>
-
-            {/* Rubriques */}
             <nav aria-label="Rubriques">
               <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Rubriques</h3>
               <ul className="space-y-4 font-bold">
-                <li><Link href="/categories/economie-business" className="hover:text-primary transition-colors">Économie & Business</Link></li>
-                <li><Link href="/categories/politique-societe" className="hover:text-primary transition-colors">Politique & Société</Link></li>
-                <li><Link href="/categories/innovation-tech" className="hover:text-primary transition-colors">Innovation & Tech</Link></li>
-                <li><Link href="/categories/culture-arts" className="hover:text-primary transition-colors">Culture & Arts</Link></li>
-                <li><Link href="/categories/sport" className="hover:text-primary transition-colors">Sport</Link></li>
+                {[["economie-business","Economie & Business"],["politique-societe","Politique & Societe"],["innovation-tech","Innovation & Tech"],["culture-arts","Culture & Arts"],["sport","Sport"]].map(([s,n]) => (
+                  <li key={s}><Link href={`/categories/${s}`} className="hover:text-primary transition-colors">{n}</Link></li>
+                ))}
                 <li><Link href="/categories" className="hover:text-primary transition-colors">Toutes les rubriques</Link></li>
               </ul>
             </nav>
-
-            {/* À Propos */}
-            <nav aria-label="À propos">
-              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">À Propos</h3>
+            <nav aria-label="A propos">
+              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">A Propos</h3>
               <ul className="space-y-4 font-bold">
                 <li><Link href="/about" className="hover:text-primary transition-colors">Qui sommes-nous</Link></li>
                 <li><Link href="/about#mission" className="hover:text-primary transition-colors">Notre mission</Link></li>
-                <li><Link href="/about#team" className="hover:text-primary transition-colors">L'équipe</Link></li>
+                <li><Link href="/about#team" className="hover:text-primary transition-colors">L'equipe</Link></li>
                 <li><Link href="/partenariats" className="hover:text-primary transition-colors">Partenaires</Link></li>
                 <li><Link href="/faq" className="hover:text-primary transition-colors">FAQ</Link></li>
               </ul>
             </nav>
-
-            {/* Contact & Légal */}
-            <nav aria-label="Contact et mentions légales">
-              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Contact & Légal</h3>
+            <nav aria-label="Contact et mentions legales">
+              <h3 className="text-xs font-black uppercase tracking-widest text-primary mb-6">Contact & Legal</h3>
               <ul className="space-y-4 font-bold">
                 <li><Link href="/contact" className="hover:text-primary transition-colors">Nous contacter</Link></li>
                 <li><Link href="/partenariats" className="hover:text-primary transition-colors">Devenir partenaire</Link></li>
                 <li><Link href="/partenariats#advertise" className="hover:text-primary transition-colors">Annoncer</Link></li>
-                <li><Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions légales</Link></li>
-                <li><Link href="/confidentialite" className="hover:text-primary transition-colors">Confidentialité</Link></li>
+                <li><Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions legales</Link></li>
+                <li><Link href="/confidentialite" className="hover:text-primary transition-colors">Confidentialite</Link></li>
               </ul>
             </nav>
           </div>
         </div>
-        
         <div className="mt-24 pt-8 border-t flex flex-col md:flex-row justify-between items-center gap-6">
           <p className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-            © {year ?? ''} GÉNIES D'AFRIQUE MEDIA. TOUS DROITS RÉSERVÉS.
+            © {year ?? ''} GENIES D'AFRIQUE MEDIA. TOUS DROITS RESERVES.
           </p>
           <div className="flex gap-8 text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-            <Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions Légales</Link>
-            <Link href="/confidentialite" className="hover:text-primary transition-colors">Confidentialité</Link>
+            <Link href="/mentions-legales" className="hover:text-primary transition-colors">Mentions Legales</Link>
+            <Link href="/confidentialite" className="hover:text-primary transition-colors">Confidentialite</Link>
           </div>
         </div>
       </div>
     </footer>
   );
 }
-

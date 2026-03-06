@@ -1,8 +1,8 @@
 // Service Worker pour GAM PWA
-// VERSION: v5 — SW ne fetche que les images d'origines contrôlées (fin des violations CSP)
-const CACHE_NAME = 'gam-pwa-v5';
-const RUNTIME_CACHE = 'gam-runtime-v5';
-const IMAGE_CACHE = 'gam-images-v5';
+// VERSION: v6 — postMessage SW_UPDATED pour notifier la page après activation
+const CACHE_NAME = 'gam-pwa-v6';
+const RUNTIME_CACHE = 'gam-runtime-v6';
+const IMAGE_CACHE = 'gam-images-v6';
 
 // Fichiers à mettre en cache lors de l'installation
 const STATIC_ASSETS = [
@@ -52,7 +52,12 @@ self.addEventListener('activate', (event) => {
       )
     )
   );
-  self.clients.claim();
+  self.clients.claim().then(() => {
+    // Prévenir toutes les pages ouvertes qu'une nouvelle version est active
+    self.clients.matchAll({ type: 'window' }).then((clients) => {
+      clients.forEach((client) => client.postMessage({ type: 'SW_UPDATED' }));
+    });
+  });
 });
 
 // ── Fetch ─────────────────────────────────────────────────────────────────────

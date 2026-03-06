@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Mail, Globe, Twitter, Linkedin, FileText, ArrowLeft } from "lucide-react";
+import { Mail, Globe, FileText, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ArticleCard } from "@/components/ArticleCard";
@@ -112,16 +112,6 @@ export default async function AuthorPage({ params }: PageProps) {
                   </a>
                 )}
 
-                {author.twitter && (
-                  <a
-                    href={author.twitter}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors"
-                  >
-                    <Twitter className="h-5 w-5" />
-                  </a>
-                )}
 
                 {author.linkedin && (
                   <a

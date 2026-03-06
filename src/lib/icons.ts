@@ -30,10 +30,7 @@ export {
 // Social & Engagement
 export {
   Facebook,
-  Twitter,
-  Instagram,
   Youtube,
-  Linkedin,
   Mail,
   Send,
   Share2,

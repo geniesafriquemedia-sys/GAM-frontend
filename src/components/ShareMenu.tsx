@@ -6,7 +6,7 @@ import {
     PopoverTrigger,
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
-import { Share2, Facebook, Twitter, Linkedin, Link2, MessageCircle } from "lucide-react";
+import { Share2, Facebook, Link2, MessageCircle } from "lucide-react";
 import { toast } from "sonner";
 import { useState } from "react";
 
@@ -24,18 +24,6 @@ export function ShareMenu({ title, url }: ShareMenuProps) {
             icon: Facebook,
             action: () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank'),
             color: "hover:text-blue-500",
-        },
-        {
-            name: "Twitter",
-            icon: Twitter,
-            action: () => window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`, '_blank'),
-            color: "hover:text-sky-500",
-        },
-        {
-            name: "LinkedIn",
-            icon: Linkedin,
-            action: () => window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`, '_blank'),
-            color: "hover:text-blue-700",
         },
         {
             name: "WhatsApp",

@@ -2,7 +2,15 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Facebook, Twitter, Instagram, Youtube, Linkedin, MoveRight } from "lucide-react";
+import { Facebook, Youtube, MoveRight } from "lucide-react";
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.02a8.26 8.26 0 0 0 4.83 1.54V7.12a4.85 4.85 0 0 1-1.06-.43z"/>
+    </svg>
+  );
+}
 import { useState, useEffect } from "react";
 
 export function Footer() {
@@ -28,15 +36,15 @@ export function Footer() {
             </p>
             <div className="flex gap-4" role="list" aria-label="Réseaux sociaux">
               {[
-                { icon: Facebook, label: "Facebook" },
-                { icon: Twitter, label: "Twitter" },
-                { icon: Instagram, label: "Instagram" },
-                { icon: Youtube, label: "Youtube" },
-                { icon: Linkedin, label: "Linkedin" },
+                { icon: Facebook, label: "Facebook", href: "https://facebook.com/geniesdafriquemedia" },
+                { icon: Youtube, label: "YouTube", href: "https://youtube.com/@geniesdafriquemedia" },
+                { icon: TikTokIcon, label: "TikTok", href: "#" },
               ].map((social) => (
-                <Link 
-                  key={social.label} 
-                  href="#" 
+                <Link
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="h-12 w-12 flex items-center justify-center rounded-full border border-primary/10 hover:bg-primary hover:text-primary-foreground transition-all group"
                   aria-label={`Suivez-nous sur ${social.label}`}
                 >

@@ -88,7 +88,7 @@ const faqCategories = [
     questions: [
       {
         q: "Comment partager un article ou une vidéo ?",
-        a: "Chaque article et vidéo dispose d'un bouton de partage permettant de diffuser le contenu sur Facebook, Twitter, LinkedIn, WhatsApp ou par email. Vous pouvez également copier le lien pour le partager où vous voulez."
+        a: "Chaque article et vidéo dispose d'un bouton de partage permettant de diffuser le contenu sur Facebook, WhatsApp ou en copiant le lien directement."
       },
       {
         q: "Puis-je contribuer en tant que journaliste ou créateur ?",

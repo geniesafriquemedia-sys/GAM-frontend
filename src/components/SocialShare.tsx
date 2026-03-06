@@ -1,6 +1,6 @@
 "use client";
 
-import { Share2, Facebook, Twitter, Linkedin, Link as LinkIcon } from "lucide-react";
+import { Share2, Facebook, Link as LinkIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
@@ -56,24 +56,6 @@ export function SocialShare({ url, title }: { url: string; title: string }) {
         title="Partager sur Facebook"
       >
         <Facebook className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        className="rounded-full h-9 w-9 text-foreground hover:bg-sky-500 hover:border-sky-500 transition-all"
-        onClick={() => window.open(`https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`, '_blank')}
-        title="Partager sur X (Twitter)"
-      >
-        <Twitter className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        className="rounded-full h-9 w-9 text-foreground hover:bg-blue-700 hover:border-blue-700 transition-all"
-        onClick={() => window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodedUrl}&title=${encodedTitle}`, '_blank')}
-        title="Partager sur LinkedIn"
-      >
-        <Linkedin className="h-4 w-4" />
       </Button>
       <Button
         variant="outline"

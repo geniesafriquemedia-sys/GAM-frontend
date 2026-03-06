@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, Phone, MapPin, Send, Instagram, Twitter, Facebook, Linkedin, Loader2, CheckCircle, AlertCircle } from "lucide-react";
+import { Mail, Phone, MapPin, Send, Facebook, Loader2, CheckCircle, AlertCircle } from "lucide-react";
 import { contactService, validateContactForm } from "@/lib/api/services/engagement.service";
 import type { ContactRequest } from "@/types";
 
@@ -118,10 +118,7 @@ export default function ContactPage() {
               <h3 className="text-2xl font-black tracking-tight">Suivez-nous</h3>
               <div className="flex gap-6">
                 {[
-                  { icon: Twitter, href: "#" },
-                  { icon: Instagram, href: "#" },
-                  { icon: Facebook, href: "#" },
-                  { icon: Linkedin, href: "#" },
+                  { icon: Facebook, href: "https://facebook.com/geniesdafriquemedia" },
                 ].map((social, i) => (
                   <a key={i} href={social.href} className="h-12 w-12 rounded-full border border-white/10 flex items-center justify-center hover:bg-primary hover:border-primary transition-all">
                     <social.icon className="h-5 w-5" />

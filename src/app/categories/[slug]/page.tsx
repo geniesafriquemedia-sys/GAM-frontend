@@ -19,15 +19,16 @@ export default async function CategoryPage({ params }: { params: Promise<{ slug:
   let articles: ArticleSummary[] = [];
 
   try {
-    // Fetch category details
-    category = await api.categories.getBySlug(slug);
-
-    // Fetch articles in this category
-    const articlesResponse = await api.articles.getAll({
-      category_slug: slug,
-      page_size: 12,
-      ordering: '-published_at'
-    });
+    // Fetch category and articles in parallel (SSR methods for proper timeout + caching)
+    const [cat, articlesResponse] = await Promise.all([
+      api.categories.getBySlugServer(slug),
+      api.articles.getAllServer({
+        category_slug: slug,
+        page_size: 12,
+        ordering: '-published_at',
+      }),
+    ]);
+    category = cat;
     articles = articlesResponse.results;
   } catch (error) {
     notFound();

@@ -363,9 +363,15 @@ export function ArticleDetail({ initialArticle, slug, sidebarAds, inBody1Ads }: 
           <section className="container mx-auto px-4">
             <motion.div
               className="relative aspect-[21/9] w-full overflow-hidden rounded-[4rem] max-w-7xl mx-auto shadow-2xl ring-1 ring-primary/5"
-              initial={{ opacity: 0, scale: 0.98 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              initial={{
+                clipPath: "inset(6% 12% 6% 12% round 1.5rem)",
+                opacity: 0,
+              }}
+              animate={{
+                clipPath: "inset(0% 0% 0% 0% round 0rem)",
+                opacity: 1,
+              }}
+              transition={{ duration: 0.9, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
             >
               <Image
                 src={imageUrl}

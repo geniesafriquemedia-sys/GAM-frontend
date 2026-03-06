@@ -8,6 +8,7 @@ import Image from "next/image";
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { VideoCard } from "@/components/VideoCard";
+import { StaggerContainer, itemVariants } from "@/components/AnimatedText";
 import { useVideos } from "@/hooks";
 import type { VideoType, VideoSummary, PaginatedResponse } from "@/types";
 import { getVideoThumbnailUrl, getVideoTypeLabel } from "@/types";
@@ -291,12 +292,18 @@ export function WebTvList({ initialVideos, featuredVideo }: WebTvListProps) {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 exit={{ opacity: 0 }}
-                transition={{ duration: 0.25 }}
-                className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-x-8 lg:gap-y-16"
+                transition={{ duration: 0.2 }}
               >
-                {videos.map((video, i) => (
-                  <VideoCard key={video.id} video={video} index={i} />
-                ))}
+                <StaggerContainer
+                  className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-x-8 lg:gap-y-16"
+                  staggerDelay={0.07}
+                >
+                  {videos.map((video, i) => (
+                    <motion.div key={video.id} variants={itemVariants}>
+                      <VideoCard video={video} index={i} />
+                    </motion.div>
+                  ))}
+                </StaggerContainer>
               </motion.div>
             )}
           </AnimatePresence>

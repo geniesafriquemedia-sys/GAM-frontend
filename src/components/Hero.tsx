@@ -6,7 +6,7 @@ import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Clock, TrendingUp, ImageIcon } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import type { ArticleSummary } from "@/types";
 import { formatReadingTime } from "@/types";
 import { getMediaUrl } from "@/lib/api/config";
@@ -31,6 +31,13 @@ export function Hero({ articles }: HeroProps) {
   const [current, setCurrent] = useState(0);
   const [paused, setPaused] = useState(false);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
+
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"],
+  });
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "15%"]);
 
   const count = articles.length;
 
@@ -64,42 +71,49 @@ export function Hero({ articles }: HeroProps) {
 
   return (
     <div
+      ref={heroRef}
       className="relative min-h-[350px] sm:min-h-[400px] md:min-h-[480px] lg:min-h-[520px] w-full overflow-hidden rounded-[1.5rem] md:rounded-[2.5rem] bg-foreground text-background shadow-[0_20px_40px_-10px_rgba(0,0,0,0.5)]"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      {/* ── Background image with cross-fade ── */}
+      {/* ── Background image with cross-fade + parallax ── */}
       <AnimatePresence mode="sync">
         <motion.div
           key={`bg-${article.id}`}
-          className="absolute inset-0 z-0"
+          className="absolute inset-0 z-0 overflow-hidden"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.8, ease: "easeInOut" }}
         >
-          {imageUrl ? (
-            <Image
-              src={imageUrl}
-              alt={article.title}
-              fill
-              className="object-cover opacity-60"
-              priority
-              sizes="(max-width: 1024px) 100vw, 67vw"
-            />
-          ) : (
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              style={{
-                background:
-                  article.category?.color
-                    ? `linear-gradient(135deg, ${article.category.color}30 0%, ${article.category.color}60 100%)`
-                    : "linear-gradient(135deg, hsl(var(--primary)/0.3) 0%, hsl(var(--primary)/0.5) 100%)",
-              }}
-            >
-              <ImageIcon className="h-24 w-24 opacity-20 text-white" />
-            </div>
-          )}
+          {/* Parallax inner layer — légèrement plus grand pour absorber le décalage */}
+          <motion.div
+            className="absolute inset-x-0 -top-[10%] h-[120%]"
+            style={{ y: bgY }}
+          >
+            {imageUrl ? (
+              <Image
+                src={imageUrl}
+                alt={article.title}
+                fill
+                className="object-cover opacity-60"
+                priority
+                sizes="(max-width: 1024px) 100vw, 67vw"
+              />
+            ) : (
+              <div
+                className="absolute inset-0 flex items-center justify-center"
+                style={{
+                  background:
+                    article.category?.color
+                      ? `linear-gradient(135deg, ${article.category.color}30 0%, ${article.category.color}60 100%)`
+                      : "linear-gradient(135deg, hsl(var(--primary)/0.3) 0%, hsl(var(--primary)/0.5) 100%)",
+                }}
+              >
+                <ImageIcon className="h-24 w-24 opacity-20 text-white" />
+              </div>
+            )}
+          </motion.div>
           {/* Gradient overlay */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
         </motion.div>

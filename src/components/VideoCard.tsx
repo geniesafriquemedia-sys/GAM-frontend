@@ -46,6 +46,7 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
     <motion.div
       initial={{ opacity: 0, y: 24 }}
       animate={{ opacity: 1, y: 0 }}
+      whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 22 } }}
       transition={{ duration: 0.4, delay: index * 0.06, ease: "easeOut" }}
       className="group relative flex flex-col gap-4"
       role="article"
@@ -54,7 +55,7 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
       {/* Thumbnail */}
       <Link
         href={`/web-tv/${slug}`}
-        className="relative aspect-video overflow-hidden rounded-[2rem] bg-muted shadow-xl transition-shadow duration-300 hover:shadow-2xl block"
+        className="relative aspect-video overflow-hidden rounded-[2rem] bg-muted shadow-xl transition-all duration-500 hover:shadow-[0_24px_60px_rgba(0,0,0,0.25)] block"
         onMouseEnter={() => {
           setIsHovered(true);
           // Délai avant d'afficher la preview (1 seconde)
@@ -92,15 +93,26 @@ export function VideoCard({ video, index = 0 }: VideoCardProps) {
 
         {/* Play button */}
         <div className="absolute inset-0 flex items-center justify-center">
-          <motion.div
-            whileHover={{ scale: 1.15 }}
-            transition={{ type: "spring", stiffness: 300, damping: 20 }}
-            className="h-14 w-14 flex items-center justify-center rounded-full bg-background/20 backdrop-blur-md border border-white/30 shadow-lg transition-colors duration-300 group-hover:bg-primary group-hover:border-primary"
-            role="button"
-            aria-label={`Lire la vidéo: ${title}`}
-          >
-            <Play className="h-6 w-6 fill-foreground group-hover:fill-white text-foreground group-hover:text-white translate-x-0.5 transition-colors duration-300" aria-hidden="true" />
-          </motion.div>
+          <div className="relative flex items-center justify-center">
+            {/* Pulsing ring au hover */}
+            {isHovered && (
+              <motion.div
+                className="absolute rounded-full border-2 border-white/50 w-14 h-14"
+                initial={{ scale: 1, opacity: 0.7 }}
+                animate={{ scale: 2.2, opacity: 0 }}
+                transition={{ duration: 1.1, repeat: Infinity, ease: "easeOut" }}
+              />
+            )}
+            <motion.div
+              whileHover={{ scale: 1.18 }}
+              transition={{ type: "spring", stiffness: 300, damping: 20 }}
+              className="h-14 w-14 flex items-center justify-center rounded-full bg-background/20 backdrop-blur-md border border-white/30 shadow-lg transition-all duration-300 group-hover:bg-primary group-hover:border-primary group-hover:shadow-primary/40 group-hover:shadow-xl"
+              role="button"
+              aria-label={`Lire la vidéo: ${title}`}
+            >
+              <Play className="h-6 w-6 fill-foreground group-hover:fill-white text-foreground group-hover:text-white translate-x-0.5 transition-colors duration-300" aria-hidden="true" />
+            </motion.div>
+          </div>
         </div>
 
         {/* Live badge */}

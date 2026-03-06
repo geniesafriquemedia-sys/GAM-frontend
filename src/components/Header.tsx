@@ -556,12 +556,19 @@ export function Header() {
             return (
               <Link key={item.href} href={item.href}
                     className={cn(
-                      "px-3 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-all",
+                      "relative px-3 py-2 rounded-lg text-[11px] font-black uppercase tracking-widest transition-colors",
                       isActive
-                        ? "text-primary bg-primary/8"
+                        ? "text-primary"
                         : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                     )}>
-                {item.name}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-pill"
+                    className="absolute inset-0 rounded-lg bg-primary/8"
+                    transition={{ type: "spring", stiffness: 500, damping: 35 }}
+                  />
+                )}
+                <span className="relative z-10">{item.name}</span>
               </Link>
             );
           })}

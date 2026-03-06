@@ -1,8 +1,8 @@
 // Service Worker pour GAM PWA
-// VERSION: v3 — bump this string on every deploy to purge stale caches
-const CACHE_NAME = 'gam-pwa-v3';
-const RUNTIME_CACHE = 'gam-runtime-v3';
-const IMAGE_CACHE = 'gam-images-v3';
+// VERSION: v4 — fix response.clone() race condition + CSP connect-src
+const CACHE_NAME = 'gam-pwa-v4';
+const RUNTIME_CACHE = 'gam-runtime-v4';
+const IMAGE_CACHE = 'gam-images-v4';
 
 // Fichiers à mettre en cache lors de l'installation
 const STATIC_ASSETS = [
@@ -125,7 +125,8 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((response) => {
           if (request.method === 'GET' && response.status === 200) {
-            caches.open(RUNTIME_CACHE).then((c) => c.put(request, response.clone()));
+            const clone = response.clone();
+            caches.open(RUNTIME_CACHE).then((c) => c.put(request, clone));
           }
           return response;
         })
@@ -142,7 +143,8 @@ self.addEventListener('fetch', (event) => {
       if (cached) return cached;
       return fetch(request).then((response) => {
         if (request.method === 'GET' && response.status === 200) {
-          caches.open(RUNTIME_CACHE).then((c) => c.put(request, response.clone()));
+          const clone = response.clone();
+          caches.open(RUNTIME_CACHE).then((c) => c.put(request, clone));
         }
         return response;
       });

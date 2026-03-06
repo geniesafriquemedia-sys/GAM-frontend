@@ -23,7 +23,7 @@ const securityHeaders = [
       "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com",
       "img-src 'self' data: blob: https: http:",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "connect-src 'self' https://api.geniesdafriquemedia.com https://*.supabase.co https://www.google-analytics.com",
+      "connect-src 'self' https://api.geniesdafriquemedia.com https://*.supabase.co https://www.google-analytics.com https://static.cloudflareinsights.com https://img.youtube.com https://res.cloudinary.com https://*.cloudinary.com",
       "media-src 'self' https://www.youtube.com https://youtube.com",
       "frame-src 'self' https://www.youtube.com https://youtube.com https://www.youtube-nocookie.com",
       "worker-src 'self' blob:",

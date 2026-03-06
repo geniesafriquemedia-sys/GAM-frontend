@@ -7,6 +7,31 @@ import { API_BASE_URL, DEFAULT_HEADERS, DEFAULT_TIMEOUT, buildQueryString } from
 import type { ApiError, HttpMethod } from '@/types';
 
 // =============================================================================
+// CLIENT-SIDE GET CACHE (TTL 60s) — évite les requêtes répétées lors des
+// navigations côté client (Header, hooks useFetch, etc.)
+// =============================================================================
+
+interface CacheEntry { data: unknown; expires: number }
+const _getCache = new Map<string, CacheEntry>();
+const GET_CACHE_TTL = 60_000; // 60 secondes
+
+function getCachedGet<T>(url: string): T | null {
+  const entry = _getCache.get(url);
+  if (!entry) return null;
+  if (Date.now() > entry.expires) { _getCache.delete(url); return null; }
+  return entry.data as T;
+}
+
+function setCachedGet(url: string, data: unknown): void {
+  _getCache.set(url, { data, expires: Date.now() + GET_CACHE_TTL });
+  // Nettoyage périodique pour éviter les fuites mémoire
+  if (_getCache.size > 200) {
+    const now = Date.now();
+    for (const [k, v] of _getCache) { if (now > v.expires) _getCache.delete(k); }
+  }
+}
+
+// =============================================================================
 // ERROR CLASS
 // =============================================================================
 
@@ -131,6 +156,12 @@ async function baseFetch<T>(
     fetchOptions.next = next;
   }
 
+  // Cache GET côté client uniquement (pas en SSR/Node où fetch est partagé)
+  if (method === 'GET' && typeof window !== 'undefined') {
+    const cached = getCachedGet<T>(url);
+    if (cached !== null) return cached;
+  }
+
   // Create abort controller for timeout
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
@@ -152,6 +183,11 @@ async function baseFetch<T>(
     if (!response.ok) {
       const errorMessage = data?.detail || `HTTP Error ${response.status}`;
       throw new ApiClientError(errorMessage, response.status, data);
+    }
+
+    // Mettre en cache les GET réussis côté client
+    if (method === 'GET' && typeof window !== 'undefined') {
+      setCachedGet(url, data);
     }
 
     return data as T;
